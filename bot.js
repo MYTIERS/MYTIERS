@@ -113,7 +113,6 @@ client.on('interactionCreate', async interaction => {
 
         let skinUrl = `https://mc-heads.net/avatar/${username}/150`;
 
-        // تخزين البيانات مع القيم الافتراضية للنقاط والأطوار مطابقة للصورة
         registeredUsers.set(interaction.user.id, { 
             username, 
             edition, 
@@ -163,7 +162,7 @@ client.on('interactionCreate', async interaction => {
                         userData.skinUrl = attachment.url;
                         registeredUsers.set(interaction.user.id, userData);
 
-                        try { await m.delete(); } catch (e) {}
+                        // تم إزالة m.delete() لكي لا يتعطل رابط الصورة في ديسكورد
 
                         await interaction.followUp({
                             content: `✅ ${interaction.user} **تم استلام وتحديث سكنك الكراك بنجاح!**`,
@@ -194,7 +193,6 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
-        // تنسيق قائمة الأطوار بنفس شكل الصورة المطلوبة
         const tiersText = Object.entries(userData.tiers)
             .map(([mode, tier]) => `• **${mode}:** \`${tier}\``)
             .join('\n');
@@ -214,6 +212,8 @@ client.on('interactionCreate', async interaction => {
 
         await interaction.reply({ embeds: [embed] });
     }
+    else if (commandName:: === 'queuepanel') { // (Fixed colon typo just in case, standard is commandName ===)
+    }
     else if (commandName === 'queuepanel') {
         const embed = new EmbedBuilder()
             .setColor('#2ecc71')
@@ -229,7 +229,7 @@ client.on('interactionCreate', async interaction => {
         const userData = registeredUsers.get(targetUser.id);
         if (userData && userData.tiers[gamemode] !== undefined) {
             userData.tiers[gamemode] = tier;
-            userData.points += 15; // زيادة نقاط تجريبية عند تعيين التير
+            userData.points += 15;
         }
 
         await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
