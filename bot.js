@@ -197,7 +197,7 @@ client.on('interactionCreate', async interaction => {
 
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
-            .setTitle(`⚔️️ RubyTiers Profile - ${userData.username}`)
+            .setTitle(`⚔️ RubyTiers Profile - ${userData.username}`)
             .setThumbnail(userData.skinUrl)
             .addFields(
                 { name: '🌍 المنطقة', value: `\`${userData.region}\``, inline: true },
@@ -231,7 +231,7 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
     }
     else if (commandName === 'syncroles') {
-        await interaction.reply({ content: '🔄 جاري مزامنة رتب الديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
+        await interaction.reply({ content: '🔄 جاري مزامنة رتب ديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
     }
     else if (commandName === 'unregister') {
         const targetUser = interaction.options.getUser('user') || interaction.user;
