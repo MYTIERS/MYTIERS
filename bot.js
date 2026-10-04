@@ -40,8 +40,8 @@ client.once('ready', async () => {
                     ))
             .addAttachmentOption(option =>
                 option.setName('skin')
-                    .setDescription('ارفع ملف السكن الخاص بك بصيغة PNG حصراً')
-                    .setRequired(true)), // إلزامي لضمان نجاح رفع السكن وعرضه
+                    .setDescription('ارفع ملف السكن PNG (اختياري، لتجنب مشاكل الجوال)')
+                    .setRequired(false)), // جعلناه اختيارياً لحل مشكلة الجوال
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -116,19 +116,11 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin');
 
-        // التأكد من أن الملف مرفوع
-        if (!skinAttachment) {
-            return await interaction.reply({
-                content: '❌ يجب عليك رفع ملف السكن (PNG) لتتمكن من إتمام التسجيل!',
-                ephemeral: true
-            });
-        }
-
         // حفظ بيانات اللاعب مرتبطة بأيدي حساب الديسكورد
         registeredUsers.set(interaction.user.id, { username, edition, region });
 
-        // استخدام رابط السكن المرفوع مباشرة من ديسكورد كصورة مصغرة
-        const skinAvatar = skinAttachment.url;
+        // إذا قام برفع ملف نستخدمه، وإلا نجلب رأس الشخصية أوتوماتيكياً بالاسم لتجنب خطأ الجوال
+        const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/helm/${username}/150.png`;
 
         const embed = new EmbedBuilder()
             .setColor('#e74c3c')
@@ -173,7 +165,6 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: '🔄 جاري مزامنة رتب الديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
     }
     else if (commandName === 'unregister') {
-        // تحديد المستخدم المستهدف (إما الشخص الذي كتب الأمر أو الحساب المختار في الخيار)
         const targetUser = interaction.options.getUser('user') || interaction.user;
 
         if (!registeredUsers.has(targetUser.id)) {
