@@ -5,7 +5,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// ضع معرّف (ID) روم النتائج هنا
+// ضع هنا ID روم النتائج الخاصة بك (📋╎tier・results)
 const RESULTS_CHANNEL_ID = '1554252285842817174'; 
 
 const registeredUsers = new Map();
@@ -14,28 +14,28 @@ const registeredUsers = new Map();
 const GAMEMODES = ['Vanilla', 'UHC', 'Pot', 'NethOP', 'SMP', 'Sword', 'Axe', 'Mace', 'SpearMace'];
 
 client.once('ready', async () => {
-    console.log(`✅ تم تسجيل الدخول باسم ${client.user.tag}!`);
+    console.log(`✅ Logged in as ${client.user.tag}!`);
 
     const commands = [
         new SlashCommandBuilder()
             .setName('register')
-            .setDescription('تسجيل حساب ماين كرافت الخاص بك')
+            .setDescription('Register your Minecraft account')
             .addStringOption(option =>
                 option.setName('username')
-                    .setDescription('اسم حسابك في ماين كرافت')
+                    .setDescription('Your Minecraft Username')
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('edition')
-                    .setDescription('نسخة ماين كرافت (جافا، كراك، بيدروك)')
+                    .setDescription('Minecraft Edition')
                     .setRequired(true)
                     .addChoices(
-                        { name: 'Java Premium (الجافا الأصلية)', value: 'JAVA' },
-                        { name: 'Cracked (المكركة)', value: 'CRACKED' },
-                        { name: 'Bedrock (البيدروك)', value: 'BEDROCK' }
+                        { name: 'Java Premium', value: 'JAVA' },
+                        { name: 'Cracked', value: 'CRACKED' },
+                        { name: 'Bedrock', value: 'BEDROCK' }
                     ))
             .addStringOption(option =>
                 option.setName('region')
-                    .setDescription('منطقتك')
+                    .setDescription('Your Region')
                     .setRequired(true)
                     .addChoices(
                         { name: 'Middle East (ME)', value: 'ME' },
@@ -45,20 +45,20 @@ client.once('ready', async () => {
                     ))
             .addAttachmentOption(option =>
                 option.setName('skin_file')
-                    .setDescription('ملف صورة السكن PNG (مخصص للكراك والبيدروك)')
+                    .setDescription('Skin PNG file (Optional for Cracked/Bedrock)')
                     .setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('setrank')
-            .setDescription('تعيين تير لاعب في نمط لعب معين (للمختبرين فقط)')
+            .setDescription('Set player tier for a gamemode (Testers only)')
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .addUserOption(option =>
                 option.setName('player')
-                    .setDescription('اللاعب المراد تقييمه')
+                    .setDescription('Target player')
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('gamemode')
-                    .setDescription('نمط اللعب')
+                    .setDescription('Gamemode / Kit')
                     .setRequired(true)
                     .addChoices(
                         { name: 'Sword 🗡️', value: 'Sword' },
@@ -73,9 +73,10 @@ client.once('ready', async () => {
                     ))
             .addStringOption(option =>
                 option.setName('tier')
-                    .setDescription('الرانك من الأقوى (HT1) إلى الأضعف (LT5)')
+                    .setDescription('Select Tier Rank')
                     .setRequired(true)
                     .addChoices(
+                        { name: 'Unranked (غير مصنف)', value: 'Unranked' },
                         { name: 'High Tier 1 (HT1)', value: 'HT1' },
                         { name: 'Low Tier 1 (LT1)', value: 'LT1' },
                         { name: 'High Tier 2 (HT2)', value: 'HT2' },
@@ -90,30 +91,30 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('profile')
-            .setDescription('عرض ملف التير الخاص بك أو بياعب آخر')
+            .setDescription('View player profile')
             .addUserOption(option =>
                 option.setName('user')
-                    .setDescription('اللاعب المراد عرض ملفه')
+                    .setDescription('Target user')
                     .setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('unregister')
-            .setDescription('حذف حساب ماين كرافت المرتبط بحساب ديسكورد')
+            .setDescription('Unlink Minecraft account')
             .addUserOption(option =>
                 option.setName('user')
-                    .setDescription('حساب الديسكورد المراد حذف تسجيله')
+                    .setDescription('Target user')
                     .setRequired(false))
     ];
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
     try {
-        console.log('جاري تحديث الأوامر في ديسكورد...');
+        console.log('Refreshing application (/) commands...');
         await rest.put(
             Routes.applicationCommands(client.user.id),
             { body: commands },
         );
-        console.log('تم تحديث الأوامر بنجاح!');
+        console.log('Successfully reloaded application (/) commands.');
     } catch (error) {
         console.error(error);
     }
@@ -127,7 +128,7 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'register') {
         if (registeredUsers.has(interaction.user.id)) {
             return await interaction.reply({
-                content: '❌ لقد قمت بالتسجيل مسبقاً! لاستبدال البيانات، استخدم أمر `/unregister` أولاً.',
+                content: '❌ You are already registered! Use `/unregister` first to change your account.',
                 ephemeral: true
             });
         }
@@ -137,15 +138,8 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin_file');
 
-        if ((edition === 'CRACKED' || edition === 'BEDROCK') && !skinAttachment) {
-            return await interaction.reply({
-                content: '⚠️ يجب عليك رفع ملف السكن الخاص بك بصيغة (PNG) بما أن نسختك مكركة أو بيدروك!',
-                ephemeral: true
-            });
-        }
-
-        // جلب صورة راس أو سكن اللاعب
-        let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
+        // تحديث رابط الصورة ليكون ثابت ويعمل دائماً
+        let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/100`;
 
         const initialTiers = {};
         GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
@@ -162,13 +156,13 @@ client.on('interactionCreate', async interaction => {
 
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
-            .setTitle('💎 RubyTiers - تم التسجيل بنجاح')
-            .setDescription('**تم ربط حسابك بنجاح!**')
+            .setTitle('💎 RubyTiers - Registration Successful')
+            .setDescription('**Your Minecraft account has been linked successfully!**')
             .setThumbnail(skinUrl)
             .addFields(
-                { name: 'الاسم:', value: `\`${username}\``, inline: false },
-                { name: 'النسخة:', value: `\`${edition}\``, inline: false },
-                { name: 'المنطقة:', value: `\`${region}\``, inline: false }
+                { name: 'Username:', value: `\`${username}\``, inline: false },
+                { name: 'Edition:', value: `\`${edition}\``, inline: false },
+                { name: 'Region:', value: `\`${region}\``, inline: false }
             )
             .setFooter({ text: 'RubyTiers Official Network' })
             .setTimestamp();
@@ -185,7 +179,7 @@ client.on('interactionCreate', async interaction => {
         
         if (!userData) {
             return await interaction.reply({ 
-                content: `❌ هذا اللاعب (${targetUser}) غير مسجل في النظام عبر أمر /register!`, 
+                content: `❌ This player (${targetUser}) is not registered in the system!`, 
                 ephemeral: true 
             });
         }
@@ -193,13 +187,19 @@ client.on('interactionCreate', async interaction => {
         const previousRank = userData.tiers[gamemode] || 'Unranked';
         userData.tiers[gamemode] = tier;
 
-        await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} بنجاح!`, ephemeral: true });
+        // الرد باللغة الإنجليزية يحدد الكيت والرانك المنسوب
+        await interaction.reply({ 
+            content: `✅ Successfully set **${tier}** rank for ${targetUser} in **${gamemode}** mode!`, 
+            ephemeral: true 
+        });
 
-        // إرسال النتيجة بتنسيق مطابق للصورة تماماً
+        // إرسال تقرير النتيجة إلى روم النتائج
         const resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
         if (resultsChannel) {
+            const rankDisplay = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;
+
             const resultEmbed = new EmbedBuilder()
-                .setColor('#00ff44')
+                .setColor('#2b2d31')
                 .setTitle(`${userData.username}'s Test Results 🏆`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
@@ -207,7 +207,7 @@ client.on('interactionCreate', async interaction => {
                     { name: 'Region:', value: `${userData.region}`, inline: false },
                     { name: 'Username:', value: `${userData.username}`, inline: false },
                     { name: 'Previous Rank:', value: `${previousRank}`, inline: false },
-                    { name: 'Rank Earned:', value: `**${tier} (${gamemode.toUpperCase()})**`, inline: false }
+                    { name: 'Rank Earned:', value: `**${rankDisplay}**`, inline: false }
                 )
                 .setFooter({ text: 'RubyTiers Official Results' })
                 .setTimestamp();
@@ -222,12 +222,11 @@ client.on('interactionCreate', async interaction => {
 
         if (!userData) {
             return await interaction.reply({
-                content: `❌ هذا المستخدم (${targetUser}) غير مسجل في النظام!`,
+                content: `❌ User (${targetUser}) is not registered!`,
                 ephemeral: true
             });
         }
 
-        // بناء قائمة الأطوار المنسقة مثل الصورة
         let tiersList = '';
         for (const [mode, rank] of Object.entries(userData.tiers)) {
             tiersList += `• **${mode}:** \`${rank}\`\n`;
@@ -253,11 +252,11 @@ client.on('interactionCreate', async interaction => {
         const targetUser = interaction.options.getUser('user') || interaction.user;
 
         if (!registeredUsers.has(targetUser.id)) {
-            return await interaction.reply({ content: `❌ هذا الحساب غير مسجل بالأساس!`, ephemeral: true });
+            return await interaction.reply({ content: `❌ Account is not registered!`, ephemeral: true });
         }
 
         registeredUsers.delete(targetUser.id);
-        await interaction.reply({ content: `🗑 تم إلغاء ربط الحساب بنجاح.`, ephemeral: true });
+        await interaction.reply({ content: `🗑 Account unlinked successfully.`, ephemeral: true });
     }
 });
 
