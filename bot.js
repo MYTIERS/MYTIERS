@@ -12,7 +12,7 @@ const {
     TextInputBuilder, 
     TextInputStyle,
     PermissionFlagsBits, 
-    ChannelType 
+    ChannelType
 } = require('discord.js');
 const fs = require('fs');
 require('dotenv').config();
@@ -47,12 +47,12 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// دالة جلب رابط الصورة (تستخدم الملف المرفوع أولاً إن وجد)
-function getHeadUrl(username, skinUrl) {
+// دالة جلب رابط رأس اللاعب بدقة عالية من السكن أو عبر أداة mc-heads
+function getPlayerHeadUrl(skinUrl, username) {
     if (skinUrl && skinUrl.startsWith('http')) {
-        return skinUrl;
+        return skinUrl; // إذا رفع صورة سكن مخصصة
     }
-    return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/100`;
+    return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/128`;
 }
 
 const activeQueues = {
@@ -139,7 +139,7 @@ client.once('ready', async () => {
                 { name: 'North America (NA)', value: 'NA' },
                 { name: 'Asia (AS)', value: 'AS' }
             ))
-            .addAttachmentOption(opt => opt.setName('skin_file').setDescription('ملف صورة السكن PNG').setRequired(false)),
+            .addAttachmentOption(opt => opt.setName('skin_file').setDescription('ملف صورة السكن PNG (اختياري)').setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('unregister')
@@ -294,7 +294,7 @@ client.on('interactionCreate', async interaction => {
             }
 
             const ticketChannel = await interaction.guild.channels.create(channelOptions);
-            const headUrl = getHeadUrl(userData.username, userData.skinUrl);
+            const headUrl = getPlayerHeadUrl(userData.skinUrl, userData.username);
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor('#e6193c')
@@ -311,7 +311,7 @@ client.on('interactionCreate', async interaction => {
 
             const ticketButtons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('close_ticket').setLabel('إغلاق التذكرة 🔒').setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️️').setStyle(ButtonStyle.Danger)
+                new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️').setStyle(ButtonStyle.Danger)
             );
 
             await ticketChannel.send({ 
@@ -344,7 +344,6 @@ client.on('interactionCreate', async interaction => {
             const skinAttachment = interaction.options.getAttachment('skin_file');
 
             let skinUrl = skinAttachment ? skinAttachment.url : null;
-            const headUrl = getHeadUrl(username, skinUrl);
 
             const initialTiers = {};
             GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
@@ -353,12 +352,14 @@ client.on('interactionCreate', async interaction => {
                 username, 
                 edition, 
                 region, 
-                skinUrl: skinUrl || headUrl, 
+                skinUrl: skinUrl, 
                 points: 0, 
                 title: 'Rookie', 
                 tiers: initialTiers 
             };
             saveData();
+
+            const headUrl = getPlayerHeadUrl(skinUrl, username);
 
             const embed = new EmbedBuilder()
                 .setColor('#e6193c')
@@ -407,7 +408,7 @@ client.on('interactionCreate', async interaction => {
 
             if (resultsChannel) {
                 const rankEarnedText = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;
-                const headUrl = getHeadUrl(userData.username, userData.skinUrl);
+                const headUrl = getPlayerHeadUrl(userData.skinUrl, userData.username);
 
                 const resultEmbed = new EmbedBuilder()
                     .setColor('#e6193c')
@@ -443,7 +444,7 @@ client.on('interactionCreate', async interaction => {
                 if (rank !== 'Unranked') rankedCount++;
             }
 
-            const headUrl = getHeadUrl(userData.username, userData.skinUrl);
+            const headUrl = getPlayerHeadUrl(userData.skinUrl, userData.username);
 
             const profileEmbed = new EmbedBuilder()
                 .setColor('#e6193c')
@@ -451,7 +452,7 @@ client.on('interactionCreate', async interaction => {
                 .setThumbnail(headUrl)
                 .addFields(
                     { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: true },
-                    { name: 'عدد التصنيفات 🎖️️', value: `\`${rankedCount} Tiers\``, inline: true },
+                    { name: 'عدد التصنيفات 🎖️', value: `\`{rankedCount} Tiers\``, inline: true },
                     { name: 'اللقب ⭐', value: `\`${userData.title}\``, inline: true },
                     { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersList, inline: false }
                 )
