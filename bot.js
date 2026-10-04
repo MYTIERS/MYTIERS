@@ -28,7 +28,7 @@ const client = new Client({
 });
 
 // ======================== [ الإعدادات الرئيسية ] ========================
-const RESULTS_CHANNEL_ID = '1556151081505918996'; // ID روم النتائج المحدد
+const RESULTS_CHANNEL_ID = '1556151081505918996'; // ID روم النتائج
 const TESTER_ROLE_ID = '1534195774160638131';     // ID رتبة التستر
 const TICKETS_CATEGORY_ID = '';                   // ID كاتيجوري التذاكر (اختياري)
 const DB_FILE = './database.json';                // ملف حفظ البيانات والتصنيفات
@@ -47,12 +47,12 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// دالة تحويل رابط ملف السكن إلى صورة رأس فقط بدقة عالية
-function formatSkinToHead(url, username) {
-    if (!url || !url.startsWith('http')) {
-        return `https://mc-heads.net/head/${encodeURIComponent(username)}/100`;
+// دالة جلب رابط صورة الرأس الموثوقة 100%
+function getHeadUrl(username, skinAttachmentUrl) {
+    if (skinAttachmentUrl && skinAttachmentUrl.startsWith('http')) {
+        return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/100`;
     }
-    return `https://visage.surgeplay.com/head/128/${encodeURIComponent(url)}`;
+    return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/100`;
 }
 
 const activeQueues = {
@@ -294,12 +294,12 @@ client.on('interactionCreate', async interaction => {
             }
 
             const ticketChannel = await interaction.guild.channels.create(channelOptions);
-            const displayHead = formatSkinToHead(userData.skinUrl, userData.username);
+            const headUrl = getHeadUrl(userData.username, userData.skinUrl);
 
             const ticketEmbed = new EmbedBuilder()
-                .setColor('#2b2d31')
+                .setColor('#e6193c')
                 .setTitle(`⚔️ MYTIERS | تذكرة اختبار جديدة`)
-                .setThumbnail(displayHead)
+                .setThumbnail(headUrl)
                 .addFields(
                     { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },
                     { name: 'الكت المطلوب:', value: `\`${mode}\``, inline: true },
@@ -343,8 +343,8 @@ client.on('interactionCreate', async interaction => {
             const region = interaction.options.getString('region');
             const skinAttachment = interaction.options.getAttachment('skin_file');
 
-            let rawSkinUrl = skinAttachment ? skinAttachment.url : null;
-            const displayHead = formatSkinToHead(rawSkinUrl, username);
+            let skinUrl = skinAttachment ? skinAttachment.url : null;
+            const headUrl = getHeadUrl(username, skinUrl);
 
             const initialTiers = {};
             GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
@@ -353,7 +353,7 @@ client.on('interactionCreate', async interaction => {
                 username, 
                 edition, 
                 region, 
-                skinUrl: rawSkinUrl || displayHead, 
+                skinUrl: skinUrl || headUrl, 
                 points: 0, 
                 title: 'Rookie', 
                 tiers: initialTiers 
@@ -363,7 +363,7 @@ client.on('interactionCreate', async interaction => {
             const embed = new EmbedBuilder()
                 .setColor('#e6193c')
                 .setTitle('💎 MYTIERS - Registration Successful')
-                .setThumbnail(displayHead)
+                .setThumbnail(headUrl)
                 .addFields(
                     { name: 'Username:', value: `\`${username}\``, inline: false },
                     { name: 'Edition:', value: `\`${edition}\``, inline: false },
@@ -404,18 +404,15 @@ client.on('interactionCreate', async interaction => {
             await interaction.reply({ content: `✅ Successfully set **${tier}** rank for ${targetUser} in **${gamemode}** mode!`, ephemeral: true });
 
             let resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
-            if (!resultsChannel) {
-                resultsChannel = interaction.guild.channels.cache.find(c => c.id === RESULTS_CHANNEL_ID);
-            }
 
             if (resultsChannel) {
                 const rankEarnedText = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;
-                const displayHead = formatSkinToHead(userData.skinUrl, userData.username);
+                const headUrl = getHeadUrl(userData.username, userData.skinUrl);
 
                 const resultEmbed = new EmbedBuilder()
                     .setColor('#e6193c')
                     .setTitle(`${userData.username}'s Test Results 🏆`)
-                    .setThumbnail(displayHead)
+                    .setThumbnail(headUrl)
                     .addFields(
                         { name: 'Tester:', value: `${interaction.user}`, inline: false },
                         { name: 'Region:', value: `${userData.region}`, inline: false },
@@ -446,16 +443,16 @@ client.on('interactionCreate', async interaction => {
                 if (rank !== 'Unranked') rankedCount++;
             }
 
-            const displayHead = formatSkinToHead(userData.skinUrl, userData.username);
+            const headUrl = getHeadUrl(userData.username, userData.skinUrl);
 
             const profileEmbed = new EmbedBuilder()
                 .setColor('#e6193c')
                 .setTitle(`⚔️ MYTIERS Profile - ${userData.username}`)
-                .setThumbnail(displayHead)
+                .setThumbnail(headUrl)
                 .addFields(
                     { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: true },
                     { name: 'عدد التصنيفات 🎖️', value: `\`${rankedCount} Tiers\``, inline: true },
-                    { name: 'اللقب ⭐️', value: `\`${userData.title}\``, inline: true },
+                    { name: 'اللقب ⭐️️', value: `\`${userData.title}\``, inline: true },
                     { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersList, inline: false }
                 )
                 .setFooter({ text: 'MYTIERS Competitive System' })
