@@ -15,6 +15,7 @@ const {
     ChannelType
 } = require('discord.js');
 const fs = require('fs');
+const Jimp = require('jimp');
 require('dotenv').config();
 
 const client = new Client({
@@ -47,11 +48,24 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// دالة جلب رابط رأس اللاعب بدقة عالية عبر أداة mc-heads
-function getPlayerHeadUrl(skinUrl, username) {
-    if (skinUrl && skinUrl.startsWith('http')) {
-        return skinUrl; 
+// دالة قص رأس اللاعب برمجياً من ملف السكن المرفوع باستخدام Jimp أو الاعتماد على الرابط الافتراضي
+async function getPlayerHeadUrl(skinUrl, username) {
+    try {
+        if (skinUrl) {
+            // تحميل صورة السكن المرفوعة وقص الوجه (الإحداثيات القياسية لسكن ماينكرافت: x=8, y=8, w=8, h=8)
+            const image = await Jimp.read(skinUrl);
+            image.crop(8, 8, 8, 8);
+            image.scale(16, Jimp.RESIZE_NEAREST_NEIGHBOR); // تكبير الصورة بوضوح للحفاظ على مظهر الـ Pixel Art
+            
+            // تحويل الصورة المقتصة إلى Base64 Data URL لتظهر مباشرة في ديسكورد
+            const buffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            return `data:image/png;base64,${buffer.toString('base64')}`;
+        }
+    } catch (err) {
+        console.error('Error processing skin with Jimp, falling back to mc-heads:', err);
     }
+    
+    // الحل البديل في حال لم يرفع سكن أو حدث خطأ
     return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/128`;
 }
 
@@ -101,7 +115,7 @@ async function buildQueueEmbed(guild, gamemode) {
 
         const onlineEmbed = new EmbedBuilder()
             .setColor('#33ff33')
-            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️`)
+            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️️`)
             .setDescription(`**🟢 أونلاين**\n\n${queueText}\n**المنتظرون:** ${queueList.length}/20`)
             .setFooter({ text: 'MYTIERS Queue' });
 
@@ -147,7 +161,7 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('setrank')
-            .setDescription('تعيين تصنيف الكت للالاعب (للتسترات فقط)')
+            .setDescription('تعيين تصنيف الكت للاعب (للتسترات فقط)')
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .addUserOption(opt => opt.setName('player').setDescription('اللاعب').setRequired(true))
             .addStringOption(opt => opt.setName('gamemode').setDescription('الكت / الطور').setRequired(true).addChoices(
@@ -294,12 +308,12 @@ client.on('interactionCreate', async interaction => {
             }
 
             const ticketChannel = await interaction.guild.channels.create(channelOptions);
-            const headUrl = getPlayerHeadUrl(userData.skinUrl, userData.username);
+            const headUrl = await getPlayerHeadUrl(userData.skinUrl, userData.username);
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor('#e6193c')
                 .setTitle(`⚔️ MYTIERS | تذكرة اختبار جديدة`)
-                .setThumbnail(headUrl)
+                .setThumbnail(headUrl.startsWith('data:') ? 'attachment://head.png' : headUrl)
                 .addFields(
                     { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },
                     { name: 'الكت المطلوب:', value: `\`${mode}\``, inline: true },
@@ -309,16 +323,24 @@ client.on('interactionCreate', async interaction => {
                 .setFooter({ text: 'MYTIERS Ticket System' })
                 .setTimestamp();
 
-            const ticketButtons = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('close_ticket').setLabel('إغلاق التذكرة 🔒').setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️').setStyle(ButtonStyle.Danger)
-            );
-
-            await ticketChannel.send({ 
+            const ticketPayload = { 
                 content: `👋 مرحباً ${interaction.user}! تم فتح التذكرة للاختبار. ينضم <@&${TESTER_ROLE_ID}> قريباً.`, 
                 embeds: [ticketEmbed],
-                components: [ticketButtons]
-            });
+                components: [
+                    new ActionRowBuilder().addComponents(
+                        new ButtonBuilder().setCustomId('close_ticket').setLabel('إغلاق التذكرة 🔒').setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️').setStyle(ButtonStyle.Danger)
+                    )
+                ]
+            };
+
+            if (headUrl.startsWith('data:')) {
+                const base64Data = headUrl.replace(/^data:image\/png;base64,/, "");
+                const buffer = Buffer.from(base64Data, 'base64');
+                ticketPayload.files = [{ attachment: buffer, name: 'head.png' }];
+            }
+
+            await ticketChannel.send(ticketPayload);
 
             return await interaction.reply({ 
                 content: `✅ تم دخول القائمة بنجاح وفتح تذكرة لك في الروم: ${ticketChannel}`, 
@@ -331,13 +353,9 @@ client.on('interactionCreate', async interaction => {
         const { commandName } = interaction;
 
         if (commandName === 'register') {
-            await interaction.deferReply();
+            await interaction.deferReply({ ephemeral: true });
 
             const userId = interaction.user.id;
-            if (registeredUsers[userId]) {
-                return await interaction.editReply({ content: '❌ أنت مسجل بالفعل! استخدم `/unregister` أولاً إذا أردت تعديل بياناتك.' });
-            }
-
             const username = interaction.options.getString('username');
             const edition = interaction.options.getString('edition');
             const region = interaction.options.getString('region');
@@ -345,26 +363,28 @@ client.on('interactionCreate', async interaction => {
 
             let skinUrl = skinAttachment ? skinAttachment.url : null;
 
-            const initialTiers = {};
-            GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
+            if (!registeredUsers[userId]) {
+                const initialTiers = {};
+                GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
+                registeredUsers[userId] = { 
+                    points: 0, 
+                    title: 'Rookie', 
+                    tiers: initialTiers 
+                };
+            }
 
-            registeredUsers[userId] = { 
-                username, 
-                edition, 
-                region, 
-                skinUrl: skinUrl, 
-                points: 0, 
-                title: 'Rookie', 
-                tiers: initialTiers 
-            };
+            registeredUsers[userId].username = username;
+            registeredUsers[userId].edition = edition;
+            registeredUsers[userId].region = region;
+            registeredUsers[userId].skinUrl = skinUrl;
             saveData();
 
-            const headUrl = getPlayerHeadUrl(skinUrl, username);
+            const headUrl = await getPlayerHeadUrl(skinUrl, username);
 
             const embed = new EmbedBuilder()
                 .setColor('#e6193c')
                 .setTitle('💎 MYTIERS - Registration Successful')
-                .setThumbnail(headUrl)
+                .setThumbnail(headUrl.startsWith('data:') ? 'attachment://head.png' : headUrl)
                 .addFields(
                     { name: 'Username:', value: `\`${username}\``, inline: false },
                     { name: 'Edition:', value: `\`${edition}\``, inline: false },
@@ -373,7 +393,14 @@ client.on('interactionCreate', async interaction => {
                 .setFooter({ text: 'MYTIERS Official Network' })
                 .setTimestamp();
 
-            await interaction.editReply({ embeds: [embed] });
+            const payload = { embeds: [embed] };
+            if (headUrl.startsWith('data:')) {
+                const base64Data = headUrl.replace(/^data:image\/png;base64,/, "");
+                const buffer = Buffer.from(base64Data, 'base64');
+                payload.files = [{ attachment: buffer, name: 'head.png' }];
+            }
+
+            await interaction.editReply(payload);
         } 
 
         else if (commandName === 'unregister') {
@@ -408,12 +435,12 @@ client.on('interactionCreate', async interaction => {
 
             if (resultsChannel) {
                 const rankEarnedText = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;
-                const headUrl = getPlayerHeadUrl(userData.skinUrl, userData.username);
+                const headUrl = await getPlayerHeadUrl(userData.skinUrl, userData.username);
 
                 const resultEmbed = new EmbedBuilder()
                     .setColor('#e6193c')
                     .setTitle(`${userData.username}'s Test Results 🏆`)
-                    .setThumbnail(headUrl)
+                    .setThumbnail(headUrl.startsWith('data:') ? 'attachment://head.png' : headUrl)
                     .addFields(
                         { name: 'Tester:', value: `${interaction.user}`, inline: false },
                         { name: 'Region:', value: `${userData.region}`, inline: false },
@@ -424,7 +451,14 @@ client.on('interactionCreate', async interaction => {
                     .setFooter({ text: 'MYTIERS Official Results' })
                     .setTimestamp();
 
-                await resultsChannel.send({ content: `${targetUser}`, embeds: [resultEmbed] });
+                const resultPayload = { content: `${targetUser}`, embeds: [resultEmbed] };
+                if (headUrl.startsWith('data:')) {
+                    const base64Data = headUrl.replace(/^data:image\/png;base64,/, "");
+                    const buffer = Buffer.from(base64Data, 'base64');
+                    resultPayload.files = [{ attachment: buffer, name: 'head.png' }];
+                }
+
+                await resultsChannel.send(resultPayload);
             }
         }
 
@@ -444,12 +478,12 @@ client.on('interactionCreate', async interaction => {
                 if (rank !== 'Unranked') rankedCount++;
             }
 
-            const headUrl = getPlayerHeadUrl(userData.skinUrl, userData.username);
+            const headUrl = await getPlayerHeadUrl(userData.skinUrl, userData.username);
 
             const profileEmbed = new EmbedBuilder()
                 .setColor('#e6193c')
                 .setTitle(`⚔️ MYTIERS Profile - ${userData.username}`)
-                .setThumbnail(headUrl)
+                .setThumbnail(headUrl.startsWith('data:') ? 'attachment://head.png' : headUrl)
                 .addFields(
                     { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: true },
                     { name: 'عدد التصنيفات 🎖️', value: `\`${rankedCount} Tiers\``, inline: true },
@@ -459,7 +493,14 @@ client.on('interactionCreate', async interaction => {
                 .setFooter({ text: 'MYTIERS Competitive System' })
                 .setTimestamp();
 
-            await interaction.reply({ embeds: [profileEmbed] });
+            const profilePayload = { embeds: [profileEmbed] };
+            if (headUrl.startsWith('data:')) {
+                const base64Data = headUrl.replace(/^data:image\/png;base64,/, "");
+                const buffer = Buffer.from(base64Data, 'base64');
+                profilePayload.files = [{ attachment: buffer, name: 'head.png' }];
+            }
+
+            await interaction.reply(profilePayload);
         }
     }
 });
