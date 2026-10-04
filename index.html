@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY TIERS - MCTiers</title>
+    <title>MY TIERS - MCTiers Replica</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-main: #0a0d14;
             --card-bg: #111622;
-            --sub-card: #161f2e;
             --border-color: #1a2332;
             --gold: #f59e0b;
             --ht-orange: #f97316;
@@ -36,7 +35,7 @@
             margin: 0 auto;
         }
 
-        /* Top Header Navigation */
+        /* Top Header Navigation Bar */
         .top-navbar {
             display: flex;
             align-items: center;
@@ -87,7 +86,7 @@
             cursor: pointer;
         }
 
-        /* Unified Single Nav Tabs Scrollable */
+        /* Scrollable Navigation Ribbon */
         .single-nav-wrapper {
             overflow-x: auto;
             white-space: nowrap;
@@ -118,10 +117,10 @@
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            gap: 3px;
+            gap: 4px;
         }
 
-        .nav-item i { font-size: 14px; }
+        .nav-item svg { width: 16px; height: 16px; fill: currentColor; }
 
         .nav-item.active {
             background: #1a2333;
@@ -129,7 +128,7 @@
             border-bottom: 2px solid var(--gold);
         }
 
-        .nav-item.active i { color: var(--gold); }
+        .nav-item.active svg { fill: var(--gold); }
 
         /* Server Header Bar */
         .server-bar {
@@ -248,12 +247,8 @@
             margin-top: 2px;
         }
 
-        .rank-icon {
-            color: var(--gold);
-            font-size: 10px;
-        }
+        .rank-icon { color: var(--gold); font-size: 10px; }
 
-        /* Status Badge */
         .status-badge {
             background: rgba(239, 68, 68, 0.15);
             color: #ef4444;
@@ -278,7 +273,7 @@
             padding-bottom: 4px;
         }
 
-        /* MCTiers Round Top Capsule Box */
+        /* Capsule Box */
         .tier-capsule {
             background: #141b27;
             border: 1px solid #1e2838;
@@ -297,12 +292,13 @@
         .tier-capsule .icon-area {
             position: absolute;
             top: 4px;
-            font-size: 12px;
             height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
+        .tier-capsule .icon-area svg { width: 14px; height: 14px; }
 
         .tier-capsule .tier-type {
             font-size: 9px;
@@ -316,16 +312,8 @@
             line-height: 1.1;
         }
 
-        /* Colors */
-        .tier-capsule.ht .tier-type,
-        .tier-capsule.ht .tier-num {
-            color: var(--ht-orange);
-        }
-
-        .tier-capsule.lt .tier-type,
-        .tier-capsule.lt .tier-num {
-            color: var(--lt-blue);
-        }
+        .tier-capsule.ht .tier-type, .tier-capsule.ht .tier-num { color: var(--ht-orange); }
+        .tier-capsule.lt .tier-type, .tier-capsule.lt .tier-num { color: var(--lt-blue); }
     </style>
 </head>
 <body>
@@ -346,7 +334,7 @@
             <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
         </div>
 
-        <!-- Single Navigation Ribbon (All Gamemodes) -->
+        <!-- Scrollable Gamemode Navigation Ribbon with Custom SVGs -->
         <div class="single-nav-wrapper">
             <div class="nav-tabs">
                 <div class="nav-item active">
@@ -354,40 +342,49 @@
                     <span>Overall</span>
                 </div>
                 <div class="nav-item">
-                    <i class="fa-solid fa-swords"></i>
-                    <span>LTMs</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fa-solid fa-gem"></i>
+                    <!-- Vanilla SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#b48ead" d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z"/></svg>
                     <span>Vanilla</span>
                 </div>
                 <div class="nav-item">
-                    <i class="fa-solid fa-heart"></i>
-                    <span>Overall Tierlist</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fa-solid fa-flask" style="color:#ec4899;"></i>
-                    <span>Pot</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fa-solid fa-shield-halved" style="color:#a855f7;"></i>
-                    <span>NethOP</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i>
-                    <span>SMP</span>
-                </div>
-                <div class="nav-item">
-                    <i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i>
+                    <!-- Sword SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#60a5fa" d="M70 20 L80 30 L45 65 L35 65 L35 55 Z M30 70 L20 80 L15 75 L25 65 Z"/></svg>
                     <span>Sword</span>
                 </div>
                 <div class="nav-item">
-                    <i class="fa-solid fa-axe" style="color:#38bdf8;"></i>
+                    <!-- UHC / Heart SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#ef4444" d="M50 80 C20 60 10 40 25 25 C35 15 45 20 50 30 C55 20 65 15 75 25 C90 40 80 60 50 80 Z"/></svg>
+                    <span>UHC</span>
+                </div>
+                <div class="nav-item">
+                    <!-- Mace SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#818cf8" d="M60 20 L80 40 L40 80 L20 60 Z"/></svg>
+                    <span>Mace</span>
+                </div>
+                <div class="nav-item">
+                    <!-- SpearMace SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#a78bfa" d="M70 10 L90 30 L30 90 L10 70 Z"/></svg>
+                    <span>SpearMace</span>
+                </div>
+                <div class="nav-item">
+                    <!-- NethOP Helmet SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#a855f7" d="M20 40 C20 20 80 20 80 40 L80 70 C80 80 20 80 20 70 Z"/></svg>
+                    <span>NethOP</span>
+                </div>
+                <div class="nav-item">
+                    <!-- Axe SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#38bdf8" d="M60 20 L80 20 L70 50 L50 40 Z M30 80 L60 30 L50 20 L20 70 Z"/></svg>
                     <span>Axe</span>
                 </div>
                 <div class="nav-item">
-                    <i class="fa-solid fa-gavel" style="color:#94a3b8;"></i>
-                    <span>Mace</span>
+                    <!-- SMP Ender Pearl SVG -->
+                    <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#0d9488"/></svg>
+                    <span>SMP</span>
+                </div>
+                <div class="nav-item">
+                    <!-- Pot Flask SVG -->
+                    <svg viewBox="0 0 100 100"><path fill="#ec4899" d="M40 20 L60 20 L60 35 L75 65 C80 75 70 85 50 85 C30 85 20 75 25 65 L40 35 Z"/></svg>
+                    <span>Pot</span>
                 </div>
             </div>
         </div>
@@ -424,9 +421,12 @@
 
             <div class="tiers-header">Tiers</div>
 
+            <!-- Tiers Row with Matched SVGs -->
             <div class="tiers-row">
                 <div class="tier-capsule ht">
-                    <div class="icon-area"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></div>
+                    <div class="icon-area">
+                        <svg viewBox="0 0 100 100"><path fill="#60a5fa" d="M70 20 L80 30 L45 65 L35 65 L35 55 Z M30 70 L20 80 L15 75 L25 65 Z"/></svg>
+                    </div>
                     <span class="tier-type">HT</span>
                     <span class="tier-num">1</span>
                 </div>
@@ -436,12 +436,16 @@
                     <span class="tier-num">1</span>
                 </div>
                 <div class="tier-capsule ht">
-                    <div class="icon-area"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></div>
+                    <div class="icon-area">
+                        <svg viewBox="0 0 100 100"><path fill="#b48ead" d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z"/></svg>
+                    </div>
                     <span class="tier-type">HT</span>
                     <span class="tier-num">1</span>
                 </div>
                 <div class="tier-capsule ht">
-                    <div class="icon-area"><i class="fa-solid fa-flask" style="color:#ec4899;"></i></div>
+                    <div class="icon-area">
+                        <svg viewBox="0 0 100 100"><path fill="#ec4899" d="M40 20 L60 20 L60 35 L75 65 C80 75 70 85 50 85 C30 85 20 75 25 65 L40 35 Z"/></svg>
+                    </div>
                     <span class="tier-type">HT</span>
                     <span class="tier-num">1</span>
                 </div>
@@ -456,12 +460,16 @@
                     <span class="tier-num">1</span>
                 </div>
                 <div class="tier-capsule lt">
-                    <div class="icon-area"><i class="fa-solid fa-heart" style="color:#ef4444;"></i></div>
+                    <div class="icon-area">
+                        <svg viewBox="0 0 100 100"><path fill="#ef4444" d="M50 80 C20 60 10 40 25 25 C35 15 45 20 50 30 C55 20 65 15 75 25 C90 40 80 60 50 80 Z"/></svg>
+                    </div>
                     <span class="tier-type">LT</span>
                     <span class="tier-num">1</span>
                 </div>
                 <div class="tier-capsule lt">
-                    <div class="icon-area"><i class="fa-solid fa-axe" style="color:#38bdf8;"></i></div>
+                    <div class="icon-area">
+                        <svg viewBox="0 0 100 100"><path fill="#38bdf8" d="M60 20 L80 20 L70 50 L50 40 Z M30 80 L60 30 L50 20 L20 70 Z"/></svg>
+                    </div>
                     <span class="tier-type">LT</span>
                     <span class="tier-num">1</span>
                 </div>
