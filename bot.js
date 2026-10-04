@@ -38,10 +38,10 @@ client.once('ready', async () => {
                         { name: 'North America (NA)', value: 'NA' },
                         { name: 'Asia (AS)', value: 'AS' }
                     ))
-            .addAttachmentOption(option =>
-                option.setName('skin')
-                    .setDescription('ارفع ملف السكن PNG (اختياري، لتجنب مشاكل الجوال)')
-                    .setRequired(false)), // جعلناه اختيارياً لحل مشكلة الجوال
+            .addStringOption(option =>
+                option.setName('skin_url')
+                    .setDescription('رابط صورة السكن (انسخ رابط الصورة من أي شات واضعه هنا)')
+                    .setRequired(false)), // خيار نصي لتجنب مشاكل تطبيق الجوال
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -114,13 +114,13 @@ client.on('interactionCreate', async interaction => {
         const username = interaction.options.getString('username');
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
-        const skinAttachment = interaction.options.getAttachment('skin');
+        const skinUrl = interaction.options.getString('skin_url');
 
         // حفظ بيانات اللاعب مرتبطة بأيدي حساب الديسكورد
         registeredUsers.set(interaction.user.id, { username, edition, region });
 
-        // إذا قام برفع ملف نستخدمه، وإلا نجلب رأس الشخصية أوتوماتيكياً بالاسم لتجنب خطأ الجوال
-        const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/helm/${username}/150.png`;
+        // إذا وضع رابط سكن نستخدمه، وإلا نجلب رأس الشخصية أوتوماتيكياً بالاسم
+        const skinAvatar = skinUrl ? skinUrl : `https://minotar.net/helm/${username}/150.png`;
 
         const embed = new EmbedBuilder()
             .setColor('#e74c3c')
@@ -174,7 +174,7 @@ client.on('interactionCreate', async interaction => {
         const userData = registeredUsers.get(targetUser.id);
         registeredUsers.delete(targetUser.id);
 
-        await interaction.reply({ content: `🗑️️ تم بنجاح حذف وإلغاء ربط حساب ماين كرافت (\`${userData.username}\`) المرتبط بحساب الديسكورد ${targetUser}. يمكنك الآن التسجيل من جديد!`, ephemeral: true });
+        await interaction.reply({ content: `🗑 تم بنجاح حذف وإلغاء ربط حساب ماين كرافت (\`${userData.username}\`) المرتبط بحساب الديسكورد ${targetUser}. يمكنك الآن التسجيل من جديد!`, ephemeral: true });
     }
 });
 
