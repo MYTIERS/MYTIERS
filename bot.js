@@ -22,19 +22,19 @@ const client = new Client({
         GatewayIntentBits.Guilds, 
         GatewayIntentBits.GuildMessages, 
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildPresences, // هام لمعرفة حالة أونلاين/أوفلاين
-        GatewayIntentBits.GuildMembers
+        GatewayIntentBits.GuildPresences, // ضروري لمعرفة حالة الأونلاين/الأوفلاين
+        GatewayIntentBits.GuildMembers   // ضروري لقراءة رتب الأعضاء
     ]
 });
 
-// ======================== [ الإعدادات المتغيرة ] ========================
+// ======================== [ الإعدادات الرئيسية ] ========================
 const RESULTS_CHANNEL_ID = '1554252285842817174'; // ID روم النتائج 📋╎tier・results
-const TESTER_ROLE_ID = 'ضع_هنا_ID_رتبة_التستر';       // ID رتبة التستر (Testers Role)
-const TICKETS_CATEGORY_ID = 'ضع_هنا_ID_كاتيجوري_التذاكر'; // ID الكاتيجوري التي تفتح فيها التذاكر
+const TESTER_ROLE_ID = '1534195774160638131';     // ID رتبة MY | Tester
+const TICKETS_CATEGORY_ID = '';                   // ضع ID الكاتيجوري هنا (اختياري)
 const DB_FILE = './database.json';
 // ======================================================================
 
-// تحميل حفظ البيانات
+// تحميل وتخزين بيانات التسجيل بملف JSON لعدم ضياعها
 let registeredUsers = {};
 if (fs.existsSync(DB_FILE)) {
     try {
@@ -48,7 +48,7 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// قائمة انتظار مؤقتة بالأطوار
+// قائمة انتظار مؤقتة لكل كت
 const activeQueues = {
     Sword: [],
     Pot: [],
@@ -63,17 +63,22 @@ const activeQueues = {
 
 const GAMEMODES = ['Vanilla', 'UHC', 'Pot', 'NethOP', 'SMP', 'Sword', 'Axe', 'Mace', 'SpearMace'];
 
-// دالة للتحقق من وجود تستر متصل (Online)
+// فحص وجود تستر بحالة أونلاين يحمل رتبة MY | Tester
 async function isTesterOnline(guild) {
     try {
         const members = await guild.members.fetch();
-        return members.some(m => m.roles.cache.has(TESTER_ROLE_ID) && m.presence && m.presence.status !== 'offline');
+        return members.some(member => 
+            member.roles.cache.has(TESTER_ROLE_ID) && 
+            member.presence && 
+            member.presence.status !== 'offline'
+        );
     } catch (err) {
+        console.error("Error fetching presences:", err);
         return false;
     }
 }
 
-// بناء إمبد قائمة الانتظار للكت المحدد
+// بناء إمبد قائمة الانتظار بناءً على حالة التستر
 async function buildQueueEmbed(guild, gamemode) {
     const online = await isTesterOnline(guild);
     const queueList = activeQueues[gamemode] || [];
@@ -81,8 +86,14 @@ async function buildQueueEmbed(guild, gamemode) {
     if (!online) {
         const offlineEmbed = new EmbedBuilder()
             .setColor('#ff3333')
-            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️`)             .setDescription(`**🔴 أوفلاين**\n\nالقائمة مغلقة حالياً، لا يوجد تستر متاح لهذا الكت.`)             .setFooter({ text: 'MYTIERS Queue' });          const row = new ActionRowBuilder().addComponents(             new ButtonBuilder().setCustomId(`join_q_${gamemode}`).setLabel('دخول القائمة').setStyle(ButtonStyle.Success).setDisabled(true),
-            new ButtonBuilder().setCustomId(`leave_q_${gamemode}`).setLabel('خروج').setStyle(ButtonStyle.Danger).setDisabled(true),             new ButtonBuilder().setCustomId(`refresh_q_${gamemode}`).setLabel('تحديث').setStyle(ButtonStyle.Secondary)
+            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️`)
+            .setDescription(`**🔴 أوفلاين**\n\nالقائمة مغلقة حالياً، لا يوجد تستر متاح لهذا الكت.`)
+            .setFooter({ text: 'MYTIERS Queue' });
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`join_q_${gamemode}`).setLabel('دخول القائمة').setStyle(ButtonStyle.Success).setDisabled(true),
+            new ButtonBuilder().setCustomId(`leave_q_${gamemode}`).setLabel('خروج').setStyle(ButtonStyle.Danger).setDisabled(true),
+            new ButtonBuilder().setCustomId(`refresh_q_${gamemode}`).setLabel('تحديث').setStyle(ButtonStyle.Secondary)
         );
 
         return { embeds: [offlineEmbed], components: [row] };
@@ -95,8 +106,14 @@ async function buildQueueEmbed(guild, gamemode) {
 
         const onlineEmbed = new EmbedBuilder()
             .setColor('#33ff33')
-            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️`)             .setDescription(`**🟢 أونلاين**\n\n${queueText}\n**المنتظرون:** ${queueList.length}/20`)             .setFooter({ text: 'MYTIERS Queue' });          const row = new ActionRowBuilder().addComponents(             new ButtonBuilder().setCustomId(`join_q_${gamemode}`).setLabel('دخول القائمة').setStyle(ButtonStyle.Success),
-            new ButtonBuilder().setCustomId(`leave_q_${gamemode}`).setLabel('خروج').setStyle(ButtonStyle.Danger),             new ButtonBuilder().setCustomId(`refresh_q_${gamemode}`).setLabel('تحديث').setStyle(ButtonStyle.Secondary)
+            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️️`)
+            .setDescription(`**🟢 أونلاين**\n\n${queueText}\n**المنتظرون:** ${queueList.length}/20`)
+            .setFooter({ text: 'MYTIERS Queue' });
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`join_q_${gamemode}`).setLabel('دخول القائمة').setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId(`leave_q_${gamemode}`).setLabel('خروج').setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId(`refresh_q_${gamemode}`).setLabel('تحديث').setStyle(ButtonStyle.Secondary)
         );
 
         return { embeds: [onlineEmbed], components: [row] };
@@ -172,7 +189,7 @@ client.once('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    // 1. أمر إرسال أزرار الكيتات الرئيسية
+    // أمر إنشاء لوحة الأزرار والقوائم
     if (interaction.isChatInputCommand() && interaction.commandName === 'setup-queue') {
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
@@ -198,27 +215,25 @@ client.on('interactionCreate', async interaction => {
         return await interaction.reply({ content: '✅ تم إرسال لوحة قوائم الانتظار بنجاح!', ephemeral: true });
     }
 
-    // 2. التفاعل مع أزرار قوائم الانتظار
+    // التفاعلات مع الأزرار
     if (interaction.isButton()) {
         const customId = interaction.customId;
 
-        // عند النقر على أحد أزرار الكيتات (Sword, SMP, إلخ)
         if (customId.startsWith('select_mode_')) {
             const mode = customId.replace('select_mode_', '');
             const queueData = await buildQueueEmbed(interaction.guild, mode);
             return await interaction.reply({ ...queueData, ephemeral: true });
         }
 
-        // عند النقر على أزرار الدخول/الخروج/التحديث
         if (customId.startsWith('join_q_')) {
             const mode = customId.replace('join_q_', '');
             if (!registeredUsers[interaction.user.id]) {
                 return await interaction.reply({ content: '❌ يجب أن تكون مسجلاً أولاً باستخدام الأمر `/register`!', ephemeral: true });
             }
 
-            // إظهار النافذة للطلب وبدء فتح التذكرة بأخذ آيبي السيرفر
             const modal = new ModalBuilder()
-                .setCustomId(`modal_ip_${mode}`)                 .setTitle(`اختبار كت ${mode} - MYTIERS`);
+                .setCustomId(`modal_ip_${mode}`)
+                .setTitle(`اختبار كت ${mode} - MYTIERS`);
 
             const ipInput = new TextInputBuilder()
                 .setCustomId('server_ip')
@@ -245,42 +260,59 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    // 3. معالجة نموذج إدخال IP وإنشاء التذكرة
+    // استقبال نموذج الآيبي وإنشاء روم التذكرة
     if (interaction.isModalSubmit()) {
         if (interaction.customId.startsWith('modal_ip_')) {
             const mode = interaction.customId.replace('modal_ip_', '');
             const serverIp = interaction.fields.getTextInputValue('server_ip');
             const userData = registeredUsers[interaction.user.id];
 
-            // إضافة للقائمة
             if (!activeQueues[mode].some(u => u.id === interaction.user.id)) {
                 activeQueues[mode].push(interaction.user);
             }
 
-            // إنشاء تذكرة تلقائية في الكاتيجوري
-            const ticketChannel = await interaction.guild.channels.create({
+            const channelOptions = {
                 name: `test-${mode}-${userData.username}`,
                 type: ChannelType.GuildText,
-                parent: TICKETS_CATEGORY_ID || null,
                 permissionOverwrites: [
                     { id: interaction.guild.id, deny: [PermissionFlagsBits.ViewChannel] },
                     { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] },
                     { id: TESTER_ROLE_ID, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages] }
                 ]
-            });
+            };
+
+            if (TICKETS_CATEGORY_ID && TICKETS_CATEGORY_ID.trim() !== '') {
+                channelOptions.parent = TICKETS_CATEGORY_ID;
+            }
+
+            const ticketChannel = await interaction.guild.channels.create(channelOptions);
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor('#2b2d31')
                 .setTitle(`⚔️ تذكرة اختبار جديدة | MYTIERS`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
-                    { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },                     { name: 'الكت المطلوب:', value: `\`${mode}\``, inline: true },                     { name: 'آيبي السيرفر (Server IP):', value: `\`${serverIp}\``, inline: false },                     { name: 'المنطقة:', value: `\`${userData.region}\``, inline: true }                 )                 .setFooter({ text: 'MYTIERS Ticket System' })                 .setTimestamp();              await ticketChannel.send({                  content: `👋 مرحباً ${interaction.user}! تم فتح التذكرة للاختبار. ينضم <@&${TESTER_ROLE_ID}> قريباً.`,                  embeds: [ticketEmbed]              });              return await interaction.reply({                  content: `✅ تم دخول القائمة بنجاح وفتح تذكرة لك في الروم: ${ticketChannel}`, 
+                    { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },
+                    { name: 'الكت المطلوب:', value: `\`${mode}\``, inline: true },
+                    { name: 'آيبي السيرفر (Server IP):', value: `\`${serverIp}\``, inline: false },
+                    { name: 'المنطقة:', value: `\`${userData.region}\``, inline: true }
+                )
+                .setFooter({ text: 'MYTIERS Ticket System' })
+                .setTimestamp();
+
+            await ticketChannel.send({ 
+                content: `👋 مرحباً ${interaction.user}! تم فتح التذكرة للاختبار. ينضم <@&${TESTER_ROLE_ID}> قريباً.`, 
+                embeds: [ticketEmbed] 
+            });
+
+            return await interaction.reply({ 
+                content: `✅ تم دخول القائمة بنجاح وفتح تذكرة لك في الروم: ${ticketChannel}`, 
                 ephemeral: true 
             });
         }
     }
 
-    // 4. الأوامر الأخرى (Register / Setrank / Profile)
+    // تنفيذ الأوامر
     if (interaction.isChatInputCommand()) {
         const { commandName } = interaction;
 
@@ -297,7 +329,37 @@ client.on('interactionCreate', async interaction => {
 
             let skinUrl = skinAttachment 
                 ? skinAttachment.url 
-                : `https://visage.surgeplay.com/face/160/${encodeURIComponent(username)}`;              const initialTiers = {};             GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');              registeredUsers[userId] = { username, edition, region, skinUrl, points: 0, title: 'Rookie', tiers: initialTiers };             saveData();              const embed = new EmbedBuilder()                 .setColor('#2b2d31')                 .setTitle('💎 MYTIERS - Registration Successful')                 .setThumbnail(skinUrl)                 .addFields(                     { name: 'Username:', value: `\`${username}\``, inline: false },                     { name: 'Edition:', value: `\`${edition}\``, inline: false },                     { name: 'Region:', value: `\`${region}\``, inline: false }                 )                 .setFooter({ text: 'MYTIERS Official Network' })                 .setTimestamp();              await interaction.reply({ embeds: [embed] });         }           else if (commandName === 'setrank') {             const targetUser = interaction.options.getUser('player');             const gamemode = interaction.options.getString('gamemode');             const tier = interaction.options.getString('tier');              const userData = registeredUsers[targetUser.id];             if (!userData) {                 return await interaction.reply({ content: `❌ هذا اللاعب (${targetUser}) غير مسجل!`, ephemeral: true });
+                : `https://visage.surgeplay.com/face/160/${encodeURIComponent(username)}`;
+
+            const initialTiers = {};
+            GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
+
+            registeredUsers[userId] = { username, edition, region, skinUrl, points: 0, title: 'Rookie', tiers: initialTiers };
+            saveData();
+
+            const embed = new EmbedBuilder()
+                .setColor('#2b2d31')
+                .setTitle('💎 MYTIERS - Registration Successful')
+                .setThumbnail(skinUrl)
+                .addFields(
+                    { name: 'Username:', value: `\`${username}\``, inline: false },
+                    { name: 'Edition:', value: `\`${edition}\``, inline: false },
+                    { name: 'Region:', value: `\`${region}\``, inline: false }
+                )
+                .setFooter({ text: 'MYTIERS Official Network' })
+                .setTimestamp();
+
+            await interaction.reply({ embeds: [embed] });
+        } 
+
+        else if (commandName === 'setrank') {
+            const targetUser = interaction.options.getUser('player');
+            const gamemode = interaction.options.getString('gamemode');
+            const tier = interaction.options.getString('tier');
+
+            const userData = registeredUsers[targetUser.id];
+            if (!userData) {
+                return await interaction.reply({ content: `❌ هذا اللاعب (${targetUser}) غير مسجل!`, ephemeral: true });
             }
 
             const previousRank = userData.tiers[gamemode] || 'Unranked';
@@ -308,11 +370,17 @@ client.on('interactionCreate', async interaction => {
 
             const resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
             if (resultsChannel) {
-                const rankEarnedText = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;                  const resultEmbed = new EmbedBuilder()                     .setColor('#2b2d31')                     .setTitle(`${userData.username}'s Test Results 🏆`)
+                const rankEarnedText = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;
+
+                const resultEmbed = new EmbedBuilder()
+                    .setColor('#2b2d31')
+                    .setTitle(`${userData.username}'s Test Results 🏆`)
                     .setThumbnail(userData.skinUrl)
                     .addFields(
-                        { name: 'Tester:', value: `${interaction.user}`, inline: false },                         { name: 'Region:', value: `${userData.region}`, inline: false },
-                        { name: 'Username:', value: `${userData.username}`, inline: false },                         { name: 'Previous Rank:', value: `${previousRank}`, inline: false },
+                        { name: 'Tester:', value: `${interaction.user}`, inline: false },
+                        { name: 'Region:', value: `${userData.region}`, inline: false },
+                        { name: 'Username:', value: `${userData.username}`, inline: false },
+                        { name: 'Previous Rank:', value: `${previousRank}`, inline: false },
                         { name: 'Rank Earned:', value: `**${rankEarnedText}**`, inline: false }
                     )
                     .setFooter({ text: 'MYTIERS Official Results' })
