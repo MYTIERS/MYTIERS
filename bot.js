@@ -5,8 +5,8 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// قائمة لحفظ المستخدمين المسجلين لمنع التكرار
-const registeredUsers = new Set();
+// استخدام Map لحفظ بيانات المستخدمين المسجلين (ربط أيدي الديسكورد باسم ماين كرافت)
+const registeredUsers = new Map();
 
 client.once('ready', async () => {
     console.log(`تم تسجيل الدخول باسم ${client.user.tag}!`);
@@ -77,7 +77,11 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('unregister')
-            .setDescription('حذف حسابك المسجل لإعادة التسجيل من جديد عند حدوث خطأ')
+            .setDescription('حذف حسابك المسجل عبر كتابة اسمك لإعادة التسجيل')
+            .addStringOption(option =>
+                option.setName('username')
+                    .setDescription('اكتب اسم ماين كرافت الخاص بك لتأكيد الحذف')
+                    .setRequired(true))
     ];
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
@@ -100,10 +104,9 @@ client.on('interactionCreate', async interaction => {
     const { commandName } = interaction;
 
     if (commandName === 'register') {
-        // التحقق مما إذا كان المستخدم قد تسجل مسبقاً
         if (registeredUsers.has(interaction.user.id)) {
             return await interaction.reply({
-                content: '❌ لقد قمت بالتسجيل مسبقاً! إذا حدث خطأ أو أردت تغيير بياناتك، يرجى حذف تسجيلك أولاً باستخدام أمر `/unregister` ثم التسجيل من جديد.',
+                content: '❌ لقد قمت بالتسجيل مسبقاً! إذا حدث خطأ أو أردت تغيير بياناتك، يرجى حذف تسجيلك أولاً باستخدام أمر `/unregister` مع كتابة اسمك ثم التسجيل من جديد.',
                 ephemeral: true
             });
         }
@@ -113,10 +116,9 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin');
 
-        // تسجيل المستخدم في النظام لمنع تكرار التسجيل
-        registeredUsers.add(interaction.user.id);
+        // حفظ اسم المستخدم المرتبط بأيدي الديسكورد
+        registeredUsers.set(interaction.user.id, username);
 
-        // إذا قام برفع ملف سكن نستخدمه، وإلا نجيبه أوتوماتيكياً بالاسم
         const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/avatar/${username}/150.png`;
 
         const embed = new EmbedBuilder()
@@ -164,9 +166,19 @@ client.on('interactionCreate', async interaction => {
             return await interaction.reply({ content: '❌ أنت غير مسجل أصلاً في النظام!', ephemeral: true });
         }
 
-        // حذف المستخدم من القائمة للسماح له بالتسجيل مجدداً
+        const inputUsername = interaction.options.getString('username');
+        const savedUsername = registeredUsers.get(interaction.user.id);
+
+        // التحقق من تطابق الاسم المدخل مع الاسم المسجل
+        if (inputUsername !== savedUsername) {
+            return await interaction.reply({ 
+                content: `❌ اسم المستخدم الذي أدخلته غير مطابق لاسمك المسجل (\`${savedUsername}\`). يرجى كتابة اسمك الصحيح لإلغاء التسجيل.`, 
+                ephemeral: true 
+            });
+        }
+
         registeredUsers.delete(interaction.user.id);
-        await interaction.reply({ content: '🗑️ تم إلغاء ربط حسابك وحذف بياناتك بنجاح. يمكنك الآن استخدام أمر `/register` والتسجيل من جديد.', ephemeral: true });
+        await interaction.reply({ content: `🗑️ تم إلغاء ربط الحساب (\`${savedUsername}\`) وحذف بياناتك بنجاح. يمكنك الآن استخدام أمر `/register` والتسجيل من جديد.`, ephemeral: true });
     }
 });
 
