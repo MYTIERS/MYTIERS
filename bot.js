@@ -162,8 +162,6 @@ client.on('interactionCreate', async interaction => {
                         userData.skinUrl = attachment.url;
                         registeredUsers.set(interaction.user.id, userData);
 
-                        // تم إزالة m.delete() لكي لا يتعطل رابط الصورة في ديسكورد
-
                         await interaction.followUp({
                             content: `✅ ${interaction.user} **تم استلام وتحديث سكنك الكراك بنجاح!**`,
                             ephemeral: true
@@ -199,7 +197,7 @@ client.on('interactionCreate', async interaction => {
 
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
-            .setTitle(`⚔️ RubyTiers Profile - ${userData.username}`)
+            .setTitle(`⚔️️ RubyTiers Profile - ${userData.username}`)
             .setThumbnail(userData.skinUrl)
             .addFields(
                 { name: '🌍 المنطقة', value: `\`${userData.region}\``, inline: true },
@@ -211,8 +209,6 @@ client.on('interactionCreate', async interaction => {
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
-    }
-    else if (commandName:: === 'queuepanel') { // (Fixed colon typo just in case, standard is commandName ===)
     }
     else if (commandName === 'queuepanel') {
         const embed = new EmbedBuilder()
