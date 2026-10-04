@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصنيفات PvP Club - MCTIERS</title>
+    <style>
+        :root {
+            --bg-dark: #0f1219;
+            --card-bg: #181d29;
+            --accent-gold: #f39c12;
+            --text-main: #ffffff;
+            --text-sub: #a0aec0;
+            --ht-color: #e74c3c;
+            --lt-color: #3498db;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #2d3748;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: var(--accent-gold);
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+
+        .server-ip {
+            background: #232a3b;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 14px;
+            color: #48bb78;
+        }
+
+        .player-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #2d3748;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .rank {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-gold);
+            width: 30px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+        }
+
+        .details .name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .details .title {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .tiers {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge.ht { background-color: var(--ht-color); color: #fff; }
+        .badge.lt { background-color: var(--lt-color); color: #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>MCTIERS - PVP CLUB</h1>
+            <div class="server-ip">عنوان الخادم: mcpvp.club</div>
+        </div>
+
+        <div id="leaderboard">
+            <!-- كارت اللاعب الأول -->
+            <div class="player-card">
+                <div class="player-info">
+                    <span class="rank">#1</span>
+                    <img src="https://mc-heads.net/avatar/Marlo/45" class="avatar" alt="مارلو">
+                    <div class="details">
+                        <div class="name">مارلو</div>
+                        <div class="title">سيد القتال الكبير</div>
+                    </div>
+                </div>
+                <div class="tiers">
+                    <span class="badge ht">HT1</span>
+                    <span class="badge ht">HT1</span>
+                    <span class="badge lt">LT1</span>
+                </div>
+            </div>
+
+            <!-- كارت اللاعب الثاني -->
+            <div class="player-card">
+                <div class="player-info">
+                    <span class="rank">#2</span>
+                    <img src="https://mc-heads.net/avatar/ItzRealMe/45" class="avatar" alt="إيتزريلمي">
+                    <div class="details">
+                        <div class="name">إيتزريلمي</div>
+                        <div class="title">سيد القتال</div>
+                    </div>
+                </div>
+                <div class="tiers">
+                    <span class="badge ht">HT3</span>
+                    <span class="badge lt">LT2</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
