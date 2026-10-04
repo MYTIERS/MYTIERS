@@ -5,7 +5,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// استخدام Map لحفظ بيانات المستخدمين المسجلين (ربط أيدي الديسكورد باسم ماين كرافت)
+// حفظ بيانات المسجلين (مفتاحها أيدي حساب الديسكورد)
 const registeredUsers = new Map();
 
 client.once('ready', async () => {
@@ -77,11 +77,11 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('unregister')
-            .setDescription('حذف حسابك المسجل عبر كتابة اسمك لإعادة التسجيل')
-            .addStringOption(option =>
-                option.setName('username')
-                    .setDescription('اكتب اسم ماين كرافت الخاص بك لتأكيد الحذف')
-                    .setRequired(true))
+            .setDescription('حذف حساب ماين كرافت المرتبط بحساب ديسكورد')
+            .addUserOption(option =>
+                option.setName('user')
+                    .setDescription('حساب الديسكورد المراد حذف تسجيله (اتركه فارغاً لحذف حسابك)')
+                    .setRequired(false))
     ];
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
@@ -106,7 +106,7 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'register') {
         if (registeredUsers.has(interaction.user.id)) {
             return await interaction.reply({
-                content: '❌ لقد قمت بالتسجيل مسبقاً! إذا حدث خطأ أو أردت تغيير بياناتك، يرجى حذف تسجيلك أولاً باستخدام أمر `/unregister` مع كتابة اسمك ثم التسجيل من جديد.',
+                content: '❌ لقد قمت بالتسجيل مسبقاً بهذا الحساب! إذا أردت إعادة التسجيل، استخدم أمر `/unregister` أولاً.',
                 ephemeral: true
             });
         }
@@ -116,10 +116,11 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin');
 
-        // حفظ اسم المستخدم المرتبط بأيدي الديسكورد
-        registeredUsers.set(interaction.user.id, username);
+        // حفظ بيانات اللاعب مرتبطة بأيدي حساب الديسكورد
+        registeredUsers.set(interaction.user.id, { username, edition, region });
 
-        const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/avatar/${username}/150.png`;
+        // إذا لم يتم رفع ملف سكن، يتم جلب "رأس الشخصية" (Helm) أوتوماتيكياً
+        const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/helm/${username}/150.png`;
 
         const embed = new EmbedBuilder()
             .setColor('#e74c3c')
@@ -138,10 +139,12 @@ client.on('interactionCreate', async interaction => {
     } 
     else if (commandName === 'profile') {
         const targetUser = interaction.options.getUser('user') || interaction.user;
+        const userData = registeredUsers.get(targetUser.id);
+
         const embed = new EmbedBuilder()
             .setColor('#3498db')
             .setTitle(`👤 ملف اللاعب: ${targetUser.username}`)
-            .setDescription('عرض تفاصيل الحساب والتيارات الخاصة باللاعب.')
+            .setDescription(userData ? `**الاسم في اللعبة:** \`${userData.username}\`\n**النسخة:** \`${userData.edition}\`\n**المنطقة:** \`${userData.region}\`` : 'هذا المستخدم غير مسجل في النظام.')
             .setTimestamp();
         await interaction.reply({ embeds: [embed] });
     }
@@ -162,23 +165,17 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: '🔄 جاري مزامنة رتب الديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
     }
     else if (commandName === 'unregister') {
-        if (!registeredUsers.has(interaction.user.id)) {
-            return await interaction.reply({ content: '❌ أنت غير مسجل أصلاً في النظام!', ephemeral: true });
+        // تحديد المستخدم المستهدف (إما الشخص الذي كتب الأمر أو الحساب المختار في الخيار)
+        const targetUser = interaction.options.getUser('user') || interaction.user;
+
+        if (!registeredUsers.has(targetUser.id)) {
+            return await interaction.reply({ content: `❌ حساب الديسكورد ${targetUser} غير مسجل أصلاً في النظام!`, ephemeral: true });
         }
 
-        const inputUsername = interaction.options.getString('username');
-        const savedUsername = registeredUsers.get(interaction.user.id);
+        const userData = registeredUsers.get(targetUser.id);
+        registeredUsers.delete(targetUser.id);
 
-        // التحقق من تطابق الاسم المدخل مع الاسم المسجل
-        if (inputUsername !== savedUsername) {
-            return await interaction.reply({ 
-                content: `❌ اسم المستخدم الذي أدخلته غير مطابق لاسمك المسجل (\`${savedUsername}\`). يرجى كتابة اسمك الصحيح لإلغاء التسجيل.`, 
-                ephemeral: true 
-            });
-        }
-
-        registeredUsers.delete(interaction.user.id);
-        await interaction.reply({ content: `🗑️ تم إلغاء ربط الحساب (\`${savedUsername}\`) وحذف بياناتك بنجاح. يمكنك الآن استخدام أمر `/register` والتسجيل من جديد.`, ephemeral: true });
+        await interaction.reply({ content: `🗑️ تم بنجاح حذف وإلغاء ربط حساب ماين كرافت (\`${userData.username}\`) المرتبط بحساب الديسكورد ${targetUser}. يمكنك الآن التسجيل من جديد!`, ephemeral: true });
     }
 });
 
