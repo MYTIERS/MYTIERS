@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY TIERS - PvP Club Rankings</title>
+    <title>MY TIERS - MCTiers Rankings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #0a0d14;
-            --bg-card: #121722;
-            --bg-subcard: #1a202c;
-            --border-color: #232a3b;
-            --accent-gold: #f59e0b;
+            --bg-main: #0c1017;
+            --bg-card: #131924;
+            --bg-subcard: #182030;
+            --border-color: #222c3d;
+            --accent-gold: #fbbf24;
+            --accent-silver: #cbd5e1;
+            --accent-bronze: #d97706;
             --text-white: #ffffff;
-            --text-gray: #9ca3af;
+            --text-gray: #94a3b8;
             --ht-color: #f97316;
             --lt-color: #3b82f6;
-            --badge-red: #ef4444;
-            --badge-green: #10b981;
         }
 
         * {
@@ -30,69 +30,22 @@
         body {
             background-color: var(--bg-main);
             color: var(--text-white);
-            padding: 15px;
-            direction: rtl;
+            padding: 12px;
+            direction: ltr;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
         }
 
-        /* Top Header & Logo */
+        /* Top Navbar */
         .top-navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             gap: 10px;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-text {
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            font-family: 'monospace', sans-serif;
-        }
-
-        .logo-my {
-            color: #2563eb;
-            text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
-        }
-
-        .logo-tiers {
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-        }
-
-        .search-box {
-            position: relative;
-            flex-grow: 1;
-            max-width: 250px;
-        }
-
-        .search-box input {
-            width: 100%;
-            background: #161b26;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 8px 32px 8px 12px;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .search-box i {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-gray);
-            font-size: 12px;
         }
 
         .menu-btn {
@@ -103,44 +56,114 @@
             cursor: pointer;
         }
 
-        /* Navigation Tabs */
-        .tabs-header {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-            background: var(--bg-card);
-            padding: 6px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            text-align: center;
+        .search-box {
+            position: relative;
+            flex-grow: 1;
         }
 
-        .tab-item {
-            padding: 8px 4px;
-            border-radius: 6px;
-            font-size: 12px;
+        .search-box input {
+            width: 100%;
+            background: #171f2e;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px 8px 32px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--text-gray);
-            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-my { color: #3b82f6; }
+        .logo-tiers { color: #fbbf24; }
+
+        /* Main Tabs Scrollable */
+        .tabs-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 12px;
+            padding-bottom: 5px;
+            scrollbar-width: none;
+        }
+
+        .tabs-wrapper::-webkit-scrollbar { display: none; }
+
+        .main-tabs {
+            display: inline-flex;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
             gap: 4px;
+            min-width: 75px;
         }
 
-        .tab-item.active {
-            background: #1e2638;
+        .tab-btn i { font-size: 16px; }
+
+        .tab-btn.active {
+            background: #1e293b;
             color: #fff;
             border-bottom: 2px solid var(--accent-gold);
         }
 
-        .tab-item i {
-            font-size: 14px;
+        .tab-btn.active i { color: var(--accent-gold); }
+
+        /* Sub Category Modes Bar */
+        .sub-modes-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
         }
 
-        .tab-item.active i {
-            color: var(--accent-gold);
+        .mode-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 10px;
+            min-width: 65px;
+            cursor: pointer;
         }
+
+        .mode-item i { font-size: 16px; margin-bottom: 4px; color: #a855f7; }
+        .mode-item.sword i { color: #3b82f6; }
+        .mode-item.axe i { color: #38bdf8; }
+        .mode-item.mace i { color: #94a3b8; }
+        .mode-item.pot i { color: #ec4899; }
+        .mode-item.smp i { color: #10b981; }
+
+        .mode-item span { font-size: 11px; color: var(--text-gray); font-weight: bold; }
 
         /* Server Bar */
         .server-bar {
@@ -148,103 +171,105 @@
             align-items: center;
             justify-content: space-between;
             background: var(--bg-card);
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 10px;
             border: 1px solid var(--border-color);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 12px;
         }
 
         .info-btn {
-            background: #232b3e;
-            border: none;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
             color: #fff;
             padding: 5px 10px;
             border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
+            font-size: 11px;
             display: flex;
             align-items: center;
             gap: 5px;
         }
 
-        .server-info-right {
+        .server-right {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .pvp-club-badge {
+        .pvp-badge {
             background: #991b1b;
             color: #fff;
             font-weight: bold;
-            padding: 3px 8px;
-            border-radius: 5px;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-size: 10px;
-            border: 1px solid #ef4444;
         }
 
-        .ip-address {
-            color: var(--text-gray);
-        }
+        .ip-text { color: var(--text-gray); font-size: 11px; }
 
-        .discord-btn {
-            color: #5865f2;
-            font-size: 16px;
-            margin-right: 5px;
-        }
-
-        /* Player Card */
+        /* Player Card Design */
         .player-card {
             background: var(--bg-card);
             border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-color);
-            position: relative;
         }
 
-        .player-top-info {
+        /* Rank Banners */
+        .rank-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 8px;
+            padding: 4px 12px;
+            margin-bottom: 10px;
+            clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
+            color: #000;
         }
 
-        .player-main {
+        .rank-header.rank-2 {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            color: #fff;
+        }
+
+        .rank-header.rank-3 {
+            background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
+            color: #fff;
+        }
+
+        .rank-title-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .rank-num {
             font-size: 22px;
             font-weight: 900;
             font-style: italic;
-            color: var(--accent-gold);
         }
 
-        .avatar-box {
-            width: 44px;
-            height: 44px;
-            background: #232b3e;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #374151;
+        .player-head {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
         }
 
-        .avatar-box img {
-            width: 100%;
-            height: 100%;
+        .player-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
         }
 
-        .player-details .name {
+        .player-name {
             font-weight: bold;
             font-size: 16px;
-            color: #fff;
         }
 
-        .player-details .title {
+        .player-sub {
             font-size: 11px;
             color: var(--text-gray);
             display: flex;
@@ -252,72 +277,64 @@
             gap: 4px;
         }
 
-        .title i {
-            color: var(--accent-gold);
-            font-size: 10px;
-        }
-
-        .status-badge {
-            padding: 4px 10px;
+        .status-tag {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 3px 8px;
             border-radius: 6px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
         }
 
-        .status-badge.unavailable {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--badge-red);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .status-badge.eu-union {
+        .status-tag.eu {
             background: rgba(16, 185, 129, 0.15);
-            color: var(--badge-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
-        /* Levels & Tiers */
-        .levels-section {
+        /* Levels Grid with Top Icons */
+        .levels-container {
             background: var(--bg-subcard);
             border-radius: 8px;
-            padding: 8px 10px;
+            padding: 8px;
         }
 
-        .levels-title {
+        .levels-label {
             font-size: 10px;
             color: var(--text-gray);
             margin-bottom: 6px;
         }
 
-        .tiers-grid {
+        .tiers-flex {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
         }
 
-        .tier-pill {
-            background: #111520;
-            border: 1px solid #2a3447;
+        .tier-box {
+            background: #111722;
+            border: 1px solid #232d3f;
             border-radius: 6px;
             padding: 4px 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 32px;
+            min-width: 36px;
         }
 
-        .tier-pill .icon {
-            font-size: 10px;
+        .tier-box .icon-top {
+            font-size: 11px;
             margin-bottom: 2px;
         }
 
-        .tier-pill .label {
+        .tier-box .tier-code {
             font-size: 10px;
             font-weight: bold;
         }
 
-        .tier-pill.ht .label { color: var(--ht-color); }
-        .tier-pill.lt .label { color: var(--lt-color); }
+        .tier-box.ht .tier-code { color: var(--ht-color); }
+        .tier-box.lt .tier-code { color: var(--lt-color); }
     </style>
 </head>
 <body>
@@ -325,141 +342,169 @@
     <div class="container">
         <!-- Top Navbar -->
         <div class="top-navbar">
-            <div class="logo-container">
-                <div class="logo-text">
-                    <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
-                </div>
-            </div>
+            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
 
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search player...">
             </div>
 
-            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <div class="logo-text">
+                <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
+            </div>
         </div>
 
-        <!-- Category Tabs -->
-        <div class="tabs-header">
-            <div class="tab-item active">
-                <i class="fa-solid fa-trophy"></i>
-                <span>إجمالي</span>
+        <!-- Main Category Tabs -->
+        <div class="tabs-wrapper">
+            <div class="main-tabs">
+                <div class="tab-btn active">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Overall</span>
+                </div>
+                <div class="tab-btn">
+                    <i class="fa-solid fa-swords"></i>
+                    <span>LTMs</span>
+                </div>
+                <div class="tab-btn">
+                    <i class="fa-solid fa-gem"></i>
+                    <span>Vanilla</span>
+                </div>
+                <div class="tab-btn">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>Overall Tierlist</span>
+                </div>
             </div>
-            <div class="tab-item">
-                <i class="fa-solid fa-swords"></i>
-                <span>LTMs</span>
+        </div>
+
+        <!-- Sub Gamemodes Bar -->
+        <div class="sub-modes-bar">
+            <div class="mode-item pot">
+                <i class="fa-solid fa-flask"></i>
+                <span>Pot</span>
             </div>
-            <div class="tab-item">
-                <i class="fa-solid fa-gem"></i>
-                <span>فانيليا</span>
+            <div class="mode-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>NethOP</span>
             </div>
-            <div class="tab-item">
-                <i class="fa-solid fa-heart"></i>
-                <span>التغطية الشاملة</span>
+            <div class="mode-item smp">
+                <i class="fa-solid fa-circle-dot"></i>
+                <span>SMP</span>
+            </div>
+            <div class="mode-item sword">
+                <i class="fa-solid fa-location-arrow"></i>
+                <span>Sword</span>
+            </div>
+            <div class="mode-item axe">
+                <i class="fa-solid fa-axe"></i>
+                <span>Axe</span>
+            </div>
+            <div class="mode-item mace">
+                <i class="fa-solid fa-gavel"></i>
+                <span>Mace</span>
             </div>
         </div>
 
         <!-- Server IP Bar -->
         <div class="server-bar">
-            <button class="info-btn"><i class="fa-solid fa-circle-info"></i> معلومة</button>
-            <div class="server-info-right">
-                <span class="pvp-club-badge">PVP CLUB</span>
-                <span class="ip-address">عنوان IP للخادم mcpvp.club</span>
-                <a href="#" class="discord-btn"><i class="fa-brands fa-discord"></i></a>
+            <button class="info-btn"><i class="fa-solid fa-circle-info"></i> Information</button>
+            <div class="server-right">
+                <span class="pvp-badge">PVP CLUB</span>
+                <span class="ip-text">SERVER IP mcpvp.club</span>
+                <i class="fa-brands fa-discord" style="color:#5865f2;"></i>
             </div>
         </div>
 
         <!-- Players List -->
         <div id="players-list">
 
-            <!-- Player #1 -->
+            <!-- Rank 1 -->
             <div class="player-card">
-                <div class="player-top-info">
-                    <div class="player-main">
+                <div class="rank-header">
+                    <div class="rank-title-box">
                         <span class="rank-num">1.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Marlo/44" alt="مارلو">
-                        </div>
-                        <div class="player-details">
-                            <div class="name">مارلو</div>
-                            <div class="title"><i class="fa-solid fa-gem"></i> سيد القتال الكبير (4)</div>
-                        </div>
+                        <img src="https://mc-heads.net/avatar/Marlo/32" class="player-head" alt="Marlo">
                     </div>
-                    <span class="status-badge unavailable">غير متوفر</span>
                 </div>
 
-                <div class="levels-section">
-                    <div class="levels-title">المستويات</div>
-                    <div class="tiers-grid">
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill lt"><span class="icon"><i class="fa-solid fa-heart" style="color: #ef4444;"></i></span><span class="label">LT 1</span></div>
-                        <div class="tier-pill lt"><span class="icon"><i class="fa-solid fa-axe" style="color: #3b82f6;"></i></span><span class="label">LT 1</span></div>
+                <div class="player-info-row">
+                    <div>
+                        <div class="player-name">Marlo</div>
+                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--accent-gold);"></i> Grand Combat Master (4)</div>
+                    </div>
+                    <span class="status-tag">N/A</span>
+                </div>
+
+                <div class="levels-container">
+                    <div class="levels-label">Tiers</div>
+                    <div class="tiers-flex">
+                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></span><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-axe" style="color:#38bdf8;"></i></span><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-flask" style="color:#ec4899;"></i></span><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-heart" style="color:#ef4444;"></i></span><span class="tier-code">LT 1</span></div>
+                        <div class="tier-box lt"><span class="tier-code">LT 1</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Player #2 -->
+            <!-- Rank 2 -->
             <div class="player-card">
-                <div class="player-top-info">
-                    <div class="player-main">
+                <div class="rank-header rank-2">
+                    <div class="rank-title-box">
                         <span class="rank-num">2.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/ItzRealMe/44" alt="إيتزريلمي">
-                        </div>
-                        <div class="player-details">
-                            <div class="name">إيتزريلمي</div>
-                            <div class="title"><i class="fa-solid fa-gem"></i> سيد القتال (330)</div>
-                        </div>
+                        <img src="https://mc-heads.net/avatar/ItzRealMe/32" class="player-head" alt="ItzRealMe">
                     </div>
-                    <span class="status-badge unavailable">غير متوفر</span>
                 </div>
 
-                <div class="levels-section">
-                    <div class="levels-title">المستويات</div>
-                    <div class="tiers-grid">
-                        <div class="tier-pill ht"><span class="label">HT 3</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
+                <div class="player-info-row">
+                    <div>
+                        <div class="player-name">ItzRealMe</div>
+                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--accent-gold);"></i> Combat Master (330)</div>
+                    </div>
+                    <span class="status-tag">N/A</span>
+                </div>
+
+                <div class="levels-container">
+                    <div class="levels-label">Tiers</div>
+                    <div class="tiers-flex">
+                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-code">HT 3</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></span><span class="tier-code">LT 2</span></div>
+                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-axe" style="color:#38bdf8;"></i></span><span class="tier-code">LT 2</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Player #3 -->
+            <!-- Rank 3 -->
             <div class="player-card">
-                <div class="player-top-info">
-                    <div class="player-main">
+                <div class="rank-header rank-3">
+                    <div class="rank-title-box">
                         <span class="rank-num">3.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Mubard/44" alt="مُبَرّد">
-                        </div>
-                        <div class="player-details">
-                            <div class="name">مُبَرّد</div>
-                            <div class="title"><i class="fa-solid fa-gem"></i> سيد القتال (326)</div>
-                        </div>
+                        <img src="https://mc-heads.net/avatar/Mubard/32" class="player-head" alt="Mubard">
                     </div>
-                    <span class="status-badge eu-union">الاتحاد الأوروبي</span>
                 </div>
 
-                <div class="levels-section">
-                    <div class="levels-title">المستويات</div>
-                    <div class="tiers-grid">
-                        <div class="tier-pill lt"><span class="label">LT 1</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 3</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 1</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 1</span></div>
-                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
+                <div class="player-info-row">
+                    <div>
+                        <div class="player-name">Mubard</div>
+                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--accent-gold);"></i> Combat Master (326)</div>
+                    </div>
+                    <span class="status-tag eu">EU</span>
+                </div>
+
+                <div class="levels-container">
+                    <div class="levels-label">Tiers</div>
+                    <div class="tiers-flex">
+                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-flask" style="color:#ec4899;"></i></span><span class="tier-code">LT 1</span></div>
+                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-code">LT 3</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
+                        <div class="tier-box lt"><span class="tier-code">LT 1</span></div>
+                        <div class="tier-box lt"><span class="tier-code">LT 2</span></div>
                     </div>
                 </div>
             </div>
