@@ -3,151 +3,467 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تصنيفات PvP Club - MCTIERS</title>
+    <title>MY TIERS - PvP Club Rankings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #0f1219;
-            --card-bg: #181d29;
-            --accent-gold: #f39c12;
-            --text-main: #ffffff;
-            --text-sub: #a0aec0;
-            --ht-color: #e74c3c;
-            --lt-color: #3498db;
+            --bg-main: #0a0d14;
+            --bg-card: #121722;
+            --bg-subcard: #1a202c;
+            --border-color: #232a3b;
+            --accent-gold: #f59e0b;
+            --text-white: #ffffff;
+            --text-gray: #9ca3af;
+            --ht-color: #f97316;
+            --lt-color: #3b82f6;
+            --badge-red: #ef4444;
+            --badge-green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 20px;
+            background-color: var(--bg-main);
+            color: var(--text-white);
+            padding: 15px;
+            direction: rtl;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
-        .header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 1px solid #2d3748;
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
-            color: var(--accent-gold);
-            margin: 0 0 10px 0;
-            font-size: 28px;
-        }
-
-        .server-ip {
-            background: #232a3b;
-            padding: 8px 15px;
-            border-radius: 20px;
-            display: inline-block;
-            font-size: 14px;
-            color: #48bb78;
-        }
-
-        .player-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
+        /* Top Header & Logo */
+        .top-navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border: 1px solid #2d3748;
+            margin-bottom: 20px;
+            gap: 10px;
         }
 
-        .player-info {
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
         }
 
-        .rank {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--accent-gold);
-            width: 30px;
+        .logo-text {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            font-family: 'monospace', sans-serif;
         }
 
-        .avatar {
-            width: 45px;
-            height: 45px;
+        .logo-my {
+            color: #2563eb;
+            text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+        }
+
+        .logo-tiers {
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+            max-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #161b26;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-        }
-
-        .details .name {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .details .title {
+            padding: 8px 32px 8px 12px;
+            color: #fff;
             font-size: 13px;
-            color: var(--text-sub);
         }
 
-        .tiers {
+        .search-box i {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+            font-size: 12px;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Navigation Tabs */
+        .tabs-header {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .tab-item {
+            padding: 8px 4px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-gray);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tab-item.active {
+            background: #1e2638;
+            color: #fff;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .tab-item i {
+            font-size: 14px;
+        }
+
+        .tab-item.active i {
+            color: var(--accent-gold);
+        }
+
+        /* Server Bar */
+        .server-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+
+        .info-btn {
+            background: #232b3e;
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .server-info-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pvp-club-badge {
+            background: #991b1b;
+            color: #fff;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            border: 1px solid #ef4444;
+        }
+
+        .ip-address {
+            color: var(--text-gray);
+        }
+
+        .discord-btn {
+            color: #5865f2;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+
+        /* Player Card */
+        .player-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .player-top-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .player-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rank-num {
+            font-size: 22px;
+            font-weight: 900;
+            font-style: italic;
+            color: var(--accent-gold);
+        }
+
+        .avatar-box {
+            width: 44px;
+            height: 44px;
+            background: #232b3e;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #374151;
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .player-details .name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .player-details .title {
+            font-size: 11px;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .title i {
+            color: var(--accent-gold);
+            font-size: 10px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .status-badge.unavailable {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--badge-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-badge.eu-union {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--badge-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Levels & Tiers */
+        .levels-section {
+            background: var(--bg-subcard);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .levels-title {
+            font-size: 10px;
+            color: var(--text-gray);
+            margin-bottom: 6px;
+        }
+
+        .tiers-grid {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
         }
 
-        .badge {
-            padding: 4px 8px;
+        .tier-pill {
+            background: #111520;
+            border: 1px solid #2a3447;
             border-radius: 6px;
-            font-size: 12px;
+            padding: 4px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 32px;
+        }
+
+        .tier-pill .icon {
+            font-size: 10px;
+            margin-bottom: 2px;
+        }
+
+        .tier-pill .label {
+            font-size: 10px;
             font-weight: bold;
         }
 
-        .badge.ht { background-color: var(--ht-color); color: #fff; }
-        .badge.lt { background-color: var(--lt-color); color: #fff; }
+        .tier-pill.ht .label { color: var(--ht-color); }
+        .tier-pill.lt .label { color: var(--lt-color); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="header">
-            <h1>MCTIERS - PVP CLUB</h1>
-            <div class="server-ip">عنوان الخادم: mcpvp.club</div>
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="logo-container">
+                <div class="logo-text">
+                    <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search player...">
+            </div>
+
+            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
         </div>
 
-        <div id="leaderboard">
-            <!-- كارت اللاعب الأول -->
+        <!-- Category Tabs -->
+        <div class="tabs-header">
+            <div class="tab-item active">
+                <i class="fa-solid fa-trophy"></i>
+                <span>إجمالي</span>
+            </div>
+            <div class="tab-item">
+                <i class="fa-solid fa-swords"></i>
+                <span>LTMs</span>
+            </div>
+            <div class="tab-item">
+                <i class="fa-solid fa-gem"></i>
+                <span>فانيليا</span>
+            </div>
+            <div class="tab-item">
+                <i class="fa-solid fa-heart"></i>
+                <span>التغطية الشاملة</span>
+            </div>
+        </div>
+
+        <!-- Server IP Bar -->
+        <div class="server-bar">
+            <button class="info-btn"><i class="fa-solid fa-circle-info"></i> معلومة</button>
+            <div class="server-info-right">
+                <span class="pvp-club-badge">PVP CLUB</span>
+                <span class="ip-address">عنوان IP للخادم mcpvp.club</span>
+                <a href="#" class="discord-btn"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+
+        <!-- Players List -->
+        <div id="players-list">
+
+            <!-- Player #1 -->
             <div class="player-card">
-                <div class="player-info">
-                    <span class="rank">#1</span>
-                    <img src="https://mc-heads.net/avatar/Marlo/45" class="avatar" alt="مارلو">
-                    <div class="details">
-                        <div class="name">مارلو</div>
-                        <div class="title">سيد القتال الكبير</div>
+                <div class="player-top-info">
+                    <div class="player-main">
+                        <span class="rank-num">1.</span>
+                        <div class="avatar-box">
+                            <img src="https://mc-heads.net/avatar/Marlo/44" alt="مارلو">
+                        </div>
+                        <div class="player-details">
+                            <div class="name">مارلو</div>
+                            <div class="title"><i class="fa-solid fa-gem"></i> سيد القتال الكبير (4)</div>
+                        </div>
                     </div>
+                    <span class="status-badge unavailable">غير متوفر</span>
                 </div>
-                <div class="tiers">
-                    <span class="badge ht">HT1</span>
-                    <span class="badge ht">HT1</span>
-                    <span class="badge lt">LT1</span>
+
+                <div class="levels-section">
+                    <div class="levels-title">المستويات</div>
+                    <div class="tiers-grid">
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill lt"><span class="icon"><i class="fa-solid fa-heart" style="color: #ef4444;"></i></span><span class="label">LT 1</span></div>
+                        <div class="tier-pill lt"><span class="icon"><i class="fa-solid fa-axe" style="color: #3b82f6;"></i></span><span class="label">LT 1</span></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- كارت اللاعب الثاني -->
+            <!-- Player #2 -->
             <div class="player-card">
-                <div class="player-info">
-                    <span class="rank">#2</span>
-                    <img src="https://mc-heads.net/avatar/ItzRealMe/45" class="avatar" alt="إيتزريلمي">
-                    <div class="details">
-                        <div class="name">إيتزريلمي</div>
-                        <div class="title">سيد القتال</div>
+                <div class="player-top-info">
+                    <div class="player-main">
+                        <span class="rank-num">2.</span>
+                        <div class="avatar-box">
+                            <img src="https://mc-heads.net/avatar/ItzRealMe/44" alt="إيتزريلمي">
+                        </div>
+                        <div class="player-details">
+                            <div class="name">إيتزريلمي</div>
+                            <div class="title"><i class="fa-solid fa-gem"></i> سيد القتال (330)</div>
+                        </div>
+                    </div>
+                    <span class="status-badge unavailable">غير متوفر</span>
+                </div>
+
+                <div class="levels-section">
+                    <div class="levels-title">المستويات</div>
+                    <div class="tiers-grid">
+                        <div class="tier-pill ht"><span class="label">HT 3</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
                     </div>
                 </div>
-                <div class="tiers">
-                    <span class="badge ht">HT3</span>
-                    <span class="badge lt">LT2</span>
+            </div>
+
+            <!-- Player #3 -->
+            <div class="player-card">
+                <div class="player-top-info">
+                    <div class="player-main">
+                        <span class="rank-num">3.</span>
+                        <div class="avatar-box">
+                            <img src="https://mc-heads.net/avatar/Mubard/44" alt="مُبَرّد">
+                        </div>
+                        <div class="player-details">
+                            <div class="name">مُبَرّد</div>
+                            <div class="title"><i class="fa-solid fa-gem"></i> سيد القتال (326)</div>
+                        </div>
+                    </div>
+                    <span class="status-badge eu-union">الاتحاد الأوروبي</span>
+                </div>
+
+                <div class="levels-section">
+                    <div class="levels-title">المستويات</div>
+                    <div class="tiers-grid">
+                        <div class="tier-pill lt"><span class="label">LT 1</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 3</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill ht"><span class="label">HT 1</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 1</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 1</span></div>
+                        <div class="tier-pill lt"><span class="label">LT 2</span></div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
