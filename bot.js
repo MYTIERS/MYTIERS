@@ -5,20 +5,23 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
+// قائمة لحفظ المستخدمين المسجلين لمنع التكرار
+const registeredUsers = new Set();
+
 client.once('ready', async () => {
     console.log(`تم تسجيل الدخول باسم ${client.user.tag}!`);
 
     const commands = [
         new SlashCommandBuilder()
             .setName('register')
-            .setDescription('تسجيل حساب ماين كرافت الخاص بك')
+            .setDescription('تسجيل حساب ماين كرافت الخاص بك (مرة واحدة فقط)')
             .addStringOption(option =>
                 option.setName('username')
                     .setDescription('اسم حسابك في ماين كرافت')
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('edition')
-                    .setDescription('نسخة ماين كرافت')
+                    .setDescription('نسخة ماين كرافت (جافا، كراك، بيدروك)')
                     .setRequired(true)
                     .addChoices(
                         { name: 'Java', value: 'JAVA' },
@@ -37,7 +40,7 @@ client.once('ready', async () => {
                     ))
             .addAttachmentOption(option =>
                 option.setName('skin')
-                    .setDescription('ارفع ملف السكن png (موصى به للكراك والبيردروك)')
+                    .setDescription('ارفع ملف السكن png الخاص بك')
                     .setRequired(false)),
 
         new SlashCommandBuilder()
@@ -74,7 +77,7 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('unregister')
-            .setDescription('حذف حساب ماين كرافت المربوط وإلغاء التسجيل')
+            .setDescription('حذف حسابك المسجل لإعادة التسجيل من جديد عند حدوث خطأ')
     ];
 
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
@@ -97,11 +100,23 @@ client.on('interactionCreate', async interaction => {
     const { commandName } = interaction;
 
     if (commandName === 'register') {
+        // التحقق مما إذا كان المستخدم قد تسجل مسبقاً
+        if (registeredUsers.has(interaction.user.id)) {
+            return await interaction.reply({
+                content: '❌ لقد قمت بالتسجيل مسبقاً! إذا حدث خطأ أو أردت تغيير بياناتك، يرجى حذف تسجيلك أولاً باستخدام أمر `/unregister` ثم التسجيل من جديد.',
+                ephemeral: true
+            });
+        }
+
         const username = interaction.options.getString('username');
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin');
 
+        // تسجيل المستخدم في النظام لمنع تكرار التسجيل
+        registeredUsers.add(interaction.user.id);
+
+        // إذا قام برفع ملف سكن نستخدمه، وإلا نجيبه أوتوماتيكياً بالاسم
         const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/avatar/${username}/150.png`;
 
         const embed = new EmbedBuilder()
@@ -145,7 +160,13 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply({ content: '🔄 جاري مزامنة رتب الديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
     }
     else if (commandName === 'unregister') {
-        await interaction.reply({ content: '🗑️ تم إلغاء ربط حسابك وحذف بياناتك بنجاح.', ephemeral: true });
+        if (!registeredUsers.has(interaction.user.id)) {
+            return await interaction.reply({ content: '❌ أنت غير مسجل أصلاً في النظام!', ephemeral: true });
+        }
+
+        // حذف المستخدم من القائمة للسماح له بالتسجيل مجدداً
+        registeredUsers.delete(interaction.user.id);
+        await interaction.reply({ content: '🗑️ تم إلغاء ربط حسابك وحذف بياناتك بنجاح. يمكنك الآن استخدام أمر `/register` والتسجيل من جديد.', ephemeral: true });
     }
 });
 
