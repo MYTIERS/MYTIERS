@@ -10,11 +10,12 @@
         :root {
             --bg-main: #0b0f19;
             --navbar-bg: #151d2a;
-            --card-bg: #1a2332;
+            --card-bg: #141c2b;
             --input-bg: #111827;
             --border-color: #232f42;
             --text-gray: #8d9bb0;
             --active-blue: #3b82f6;
+            --gold: #f59e0b;
         }
 
         * {
@@ -115,7 +116,7 @@
             cursor: pointer;
         }
 
-        /* Single Horizontal Scrollable Categories Bar */
+        /* Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
@@ -181,13 +182,13 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
         }
 
-        /* Server Info Banner Below Navigation */
+        /* Server Info Banner */
         .server-banner {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            margin-top: 4px;
+            margin-bottom: 16px;
         }
 
         .info-btn {
@@ -221,7 +222,6 @@
             justify-content: space-between;
         }
 
-        /* Server Name Text Style (No Logo Box) */
         .server-title-text {
             font-size: 13px;
             font-weight: 900;
@@ -274,9 +274,142 @@
             flex-shrink: 0;
         }
 
-        .discord-btn:hover {
-            background: #4752C4;
-            transform: scale(1.05);
+        /* Leaderboard Cards Section */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .player-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .player-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rank-badge {
+            background: #d97706;
+            color: #fff;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 8px 0 0 8px;
+            margin-right: -4px;
+        }
+
+        .avatar-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            background: #232f42;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-name {
+            font-weight: 800;
+            font-size: 15px;
+            color: #ffffff;
+        }
+
+        .player-subtitle {
+            font-size: 11px;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .points-badge {
+            color: #93c5fd;
+            font-weight: 600;
+        }
+
+        .region-badge {
+            background: #065f46;
+            color: #34d399;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+
+        /* Tier Items Horizontal Row */
+        .tiers-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tiers-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tier-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #111827;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px;
+            min-width: 42px;
+            gap: 4px;
+        }
+
+        .tier-slot i {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        .tier-slot.active-tier {
+            border-color: var(--gold);
+        }
+
+        .tier-slot.active-tier i {
+            color: var(--gold);
+        }
+
+        .tier-label {
+            font-size: 9px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .tier-label.gold-text {
+            color: var(--gold);
+            font-weight: 800;
         }
     </style>
 </head>
@@ -284,7 +417,7 @@
 
     <div class="container">
 
-        <!-- Top Header Navigation Bar -->
+        <!-- Header Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -300,7 +433,7 @@
             </button>
         </div>
 
-        <!-- Single Horizontal Scrollable Categories Bar -->
+        <!-- Scrollable Categories Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
@@ -339,25 +472,10 @@
                     <span>Sword</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./axe.svg" alt="Axe">
-                    <span>Axe</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./mace.svg" alt="Mace">
-                    <span>Mace</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./uhc.svg" alt="UHC">
-                    <span>UHC</span>
-                </div>
-
             </div>
         </div>
 
-        <!-- Server Info Banner -->
+        <!-- Server Banner -->
         <div class="server-banner">
             
             <button class="info-btn">
@@ -366,7 +484,6 @@
             </button>
 
             <div class="server-box">
-                <!-- Server Name Text Instead of Logo -->
                 <span class="server-title-text">PVP MIKEY</span>
 
                 <div class="ip-container">
@@ -377,10 +494,71 @@
                     </span>
                 </div>
 
-                <!-- Discord Link Button -->
                 <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn" title="Join Discord">
                     <i class="fa-brands fa-discord"></i>
                 </a>
+            </div>
+
+        </div>
+
+        <!-- Leaderboard Player Cards -->
+        <div class="leaderboard-list">
+
+            <!-- Player 1 -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-info-left">
+                        <span class="rank-badge">1.</span>
+                        <div class="avatar-box">
+                            <img src="https://mc-heads.net/avatar/iRuby_X/42" alt="iRuby_X">
+                        </div>
+                        <div class="player-details">
+                            <span class="player-name">iRuby_X</span>
+                            <span class="player-subtitle">
+                                <span class="points-badge">(60 نقطة)</span> متخصص قتالي
+                            </span>
+                        </div>
+                    </div>
+                    <span class="region-badge">EU</span>
+                </div>
+
+                <div class="tiers-row">
+                    <div class="tier-slot"><i class="fa-solid fa-gem"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot"><i class="fa-brands fa-discord"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot"><i class="fa-solid fa-eye"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot active-tier"><i class="fa-solid fa-sword"></i><span class="tier-label gold-text">HT1</span></div>
+                    <div class="tier-slot"><i class="fa-solid fa-shield-halved"></i><span class="tier-label">غير مصنف</span></div>
+                </div>
+            </div>
+
+            <!-- Player 2 -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-info-left">
+                        <span class="rank-badge" style="background:#64748b;">2.</span>
+                        <div class="avatar-box">
+                            <img src="https://mc-heads.net/avatar/Mustfa_105/42" alt="Mustfa_105">
+                        </div>
+                        <div class="player-details">
+                            <span class="player-name">Mustfa_105</span>
+                            <span class="player-subtitle">
+                                <span class="points-badge">(42 نقطة)</span> طالب عسكري قتالي
+                            </span>
+                        </div>
+                    </div>
+                    <span class="region-badge">EU</span>
+                </div>
+
+                <div class="tiers-row">
+                    <div class="tier-slot active-tier"><i class="fa-solid fa-gem"></i><span class="tier-label gold-text">LT3</span></div>
+                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
+                    <div class="tier-slot active-tier"><i class="fa-solid fa-eye"></i><span class="tier-label gold-text">LT3</span></div>
+                    <div class="tier-slot active-tier"><i class="fa-solid fa-key"></i><span class="tier-label gold-text">LT2</span></div>
+                    <div class="tier-slot active-tier"><i class="fa-solid fa-hammer"></i><span class="tier-label gold-text">HT3</span></div>
+                </div>
             </div>
 
         </div>
