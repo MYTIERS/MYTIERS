@@ -30,8 +30,8 @@ const client = new Client({
 // ======================== [ الإعدادات الرئيسية ] ========================
 const RESULTS_CHANNEL_ID = '1554252285842817174'; // ID روم النتائج
 const TESTER_ROLE_ID = '1534195774160638131';     // ID رتبة MY | Tester
-const TICKETS_CATEGORY_ID = '';                   // ضع ID الكاتيجوري هنا (اختياري)
-const DB_FILE = './database.json';
+const TICKETS_CATEGORY_ID = '';                   // ID كاتيجوري التذاكر (اختياري)
+const DB_FILE = './database.json';                // ملف حفظ البيانات والتصنيفات
 // ======================================================================
 
 let registeredUsers = {};
@@ -53,9 +53,14 @@ const activeQueues = {
 
 const GAMEMODES = ['Vanilla', 'UHC', 'Pot', 'NethOP', 'SMP', 'Sword', 'Axe', 'Mace', 'SpearMace'];
 
-// دالة جلب صورة السكن المصغرة (رأس وكتفين)
+// دالة تحويل اسم اللاعب الأصلي إلى مجسم رأس وكتفين
 function getSkinUrl(username) {
     return `https://mc-heads.net/bust/${encodeURIComponent(username)}/100`;
+}
+
+// دالة تحويل صورة السكن المرفوعة (PNG) للحساب المكرك إلى مجسم رأس وكتفين (Bust 3D)
+function convertUploadedSkinToBust(attachmentUrl) {
+    return `https://render.crafty.gg/3d/bust?url=${encodeURIComponent(attachmentUrl)}`;
 }
 
 async function isTesterOnline(guild) {
@@ -67,7 +72,6 @@ async function isTesterOnline(guild) {
             member.presence.status !== 'offline'
         );
     } catch (err) {
-        console.error("Error fetching presences:", err);
         return false;
     }
 }
@@ -137,11 +141,11 @@ client.once('ready', async () => {
                 { name: 'North America (NA)', value: 'NA' },
                 { name: 'Asia (AS)', value: 'AS' }
             ))
-            .addAttachmentOption(opt => opt.setName('skin_file').setDescription('ملف السكن PNG (اختياري)').setRequired(false)),
+            .addAttachmentOption(opt => opt.setName('skin_file').setDescription('رفع ملف صورة السكن PNG (مطلوبة للكراك)').setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('unregister')
-            .setDescription('حذف تسجيلك الحالي لإعادة التسجيل حساب جديد'),
+            .setDescription('حذف تسجيلك الحالي لإعادة التسجيل بحساب جديد'),
 
         new SlashCommandBuilder()
             .setName('setrank')
@@ -175,7 +179,7 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('profile')
-            .setDescription('عرض بروفايل اللاعب')
+            .setDescription('عرض بروفايل اللاعب والتصنيفات الحاصل عليها')
             .addUserOption(opt => opt.setName('user').setDescription('اللاعب').setRequired(false))
     ];
 
@@ -254,15 +258,13 @@ client.on('interactionCreate', async interaction => {
             return await interaction.update(queueData);
         }
 
-        // زر قفل التذكرة
         if (customId === 'close_ticket') {
             await interaction.channel.permissionOverwrites.edit(interaction.guild.id, { SendMessages: false });
-            await interaction.reply({ content: '🔒 تم قفل التذكرة بنجاح.' });
+            await interaction.reply({ content: '🔒 تم إغلاق التذكرة بنجاح.' });
         }
 
-        // زر حذف التذكرة
         if (customId === 'delete_ticket') {
-            await interaction.reply({ content: '🗑️ سيتم حذف التذكرة بعد 5 ثوانٍ...' });
+            await interaction.reply({ content: '🗑️ سيتم حذف التذكرة خلال 5 ثوانٍ...' });
             setTimeout(() => {
                 interaction.channel.delete().catch(() => {});
             }, 5000);
@@ -297,7 +299,7 @@ client.on('interactionCreate', async interaction => {
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor('#2b2d31')
-                .setTitle(`⚔️ MYTIERS | تذكرة اختبار جديدة`)
+                .setTitle(`⚔️️ MYTIERS | تذكرة اختبار جديدة`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
                     { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },
@@ -308,7 +310,6 @@ client.on('interactionCreate', async interaction => {
                 .setFooter({ text: 'MYTIERS Ticket System' })
                 .setTimestamp();
 
-            // أزرار التحكم بالتذكرة (قفل وحذف)
             const ticketButtons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('close_ticket').setLabel('إغلاق التذكرة 🔒').setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️').setStyle(ButtonStyle.Danger)
@@ -333,7 +334,7 @@ client.on('interactionCreate', async interaction => {
         if (commandName === 'register') {
             const userId = interaction.user.id;
             if (registeredUsers[userId]) {
-                return await interaction.reply({ content: '❌ أنت مسجل بالفعل! استخدم `/unregister` أولاً إذا أردت تغيير حسابك.', ephemeral: true });
+                return await interaction.reply({ content: '❌ أنت مسجل بالفعل! استخدم `/unregister` أولاً إذا أردت تعديل بياناتك.', ephemeral: true });
             }
 
             const username = interaction.options.getString('username');
@@ -341,7 +342,14 @@ client.on('interactionCreate', async interaction => {
             const region = interaction.options.getString('region');
             const skinAttachment = interaction.options.getAttachment('skin_file');
 
-            let skinUrl = skinAttachment ? skinAttachment.url : getSkinUrl(username);
+            let skinUrl;
+            if (skinAttachment) {
+                // إذا تم رفع ملف سكن PNG يتم تحويله لمجسم رأس وكتفين تلقائياً
+                skinUrl = convertUploadedSkinToBust(skinAttachment.url);
+            } else {
+                // في حال عدم الرفع يتم الاعتماد على الاسم تلقائياً
+                skinUrl = getSkinUrl(username);
+            }
 
             const initialTiers = {};
             GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
@@ -373,7 +381,7 @@ client.on('interactionCreate', async interaction => {
             delete registeredUsers[userId];
             saveData();
 
-            return await interaction.reply({ content: '✅ تم حذف تسجيلك بنجاح! يمكنك الآن استخدام `/register` والتسجيل باسم جديد.', ephemeral: true });
+            return await interaction.reply({ content: '✅ تم حذف تسجيلك وتصنيفاتك بنجاح! يمكنك التسجيل ببيانات جديدة الآن.', ephemeral: true });
         }
 
         else if (commandName === 'setrank') {
@@ -383,7 +391,7 @@ client.on('interactionCreate', async interaction => {
 
             const userData = registeredUsers[targetUser.id];
             if (!userData) {
-                return await interaction.reply({ content: `❌ هذا اللاعب (${targetUser}) غير مسجل!`, ephemeral: true });
+                return await interaction.reply({ content: `❌ هذا اللاعب (${targetUser}) غير مسجل في البوت!`, ephemeral: true });
             }
 
             const previousRank = userData.tiers[gamemode] || 'Unranked';
@@ -392,12 +400,16 @@ client.on('interactionCreate', async interaction => {
 
             await interaction.reply({ content: `✅ Successfully set **${tier}** rank for ${targetUser} in **${gamemode}** mode!`, ephemeral: true });
 
-            const resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
+            let resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
+            if (!resultsChannel) {
+                resultsChannel = interaction.guild.channels.cache.find(c => c.name.includes('tier') && c.name.includes('results'));
+            }
+
             if (resultsChannel) {
                 const rankEarnedText = tier === 'Unranked' ? 'Unranked' : `${tier} (${gamemode.toUpperCase()})`;
 
                 const resultEmbed = new EmbedBuilder()
-                    .setColor('#2b2d31')
+                    .setColor('#800020')
                     .setTitle(`${userData.username}'s Test Results 🏆`)
                     .setThumbnail(userData.skinUrl)
                     .addFields(
@@ -410,7 +422,7 @@ client.on('interactionCreate', async interaction => {
                     .setFooter({ text: 'MYTIERS Official Results' })
                     .setTimestamp();
 
-                await resultsChannel.send({ embeds: [resultEmbed] });
+                await resultsChannel.send({ content: `${targetUser}`, embeds: [resultEmbed] });
             }
         }
 
@@ -423,8 +435,11 @@ client.on('interactionCreate', async interaction => {
             }
 
             let tiersList = '';
+            let rankedCount = 0;
+
             for (const [mode, rank] of Object.entries(userData.tiers)) {
                 tiersList += `• **${mode}:** \`${rank}\`\n`;
+                if (rank !== 'Unranked') rankedCount++;
             }
 
             const profileEmbed = new EmbedBuilder()
@@ -432,9 +447,9 @@ client.on('interactionCreate', async interaction => {
                 .setTitle(`⚔️ MYTIERS Profile - ${userData.username}`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
-                    { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: false },
-                    { name: 'النقاط 🏆', value: `\`${userData.points} pts\``, inline: false },
-                    { name: 'اللقب ⭐️', value: `\`${userData.title}\``, inline: false },
+                    { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: true },
+                    { name: 'عدد التصنيفات 🎖️', value: `\`${rankedCount} Tiers\``, inline: true },
+                    { name: 'اللقب ⭐️', value: `\`${userData.title}\``, inline: true },
                     { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersList, inline: false }
                 )
                 .setFooter({ text: 'MYTIERS Competitive System' })
