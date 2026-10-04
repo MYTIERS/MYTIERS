@@ -5,7 +5,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// حفظ بيانات المسجلين (مفتاحها أيدي حساب الديسكورد)
+// حفظ بيانات المسجلين
 const registeredUsers = new Map();
 
 client.once('ready', async () => {
@@ -14,7 +14,7 @@ client.once('ready', async () => {
     const commands = [
         new SlashCommandBuilder()
             .setName('register')
-            .setDescription('تسجيل حساب ماين كرافت الخاص بك (مرة واحدة فقط)')
+            .setDescription('تسجيل حساب ماين كرافت الخاص بك')
             .addStringOption(option =>
                 option.setName('username')
                     .setDescription('اسم حسابك في ماين كرافت')
@@ -38,10 +38,10 @@ client.once('ready', async () => {
                         { name: 'North America (NA)', value: 'NA' },
                         { name: 'Asia (AS)', value: 'AS' }
                     ))
-            .addStringOption(option =>
-                option.setName('skin_url')
-                    .setDescription('رابط صورة السكن (انسخ رابط الصورة من أي شات واضعه هنا)')
-                    .setRequired(false)), // خيار نصي لتجنب مشاكل تطبيق الجوال
+            .addAttachmentOption(option =>
+                option.setName('skin_file')
+                    .setDescription('ارفع ملف السكن PNG الخاص بك (اختياري)')
+                    .setRequired(false)), // جعلناه اختيارياً لتجنب مشكلة الجوال نهائياً
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -80,7 +80,7 @@ client.once('ready', async () => {
             .setDescription('حذف حساب ماين كرافت المرتبط بحساب ديسكورد')
             .addUserOption(option =>
                 option.setName('user')
-                    .setDescription('حساب الديسكورد المراد حذف تسجيله (اتركه فارغاً لحذف حسابك)')
+                    .setDescription('حساب الديسكورد المراد حذف تسجيله')
                     .setRequired(false))
     ];
 
@@ -114,19 +114,18 @@ client.on('interactionCreate', async interaction => {
         const username = interaction.options.getString('username');
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
-        const skinUrl = interaction.options.getString('skin_url');
+        const skinAttachment = interaction.options.getAttachment('skin_file');
 
-        // حفظ بيانات اللاعب مرتبطة بأيدي حساب الديسكورد
-        registeredUsers.set(interaction.user.id, { username, edition, region });
+        // إذا قام اللاعب برفع ملف السكن، نستخدمه، وإلا نجلب الرأس أوتوماتيكياً
+        let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
 
-        // إذا وضع رابط سكن نستخدمه، وإلا نجلب رأس الشخصية أوتوماتيكياً بالاسم
-        const skinAvatar = skinUrl ? skinUrl : `https://minotar.net/helm/${username}/150.png`;
+        registeredUsers.set(interaction.user.id, { username, edition, region, skinUrl });
 
         const embed = new EmbedBuilder()
             .setColor('#e74c3c')
             .setTitle('💎 MYTIERS | نظام التسجيل')
             .setDescription('**تم ربط حسابك بنجاح!**')
-            .setThumbnail(skinAvatar)
+            .setThumbnail(skinUrl)
             .addFields(
                 { name: '👤 الاسم', value: `\`${username}\``, inline: true },
                 { name: '🎮 النسخة', value: `\`${edition}\``, inline: true },
@@ -145,6 +144,7 @@ client.on('interactionCreate', async interaction => {
             .setColor('#3498db')
             .setTitle(`👤 ملف اللاعب: ${targetUser.username}`)
             .setDescription(userData ? `**الاسم في اللعبة:** \`${userData.username}\`\n**النسخة:** \`${userData.edition}\`\n**المنطقة:** \`${userData.region}\`` : 'هذا المستخدم غير مسجل في النظام.')
+            .setThumbnail(userData ? userData.skinUrl : null)
             .setTimestamp();
         await interaction.reply({ embeds: [embed] });
     }
