@@ -37,11 +37,7 @@ client.once('ready', async () => {
                         { name: 'Europe (EU)', value: 'EU' },
                         { name: 'North America (NA)', value: 'NA' },
                         { name: 'Asia (AS)', value: 'AS' }
-                    ))
-            .addStringOption(option =>
-                option.setName('skin_url')
-                    .setDescription('رابط مباشر لصورة رأس السكن (اختياري، مثل Imgur)')
-                    .setRequired(false)),
+                    )),
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -114,17 +110,18 @@ client.on('interactionCreate', async interaction => {
         const username = interaction.options.getString('username');
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
-        const customSkinUrl = interaction.options.getString('skin_url');
 
-        // إذا قام اللاعب بوضع رابط مباشر لصورة الرأس، نستخدمه، وإلا نجلب الرأس أوتوماتيكياً
-        let skinUrl = customSkinUrl ? customSkinUrl : `https://mc-heads.net/avatar/${username}/150`;
+        // السكن الافتراضي مبدئياً
+        let skinUrl = `https://mc-heads.net/avatar/${username}/150`;
 
         registeredUsers.set(interaction.user.id, { username, edition, region, skinUrl });
 
         const embed = new EmbedBuilder()
             .setColor('#e74c3c')
             .setTitle('💎 MYTIERS | نظام التسجيل')
-            .setDescription('**تم ربط حسابك بنجاح!**')
+            .setDescription(edition === 'CRACKED' 
+                ? '**تم تسجيل حسابك بنجاح!**\n\n📸 **بما أن حسابك (كراك)، يرجى إرسال صورة السكن (PNG) هنا في الشات الآن كرسالة عادية لتحديثه (أمامك 60 ثانية).**'
+                : '**تم ربط حسابك بنجاح!**')
             .setThumbnail(skinUrl)
             .addFields(
                 { name: '👤 الاسم', value: `\`${username}\``, inline: true },
@@ -135,6 +132,40 @@ client.on('interactionCreate', async interaction => {
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
+
+        // إذا كانت النسخة كراك، ننتظر أن يرسل اللاعب صورة السكن في الشات العادي
+        if (edition === 'CRACKED') {
+            const filter = m => m.author.id === interaction.user.id && m.attachments.size > 0;
+            const collector = interaction.channel.createMessageCollector({ filter, time: 60000, max: 1 });
+
+            collector.on('collect', async m => {
+                const attachment = m.attachments.first();
+                if (attachment) {
+                    const userData = registeredUsers.get(interaction.user.id);
+                    if (userData) {
+                        userData.skinUrl = attachment.url;
+                        registeredUsers.set(interaction.user.id, userData);
+
+                        // حذف رسالة الصورة للحفاظ على نظافة الشات
+                        try { await m.delete(); } catch (e) {}
+
+                        await interaction.followUp({
+                            content: `✅ ${interaction.user} **تم استلام وتحديث سكنك الكراك بنجاح!**`,
+                            ephemeral: true
+                        });
+                    }
+                }
+            });
+
+            collector.on('end', (collected, reason) => {
+                if (reason === 'time' && collected.size === 0) {
+                    interaction.followUp({
+                        content: `⏳ انتهى وقت إرسال السكن لحسابك (${username}). تم اعتماد السكن الافتراضي. يمكنك إعادة التسجيل متى شئت.`,
+                        ephemeral: true
+                    }).catch(() => {});
+                }
+            });
+        }
     } 
     else if (commandName === 'profile') {
         const targetUser = interaction.options.getUser('user') || interaction.user;
@@ -159,7 +190,7 @@ client.on('interactionCreate', async interaction => {
         const targetUser = interaction.options.getUser('user');
         const gamemode = interaction.options.getString('gamemode');
         const tier = interaction.options.getString('tier');
-        + await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
+        await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
     }
     else if (commandName === 'syncroles') {
         await interaction.reply({ content: '🔄 جاري مزامنة رتب الديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
