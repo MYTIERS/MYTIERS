@@ -5,10 +5,9 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// معرف قناة النتائج (ضع ID القناة الخاصة بك هنا)
-const RESULTS_CHANNEL_ID = '123456789012345678'; 
+// ضع معرّف (ID) روم النتائج هنا
+const RESULTS_CHANNEL_ID = '1554252285842817174'; 
 
-// حفظ بيانات المسجلين (ملاحظة: ينصح باستخدام قاعدة بيانات لاحقاً)
 const registeredUsers = new Map();
 
 client.once('ready', async () => {
@@ -27,9 +26,9 @@ client.once('ready', async () => {
                     .setDescription('نسخة ماين كرافت (جافا، كراك، بيدروك)')
                     .setRequired(true)
                     .addChoices(
-                        { name: 'Java Premium', value: 'JAVA' },
-                        { name: 'Cracked', value: 'CRACKED' },
-                        { name: 'Bedrock', value: 'BEDROCK' }
+                        { name: 'Java Premium (الجافا الأصلية)', value: 'JAVA' },
+                        { name: 'Cracked (المكركة)', value: 'CRACKED' },
+                        { name: 'Bedrock (البيدروك)', value: 'BEDROCK' }
                     ))
             .addStringOption(option =>
                 option.setName('region')
@@ -43,43 +42,48 @@ client.once('ready', async () => {
                     ))
             .addAttachmentOption(option =>
                 option.setName('skin_file')
-                    .setDescription('ملف صورة السكن (مطلوب للكراك والبيدروك)')
-                    .setRequired(false)),
-
-        new SlashCommandBuilder()
-            .setName('profile')
-            .setDescription('عرض ملفك الشخصي أو ملف لاعب آخر')
-            .addUserOption(option =>
-                option.setName('user')
-                    .setDescription('اللاعب المراد عرض ملفه')
+                    .setDescription('ملف صورة السكن PNG (مخصص للكراك والبيدروك)')
                     .setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('setrank')
             .setDescription('تعيين تير لاعب في نمط لعب معين (للمختبرين فقط)')
-            .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles) // صلاحيات المشرفين/التستر
+            .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .addUserOption(option =>
-                option.setName('user')
-                    .setDescription('اللاعب')
+                option.setName('player')
+                    .setDescription('اللاعب المراد تقييمه')
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('gamemode')
                     .setDescription('نمط اللعب')
                     .setRequired(true)
                     .addChoices(
-                        { name: 'Sword', value: 'Sword' },
-                        { name: 'Vanilla', value: 'Vanilla' },
-                        { name: 'Pot', value: 'Pot' },
-                        { name: 'UHC', value: 'UHC' },
-                        { name: 'NethOP', value: 'NethOP' },
-                        { name: 'SMP', value: 'SMP' },
-                        { name: 'Axe', value: 'Axe' },
-                        { name: 'Mace', value: 'Mace' }
+                        { name: 'Sword 🗡️', value: 'SWORD' },
+                        { name: 'Vanilla 🔮', value: 'VANILLA' },
+                        { name: 'Pot 🧪', value: 'POT' },
+                        { name: 'UHC 💖', value: 'UHC' },
+                        { name: 'NethOP 🛡️', value: 'NETHOP' },
+                        { name: 'SMP 🟢', value: 'SMP' },
+                        { name: 'Axe 🪓', value: 'AXE' },
+                        { name: 'Mace 🔨', value: 'MACE' },
+                        { name: 'Spearmace 🔱', value: 'SPEARMACE' }
                     ))
             .addStringOption(option =>
                 option.setName('tier')
-                    .setDescription('الرانك المستحق')
-                    .setRequired(true)),
+                    .setDescription('الرانك من الأقوى (HT1) إلى الأضعف (LT5)')
+                    .setRequired(true)
+                    .addChoices(
+                        { name: 'High Tier 1 (HT1) 🔥 [الأقوى]', value: 'HT1' },
+                        { name: 'Low Tier 1 (LT1)', value: 'LT1' },
+                        { name: 'High Tier 2 (HT2)', value: 'HT2' },
+                        { name: 'Low Tier 2 (LT2)', value: 'LT2' },
+                        { name: 'High Tier 3 (HT3)', value: 'HT3' },
+                        { name: 'Low Tier 3 (LT3)', value: 'LT3' },
+                        { name: 'High Tier 4 (HT4)', value: 'HT4' },
+                        { name: 'Low Tier 4 (LT4)', value: 'LT4' },
+                        { name: 'High Tier 5 (HT5)', value: 'HT5' },
+                        { name: 'Low Tier 5 (LT5) [الأضعف]', value: 'LT5' }
+                    )),
 
         new SlashCommandBuilder()
             .setName('unregister')
@@ -98,7 +102,7 @@ client.once('ready', async () => {
             Routes.applicationCommands(client.user.id),
             { body: commands },
         );
-        console.log('تم تحديث الأوامر بنجاح!');
+        console.log('تم تحديث الأوامر مع الخيارات الجديدة بنجاح!');
     } catch (error) {
         console.error(error);
     }
@@ -122,7 +126,6 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin_file');
 
-        // التحقق من رفع السكن للكراك
         if ((edition === 'CRACKED' || edition === 'BEDROCK') && !skinAttachment) {
             return await interaction.reply({
                 content: '⚠️ يجب عليك رفع ملف السكن الخاص بك بصيغة (PNG) بما أن نسختك مكركة أو بيدروك!',
@@ -130,6 +133,7 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
+        // تحديد رابط السكن وإصلاح المشكلة
         let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
 
         registeredUsers.set(interaction.user.id, { 
@@ -137,29 +141,18 @@ client.on('interactionCreate', async interaction => {
             edition, 
             region, 
             skinUrl,
-            points: 0,
-            tiers: {
-                'Vanilla': 'Unranked',
-                'UHC': 'Unranked',
-                'Pot': 'Unranked',
-                'NethOP': 'Unranked',
-                'SMP': 'Unranked',
-                'Sword': 'Unranked',
-                'Axe': 'Unranked',
-                'Mace': 'Unranked',
-                'SpearMace': 'Unranked'
-            }
+            tiers: {}
         });
 
         const embed = new EmbedBuilder()
-            .setColor('#00ff7f')
+            .setColor('#2b2d31')
             .setTitle('💎 RubyTiers - تم التسجيل بنجاح')
-            .setDescription('تم ربط حسابك بنجاح!')
+            .setDescription('**تم ربط حسابك بنجاح!**')
             .setThumbnail(skinUrl)
             .addFields(
-                { name: 'الاسم', value: `\`${username}\``, inline: false },
-                { name: 'النسخة', value: `\`${edition}\``, inline: false },
-                { name: 'المنطقة', value: `\`${region}\``, inline: false }
+                { name: 'الاسم:', value: `\`${username}\``, inline: false },
+                { name: 'النسخة:', value: `\`${edition}\``, inline: false },
+                { name: 'المنطقة:', value: `\`${region}\``, inline: false }
             )
             .setFooter({ text: 'RubyTiers Official Network' })
             .setTimestamp();
@@ -168,7 +161,7 @@ client.on('interactionCreate', async interaction => {
     } 
 
     else if (commandName === 'setrank') {
-        const targetUser = interaction.options.getUser('user');
+        const targetUser = interaction.options.getUser('player');
         const gamemode = interaction.options.getString('gamemode');
         const tier = interaction.options.getString('tier');
 
@@ -184,10 +177,9 @@ client.on('interactionCreate', async interaction => {
         const previousRank = userData.tiers[gamemode] || 'Unranked';
         userData.tiers[gamemode] = tier;
 
-        // إرسال الرد للتستر
         await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} بنجاح!`, ephemeral: true });
 
-        // إرسال النتيجة تلقائياً لروم النتائج
+        // إرسال النتيجة تلقائياً لروم النتائج المخصص
         const resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
         if (resultsChannel) {
             const resultEmbed = new EmbedBuilder()
@@ -199,7 +191,7 @@ client.on('interactionCreate', async interaction => {
                     { name: 'Region:', value: `${userData.region}`, inline: false },
                     { name: 'Username:', value: `${userData.username}`, inline: false },
                     { name: 'Previous Rank:', value: `${previousRank}`, inline: false },
-                    { name: 'Rank Earned:', value: `**${tier} (${gamemode.toUpperCase()})**`, inline: false }
+                    { name: 'Rank Earned:', value: `**${tier} (${gamemode})**`, inline: false }
                 )
                 .setFooter({ text: 'RubyTiers Official Results' })
                 .setTimestamp();
