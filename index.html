@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY TIERS - MCTiers Rankings</title>
+    <title>MY TIERS - MCTiers</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #0c1017;
-            --bg-card: #131924;
-            --bg-subcard: #182030;
-            --border-color: #222c3d;
-            --accent-gold: #fbbf24;
-            --accent-silver: #cbd5e1;
-            --accent-bronze: #d97706;
-            --text-white: #ffffff;
-            --text-gray: #94a3b8;
+            --bg-dark: #0a0e17;
+            --card-bg: #111723;
+            --sub-card: #161f2e;
+            --border-color: #1e293b;
+            --gold: #f59e0b;
+            --silver: #94a3b8;
+            --bronze: #d97706;
             --ht-color: #f97316;
             --lt-color: #3b82f6;
+            --text-gray: #8e9bb0;
         }
 
         * {
@@ -28,33 +27,35 @@
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-white);
-            padding: 12px;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            padding: 10px;
             direction: ltr;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 480px;
             margin: 0 auto;
         }
 
-        /* Top Navbar */
+        /* Top Header */
         .top-navbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 15px;
-            gap: 10px;
+            margin-bottom: 12px;
+            gap: 8px;
         }
 
-        .menu-btn {
-            background: transparent;
-            border: none;
-            color: #fff;
+        .logo-text {
             font-size: 20px;
-            cursor: pointer;
+            font-weight: 900;
+            font-family: monospace;
+            letter-spacing: 0.5px;
         }
+
+        .logo-my { color: #f59e0b; }
+        .logo-tiers { color: #f59e0b; }
 
         .search-box {
             position: relative;
@@ -63,12 +64,12 @@
 
         .search-box input {
             width: 100%;
-            background: #171f2e;
+            background: #151c28;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 8px 12px 8px 32px;
+            padding: 7px 10px 7px 30px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .search-box i {
@@ -77,330 +78,297 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-gray);
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        .logo-text {
-            font-size: 22px;
-            font-weight: 900;
-            font-family: monospace;
-            letter-spacing: 0.5px;
+        .menu-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
         }
 
-        .logo-my { color: #3b82f6; }
-        .logo-tiers { color: #fbbf24; }
-
-        /* Main Tabs Scrollable */
-        .tabs-wrapper {
+        /* Unified Single Nav Tabs (Horizontal Scroll) */
+        .single-nav-wrapper {
             overflow-x: auto;
             white-space: nowrap;
-            margin-bottom: 12px;
-            padding-bottom: 5px;
+            margin-bottom: 10px;
+            padding-bottom: 4px;
             scrollbar-width: none;
         }
 
-        .tabs-wrapper::-webkit-scrollbar { display: none; }
+        .single-nav-wrapper::-webkit-scrollbar { display: none; }
 
-        .main-tabs {
+        .nav-tabs {
             display: inline-flex;
-            gap: 8px;
-            background: var(--bg-card);
-            padding: 6px;
-            border-radius: 12px;
+            gap: 6px;
+            background: #121824;
+            padding: 4px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
         }
 
-        .tab-btn {
-            display: flex;
+        .nav-item {
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            padding: 8px 16px;
-            border-radius: 8px;
+            justify-content: center;
+            padding: 6px 14px;
+            border-radius: 6px;
             color: var(--text-gray);
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            gap: 4px;
-            min-width: 75px;
+            gap: 3px;
         }
 
-        .tab-btn i { font-size: 16px; }
+        .nav-item i { font-size: 14px; }
 
-        .tab-btn.active {
-            background: #1e293b;
-            color: #fff;
-            border-bottom: 2px solid var(--accent-gold);
+        .nav-item.active {
+            background: #1a2333;
+            color: #ffffff;
+            border-bottom: 2px solid var(--gold);
         }
 
-        .tab-btn.active i { color: var(--accent-gold); }
+        .nav-item.active i { color: var(--gold); }
 
-        /* Sub Category Modes Bar */
-        .sub-modes-bar {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            scrollbar-width: none;
-        }
-
-        .mode-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 10px;
-            min-width: 65px;
-            cursor: pointer;
-        }
-
-        .mode-item i { font-size: 16px; margin-bottom: 4px; color: #a855f7; }
-        .mode-item.sword i { color: #3b82f6; }
-        .mode-item.axe i { color: #38bdf8; }
-        .mode-item.mace i { color: #94a3b8; }
-        .mode-item.pot i { color: #ec4899; }
-        .mode-item.smp i { color: #10b981; }
-
-        .mode-item span { font-size: 11px; color: var(--text-gray); font-weight: bold; }
-
-        /* Server Bar */
+        /* Server Header Bar */
         .server-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--bg-card);
-            padding: 8px 12px;
-            border-radius: 10px;
+            background: var(--card-bg);
+            padding: 6px 10px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
-            margin-bottom: 15px;
-            font-size: 12px;
+            margin-bottom: 12px;
+            font-size: 11px;
         }
 
         .info-btn {
-            background: #1e293b;
+            background: #1c2636;
             border: 1px solid var(--border-color);
             color: #fff;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 10px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .server-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .pvp-badge {
-            background: #991b1b;
+            background: #e11d48;
             color: #fff;
             font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 9px;
         }
 
-        .ip-text { color: var(--text-gray); font-size: 11px; }
+        .ip-text { color: var(--text-gray); font-size: 10px; }
 
-        /* Player Card Design */
+        /* Player Card Design (Compact Height) */
         .player-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
             border: 1px solid var(--border-color);
         }
 
-        /* Rank Banners */
-        .rank-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        /* Banner Header */
+        .rank-banner {
+            position: relative;
+            height: 38px;
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            border-radius: 8px;
-            padding: 4px 12px;
-            margin-bottom: 10px;
-            clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
-            color: #000;
-        }
-
-        .rank-header.rank-2 {
-            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
-            color: #fff;
-        }
-
-        .rank-header.rank-3 {
-            background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
-            color: #fff;
-        }
-
-        .rank-title-box {
+            border-radius: 6px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            padding-left: 10px;
+            margin-bottom: 8px;
+            clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
+        }
+
+        .rank-banner.rank-2 {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        }
+
+        .rank-banner.rank-3 {
+            background: linear-gradient(135deg, #b45309 0%, #78350f 100%);
         }
 
         .rank-num {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
             font-style: italic;
+            color: #000;
+            margin-right: 15px;
         }
 
-        .player-head {
+        .rank-banner.rank-2 .rank-num,
+        .rank-banner.rank-3 .rank-num {
+            color: #fff;
+        }
+
+        .player-head-img {
             width: 32px;
             height: 32px;
             border-radius: 4px;
+            position: absolute;
+            left: 42px;
+            top: 3px;
         }
 
-        .player-info-row {
+        .player-meta {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .player-name {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .player-sub {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-gray);
             display: flex;
             align-items: center;
             gap: 4px;
         }
 
-        .status-tag {
+        .status-badge {
             background: rgba(239, 68, 68, 0.15);
             color: #ef4444;
             border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
             font-weight: bold;
         }
 
-        .status-tag.eu {
+        .status-badge.eu {
             background: rgba(16, 185, 129, 0.15);
             color: #10b981;
             border-color: rgba(16, 185, 129, 0.3);
         }
 
-        /* Levels Grid with Top Icons */
-        .levels-container {
-            background: var(--bg-subcard);
-            border-radius: 8px;
-            padding: 8px;
+        /* Levels Grid Compact */
+        .levels-section {
+            background: var(--sub-card);
+            border-radius: 6px;
+            padding: 6px;
         }
 
-        .levels-label {
-            font-size: 10px;
+        .levels-title {
+            font-size: 9px;
             color: var(--text-gray);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
-        .tiers-flex {
+        .tiers-grid {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
         }
 
-        .tier-box {
-            background: #111722;
-            border: 1px solid #232d3f;
-            border-radius: 6px;
-            padding: 4px 6px;
+        .tier-item {
+            background: #101622;
+            border: 1px solid #1c2738;
+            border-radius: 5px;
+            padding: 2px 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 36px;
+            min-width: 32px;
         }
 
-        .tier-box .icon-top {
-            font-size: 11px;
-            margin-bottom: 2px;
-        }
-
-        .tier-box .tier-code {
+        .tier-item .icon-box {
             font-size: 10px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tier-item .tier-val {
+            font-size: 9px;
             font-weight: bold;
         }
 
-        .tier-box.ht .tier-code { color: var(--ht-color); }
-        .tier-box.lt .tier-code { color: var(--lt-color); }
+        .tier-item.ht .tier-val { color: var(--ht-color); }
+        .tier-item.lt .tier-val { color: var(--lt-color); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Top Navbar -->
+        <!-- Top Navigation Bar -->
         <div class="top-navbar">
-            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <div class="logo-text">
+                <span class="logo-my">MC</span><span class="logo-tiers">TIERS</span>
+            </div>
 
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search player...">
             </div>
 
-            <div class="logo-text">
-                <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
-            </div>
+            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
         </div>
 
-        <!-- Main Category Tabs -->
-        <div class="tabs-wrapper">
-            <div class="main-tabs">
-                <div class="tab-btn active">
+        <!-- Single Navigation Ribbon (All Gamemodes) -->
+        <div class="single-nav-wrapper">
+            <div class="nav-tabs">
+                <div class="nav-item active">
                     <i class="fa-solid fa-trophy"></i>
                     <span>Overall</span>
                 </div>
-                <div class="tab-btn">
+                <div class="nav-item">
                     <i class="fa-solid fa-swords"></i>
                     <span>LTMs</span>
                 </div>
-                <div class="tab-btn">
+                <div class="nav-item">
                     <i class="fa-solid fa-gem"></i>
                     <span>Vanilla</span>
                 </div>
-                <div class="tab-btn">
+                <div class="nav-item">
                     <i class="fa-solid fa-heart"></i>
                     <span>Overall Tierlist</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Sub Gamemodes Bar -->
-        <div class="sub-modes-bar">
-            <div class="mode-item pot">
-                <i class="fa-solid fa-flask"></i>
-                <span>Pot</span>
-            </div>
-            <div class="mode-item">
-                <i class="fa-solid fa-shield-halved"></i>
-                <span>NethOP</span>
-            </div>
-            <div class="mode-item smp">
-                <i class="fa-solid fa-circle-dot"></i>
-                <span>SMP</span>
-            </div>
-            <div class="mode-item sword">
-                <i class="fa-solid fa-location-arrow"></i>
-                <span>Sword</span>
-            </div>
-            <div class="mode-item axe">
-                <i class="fa-solid fa-axe"></i>
-                <span>Axe</span>
-            </div>
-            <div class="mode-item mace">
-                <i class="fa-solid fa-gavel"></i>
-                <span>Mace</span>
+                <div class="nav-item">
+                    <i class="fa-solid fa-flask" style="color:#ec4899;"></i>
+                    <span>Pot</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-shield-halved" style="color:#a855f7;"></i>
+                    <span>NethOP</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i>
+                    <span>SMP</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i>
+                    <span>Sword</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-axe" style="color:#38bdf8;"></i>
+                    <span>Axe</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-gavel" style="color:#94a3b8;"></i>
+                    <span>Mace</span>
+                </div>
             </div>
         </div>
 
@@ -409,7 +377,7 @@
             <button class="info-btn"><i class="fa-solid fa-circle-info"></i> Information</button>
             <div class="server-right">
                 <span class="pvp-badge">PVP CLUB</span>
-                <span class="ip-text">SERVER IP mcpvp.club</span>
+                <span class="ip-text">mcpvp.club</span>
                 <i class="fa-brands fa-discord" style="color:#5865f2;"></i>
             </div>
         </div>
@@ -419,92 +387,86 @@
 
             <!-- Rank 1 -->
             <div class="player-card">
-                <div class="rank-header">
-                    <div class="rank-title-box">
-                        <span class="rank-num">1.</span>
-                        <img src="https://mc-heads.net/avatar/Marlo/32" class="player-head" alt="Marlo">
-                    </div>
+                <div class="rank-banner">
+                    <span class="rank-num">1.</span>
+                    <img src="https://mc-heads.net/avatar/Marlo/32" class="player-head-img" alt="Marlo">
                 </div>
 
-                <div class="player-info-row">
+                <div class="player-meta">
                     <div>
                         <div class="player-name">Marlo</div>
-                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--accent-gold);"></i> Grand Combat Master (4)</div>
+                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--gold);"></i> Grand Combat Master (4)</div>
                     </div>
-                    <span class="status-tag">N/A</span>
+                    <span class="status-badge">N/A</span>
                 </div>
 
-                <div class="levels-container">
-                    <div class="levels-label">Tiers</div>
-                    <div class="tiers-flex">
-                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></span><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-axe" style="color:#38bdf8;"></i></span><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-flask" style="color:#ec4899;"></i></span><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-heart" style="color:#ef4444;"></i></span><span class="tier-code">LT 1</span></div>
-                        <div class="tier-box lt"><span class="tier-code">LT 1</span></div>
+                <div class="levels-section">
+                    <div class="levels-title">Tiers</div>
+                    <div class="tiers-grid">
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item lt"><span class="icon-box"><i class="fa-solid fa-heart" style="color:#ef4444;"></i></span><span class="tier-val">LT 1</span></div>
+                        <div class="tier-item lt"><span class="icon-box"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></span><span class="tier-val">LT 1</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Rank 2 -->
             <div class="player-card">
-                <div class="rank-header rank-2">
-                    <div class="rank-title-box">
-                        <span class="rank-num">2.</span>
-                        <img src="https://mc-heads.net/avatar/ItzRealMe/32" class="player-head" alt="ItzRealMe">
-                    </div>
+                <div class="rank-banner rank-2">
+                    <span class="rank-num">2.</span>
+                    <img src="https://mc-heads.net/avatar/ItzRealMe/32" class="player-head-img" alt="ItzRealMe">
                 </div>
 
-                <div class="player-info-row">
+                <div class="player-meta">
                     <div>
                         <div class="player-name">ItzRealMe</div>
-                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--accent-gold);"></i> Combat Master (330)</div>
+                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--gold);"></i> Combat Master (330)</div>
                     </div>
-                    <span class="status-tag">N/A</span>
+                    <span class="status-badge">N/A</span>
                 </div>
 
-                <div class="levels-container">
-                    <div class="levels-label">Tiers</div>
-                    <div class="tiers-flex">
-                        <div class="tier-box ht"><span class="icon-top"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-code">HT 3</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></span><span class="tier-code">LT 2</span></div>
-                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-axe" style="color:#38bdf8;"></i></span><span class="tier-code">LT 2</span></div>
+                <div class="levels-section">
+                    <div class="levels-title">Tiers</div>
+                    <div class="tiers-grid">
+                        <div class="tier-item ht"><span class="icon-box"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-val">HT 3</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item lt"><span class="icon-box"><i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i></span><span class="tier-val">LT 2</span></div>
+                        <div class="tier-item lt"><span class="icon-box"><i class="fa-solid fa-axe" style="color:#38bdf8;"></i></span><span class="tier-val">LT 2</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Rank 3 -->
             <div class="player-card">
-                <div class="rank-header rank-3">
-                    <div class="rank-title-box">
-                        <span class="rank-num">3.</span>
-                        <img src="https://mc-heads.net/avatar/Mubard/32" class="player-head" alt="Mubard">
-                    </div>
+                <div class="rank-banner rank-3">
+                    <span class="rank-num">3.</span>
+                    <img src="https://mc-heads.net/avatar/Mubard/32" class="player-head-img" alt="Mubard">
                 </div>
 
-                <div class="player-info-row">
+                <div class="player-meta">
                     <div>
                         <div class="player-name">Mubard</div>
-                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--accent-gold);"></i> Combat Master (326)</div>
+                        <div class="player-sub"><i class="fa-solid fa-gem" style="color:var(--gold);"></i> Combat Master (326)</div>
                     </div>
-                    <span class="status-tag eu">EU</span>
+                    <span class="status-badge eu">EU</span>
                 </div>
 
-                <div class="levels-container">
-                    <div class="levels-label">Tiers</div>
-                    <div class="tiers-flex">
-                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-flask" style="color:#ec4899;"></i></span><span class="tier-code">LT 1</span></div>
-                        <div class="tier-box lt"><span class="icon-top"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-code">LT 3</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box ht"><span class="tier-code">HT 1</span></div>
-                        <div class="tier-box lt"><span class="tier-code">LT 1</span></div>
-                        <div class="tier-box lt"><span class="tier-code">LT 2</span></div>
+                <div class="levels-section">
+                    <div class="levels-title">Tiers</div>
+                    <div class="tiers-grid">
+                        <div class="tier-item lt"><span class="icon-box"><i class="fa-solid fa-flask" style="color:#ec4899;"></i></span><span class="tier-val">LT 1</span></div>
+                        <div class="tier-item lt"><span class="icon-box"><i class="fa-solid fa-gem" style="color:#a855f7;"></i></span><span class="tier-val">LT 3</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item ht"><span class="icon-box"></span><span class="tier-val">HT 1</span></div>
+                        <div class="tier-item lt"><span class="icon-box"></span><span class="tier-val">LT 1</span></div>
+                        <div class="tier-item lt"><span class="icon-box"></span><span class="tier-val">LT 2</span></div>
                     </div>
                 </div>
             </div>
