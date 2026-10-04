@@ -38,10 +38,10 @@ client.once('ready', async () => {
                         { name: 'North America (NA)', value: 'NA' },
                         { name: 'Asia (AS)', value: 'AS' }
                     ))
-            .addAttachmentOption(option =>
-                option.setName('skin_file')
-                    .setDescription('ارفع ملف السكن PNG الخاص بك (اختياري)')
-                    .setRequired(false)), // جعلناه اختيارياً لتجنب مشكلة الجوال نهائياً
+            .addStringOption(option =>
+                option.setName('skin_url')
+                    .setDescription('رابط مباشر لصورة رأس السكن (اختياري، مثل Imgur)')
+                    .setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -114,10 +114,10 @@ client.on('interactionCreate', async interaction => {
         const username = interaction.options.getString('username');
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
-        const skinAttachment = interaction.options.getAttachment('skin_file');
+        const customSkinUrl = interaction.options.getString('skin_url');
 
-        // إذا قام اللاعب برفع ملف السكن، نستخدمه، وإلا نجلب الرأس أوتوماتيكياً
-        let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
+        // إذا قام اللاعب بوضع رابط مباشر لصورة الرأس، نستخدمه، وإلا نجلب الرأس أوتوماتيكياً
+        let skinUrl = customSkinUrl ? customSkinUrl : `https://mc-heads.net/avatar/${username}/150`;
 
         registeredUsers.set(interaction.user.id, { username, edition, region, skinUrl });
 
@@ -159,7 +159,7 @@ client.on('interactionCreate', async interaction => {
         const targetUser = interaction.options.getUser('user');
         const gamemode = interaction.options.getString('gamemode');
         const tier = interaction.options.getString('tier');
-        await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
+        + await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
     }
     else if (commandName === 'syncroles') {
         await interaction.reply({ content: '🔄 جاري مزامنة رتب الديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
