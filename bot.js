@@ -47,21 +47,21 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
+// دالة جلب مجسم الرأس من اسم اللاعب الأصلي
+function getSkinUrl(username) {
+    return `https://mc-heads.net/head/${encodeURIComponent(username)}/100`;
+}
+
+// دالة تحويل رابط ملف السكن المرفوع (PNG) للحساب الكراك إلى مجسم رأس 3D فوراً
+function getCrackedSkinUrl(attachmentUrl) {
+    return `https://mc-heads.net/head/${encodeURIComponent(attachmentUrl)}/100`;
+}
+
 const activeQueues = {
     Sword: [], Pot: [], Vanilla: [], UHC: [], NethOP: [], SMP: [], Axe: [], Mace: [], SpearMace: []
 };
 
 const GAMEMODES = ['Vanilla', 'UHC', 'Pot', 'NethOP', 'SMP', 'Sword', 'Axe', 'Mace', 'SpearMace'];
-
-// دالة تحويل اسم اللاعب الأصلي إلى مجسم رأس وكتفين
-function getSkinUrl(username) {
-    return `https://mc-heads.net/bust/${encodeURIComponent(username)}/100`;
-}
-
-// دالة تحويل صورة السكن المرفوعة (PNG) للحساب المكرك إلى مجسم رأس وكتفين (Bust 3D)
-function convertUploadedSkinToBust(attachmentUrl) {
-    return `https://render.crafty.gg/3d/bust?url=${encodeURIComponent(attachmentUrl)}`;
-}
 
 async function isTesterOnline(guild) {
     try {
@@ -141,7 +141,7 @@ client.once('ready', async () => {
                 { name: 'North America (NA)', value: 'NA' },
                 { name: 'Asia (AS)', value: 'AS' }
             ))
-            .addAttachmentOption(opt => opt.setName('skin_file').setDescription('رفع ملف صورة السكن PNG (مطلوبة للكراك)').setRequired(false)),
+            .addAttachmentOption(opt => opt.setName('skin_file').setDescription('ملف صورة السكن PNG').setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('unregister')
@@ -193,7 +193,7 @@ client.on('interactionCreate', async interaction => {
     if (interaction.isChatInputCommand() && interaction.commandName === 'setup-queue') {
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
-            .setTitle('🧪 MYTIERS - قوائم الاختبار')
+            .setTitle('🧪 MYTIERS - قوائم الانتظار')
             .setDescription('اختر الكت الذي تريد الاختبار فيه من الأزرار بالأسفل لعرض قائمة الانتظار والدخول فيها.\n\n⚠️ **يجب أن تكون مسجلاً عبر `/register` أولاً.**');
 
         const row1 = new ActionRowBuilder().addComponents(
@@ -299,7 +299,7 @@ client.on('interactionCreate', async interaction => {
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor('#2b2d31')
-                .setTitle(`⚔️️ MYTIERS | تذكرة اختبار جديدة`)
+                .setTitle(`⚔️ MYTIERS | تذكرة اختبار جديدة`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
                     { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },
@@ -344,10 +344,8 @@ client.on('interactionCreate', async interaction => {
 
             let skinUrl;
             if (skinAttachment) {
-                // إذا تم رفع ملف سكن PNG يتم تحويله لمجسم رأس وكتفين تلقائياً
-                skinUrl = convertUploadedSkinToBust(skinAttachment.url);
+                skinUrl = skinAttachment.url;
             } else {
-                // في حال عدم الرفع يتم الاعتماد على الاسم تلقائياً
                 skinUrl = getSkinUrl(username);
             }
 
