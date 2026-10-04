@@ -1,12 +1,14 @@
 {
   "name": "mytiers-bot",
   "version": "1.0.0",
+  "description": "Discord Bot for Tiers",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
   },
   "dependencies": {
     "axios": "^1.6.8",
+    "canvas": "^2.11.2",
     "discord.js": "^14.14.0",
     "dotenv": "^16.4.5"
   }
