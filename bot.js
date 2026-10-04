@@ -37,7 +37,11 @@ client.once('ready', async () => {
                         { name: 'Europe (EU)', value: 'EU' },
                         { name: 'North America (NA)', value: 'NA' },
                         { name: 'Asia (AS)', value: 'AS' }
-                    )),
+                    ))
+            .addAttachmentOption(option =>
+                option.setName('skin_file')
+                    .setDescription('ملف صورة السكن (اختياري، مخصص لحسابات الكراك)')
+                    .setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -69,7 +73,7 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('syncroles')
-            .setDescription('مزامنة رتب ديسكورد للـ HT / LT لجميع المسجلين'),
+            .setDescription('مزامنة رتب ديسكورد للـ LT / HT لجميع المسجلين'),
 
         new SlashCommandBuilder()
             .setName('unregister')
@@ -110,8 +114,10 @@ client.on('interactionCreate', async interaction => {
         const username = interaction.options.getString('username');
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
+        const skinAttachment = interaction.options.getAttachment('skin_file');
 
-        let skinUrl = `https://mc-heads.net/avatar/${username}/150`;
+        // إذا قام برفع ملف سكن يستميله، وإلا يأخذ السكن الافتراضي حسب اسم اللاعب
+        let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
 
         registeredUsers.set(interaction.user.id, { 
             username, 
