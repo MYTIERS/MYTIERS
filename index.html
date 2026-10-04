@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCTiers Replica</title>
+    <title>MY TIERS - MCTiers</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --bg-main: #0a0d14;
             --card-bg: #111622;
-            --tier-bg: #182030;
+            --sub-card: #161f2e;
+            --border-color: #1a2332;
+            --gold: #f59e0b;
             --ht-orange: #f97316;
             --lt-blue: #3b82f6;
             --text-gray: #94a3b8;
@@ -25,22 +27,159 @@
         body {
             background-color: var(--bg-main);
             color: #ffffff;
-            padding: 12px;
+            padding: 10px;
             direction: ltr;
         }
 
         .container {
-            max-width: 450px;
+            max-width: 480px;
             margin: 0 auto;
         }
+
+        /* Top Header Navigation */
+        .top-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 900;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-my { color: var(--gold); }
+        .logo-tiers { color: var(--gold); }
+
+        .search-box {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: #141b27;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 7px 10px 7px 30px;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+            font-size: 11px;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Unified Single Nav Tabs Scrollable */
+        .single-nav-wrapper {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 10px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .single-nav-wrapper::-webkit-scrollbar { display: none; }
+
+        .nav-tabs {
+            display: inline-flex;
+            gap: 6px;
+            background: #121824;
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-item {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 14px;
+            border-radius: 6px;
+            color: var(--text-gray);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            gap: 3px;
+        }
+
+        .nav-item i { font-size: 14px; }
+
+        .nav-item.active {
+            background: #1a2333;
+            color: #ffffff;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .nav-item.active i { color: var(--gold); }
+
+        /* Server Header Bar */
+        .server-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            font-size: 11px;
+        }
+
+        .info-btn {
+            background: #1c2636;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .server-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pvp-badge {
+            background: #e11d48;
+            color: #fff;
+            font-weight: bold;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 9px;
+        }
+
+        .ip-text { color: var(--text-gray); font-size: 10px; }
 
         /* Card Container */
         .player-card {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #1a2332;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
             position: relative;
         }
 
@@ -51,13 +190,13 @@
             justify-content: space-between;
             position: relative;
             height: 48px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         /* Yellow Rank Banner */
         .rank-banner {
             position: relative;
-            background: #eab308;
+            background: var(--gold);
             height: 38px;
             width: 140px;
             clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
@@ -74,17 +213,19 @@
             color: #000;
         }
 
-        /* Minecraft Body Render floating over banner */
-        .player-render {
+        /* Minecraft Head Avatar */
+        .player-head {
             position: absolute;
-            left: 55px;
-            bottom: -4px;
-            height: 52px;
+            left: 50px;
+            top: 4px;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
             z-index: 2;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
-        /* Player Details Next to Banner */
+        /* Player Details */
         .player-info {
             position: absolute;
             left: 135px;
@@ -108,11 +249,11 @@
         }
 
         .rank-icon {
-            color: #eab308;
+            color: var(--gold);
             font-size: 10px;
         }
 
-        /* Status Tag (Top Right) */
+        /* Status Badge */
         .status-badge {
             background: rgba(239, 68, 68, 0.15);
             color: #ef4444;
@@ -121,12 +262,6 @@
             border-radius: 6px;
             font-size: 10px;
             font-weight: bold;
-        }
-
-        .status-badge.eu {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            border-color: rgba(16, 185, 129, 0.3);
         }
 
         /* Tiers Section */
@@ -197,14 +332,84 @@
 
     <div class="container">
 
+        <!-- Top Header Navigation Bar -->
+        <div class="top-navbar">
+            <div class="logo-text">
+                <span class="logo-my">MC</span><span class="logo-tiers">TIERS</span>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search player...">
+            </div>
+
+            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+        </div>
+
+        <!-- Single Navigation Ribbon (All Gamemodes) -->
+        <div class="single-nav-wrapper">
+            <div class="nav-tabs">
+                <div class="nav-item active">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Overall</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-swords"></i>
+                    <span>LTMs</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-gem"></i>
+                    <span>Vanilla</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>Overall Tierlist</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-flask" style="color:#ec4899;"></i>
+                    <span>Pot</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-shield-halved" style="color:#a855f7;"></i>
+                    <span>NethOP</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-circle-dot" style="color:#10b981;"></i>
+                    <span>SMP</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-location-arrow" style="color:#3b82f6;"></i>
+                    <span>Sword</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-axe" style="color:#38bdf8;"></i>
+                    <span>Axe</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fa-solid fa-gavel" style="color:#94a3b8;"></i>
+                    <span>Mace</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Server Information Bar -->
+        <div class="server-bar">
+            <button class="info-btn"><i class="fa-solid fa-circle-info"></i> Information</button>
+            <div class="server-right">
+                <span class="pvp-badge">PVP CLUB</span>
+                <span class="ip-text">mcpvp.club</span>
+                <i class="fa-brands fa-discord" style="color:#5865f2;"></i>
+            </div>
+        </div>
+
         <!-- Player Card 1 -->
         <div class="player-card">
             <div class="card-top">
                 <div class="rank-banner">
                     <span class="rank-num">1.</span>
                 </div>
-                <!-- Minecraft Body Render -->
-                <img src="https://mc-heads.net/body/Marlo/right" class="player-render" alt="Marlo">
+                <!-- Player Head Avatar Only -->
+                <img src="https://mc-heads.net/avatar/Marlo/30" class="player-head" alt="Marlo">
 
                 <div class="player-info">
                     <div class="player-name">Marlo</div>
