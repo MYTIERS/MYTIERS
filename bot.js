@@ -47,10 +47,10 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// دالة جلب رابط صورة الرأس الموثوقة 100%
-function getHeadUrl(username, skinAttachmentUrl) {
-    if (skinAttachmentUrl && skinAttachmentUrl.startsWith('http')) {
-        return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/100`;
+// دالة جلب رابط الصورة (تستخدم الملف المرفوع أولاً إن وجد)
+function getHeadUrl(username, skinUrl) {
+    if (skinUrl && skinUrl.startsWith('http')) {
+        return skinUrl;
     }
     return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/100`;
 }
@@ -311,7 +311,7 @@ client.on('interactionCreate', async interaction => {
 
             const ticketButtons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder().setCustomId('close_ticket').setLabel('إغلاق التذكرة 🔒').setStyle(ButtonStyle.Secondary),
-                new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️').setStyle(ButtonStyle.Danger)
+                new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️️').setStyle(ButtonStyle.Danger)
             );
 
             await ticketChannel.send({ 
@@ -451,8 +451,8 @@ client.on('interactionCreate', async interaction => {
                 .setThumbnail(headUrl)
                 .addFields(
                     { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: true },
-                    { name: 'عدد التصنيفات 🎖️', value: `\`${rankedCount} Tiers\``, inline: true },
-                    { name: 'اللقب ⭐️️', value: `\`${userData.title}\``, inline: true },
+                    { name: 'عدد التصنيفات 🎖️️', value: `\`${rankedCount} Tiers\``, inline: true },
+                    { name: 'اللقب ⭐', value: `\`${userData.title}\``, inline: true },
                     { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersList, inline: false }
                 )
                 .setFooter({ text: 'MYTIERS Competitive System' })
