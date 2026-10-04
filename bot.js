@@ -136,9 +136,7 @@ client.on('interactionCreate', async interaction => {
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
             .setTitle('💎 RubyTiers | نظام التسجيل')
-            .setDescription(edition === 'CRACKED' 
-                ? '**تم تسجيل حسابك بنجاح!**\n\n📸 **بما أن حسابك (كراك)، يرجى إرسال صورة السكن (PNG) هنا في الشات الآن كرسالة عادية لتحديثه (أمامك 60 ثانية).**'
-                : '**تم ربط حسابك بنجاح!**')
+            .setDescription('**تم تسجيل وربط حسابك بنجاح!**')
             .setThumbnail(skinUrl)
             .addFields(
                 { name: '👤 الاسم', value: `\`${username}\``, inline: true },
@@ -149,36 +147,6 @@ client.on('interactionCreate', async interaction => {
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
-
-        if (edition === 'CRACKED') {
-            const filter = m => m.author.id === interaction.user.id && m.attachments.size > 0;
-            const collector = interaction.channel.createMessageCollector({ filter, time: 60000, max: 1 });
-
-            collector.on('collect', async m => {
-                const attachment = m.attachments.first();
-                if (attachment) {
-                    const userData = registeredUsers.get(interaction.user.id);
-                    if (userData) {
-                        userData.skinUrl = attachment.url;
-                        registeredUsers.set(interaction.user.id, userData);
-
-                        await interaction.followUp({
-                            content: `✅ ${interaction.user} **تم استلام وتحديث سكنك الكراك بنجاح!**`,
-                            ephemeral: true
-                        });
-                    }
-                }
-            });
-
-            collector.on('end', (collected, reason) => {
-                if (reason === 'time' && collected.size === 0) {
-                    interaction.followUp({
-                        content: `⏳ انتهى وقت إرسال السكن لحسابك (${username}). تم اعتماد السكن الافتراضي. يمكنك إعادة التسجيل متى شئت.`,
-                        ephemeral: true
-                    }).catch(() => {});
-                }
-            });
-        }
     } 
     else if (commandName === 'profile') {
         const targetUser = interaction.options.getUser('user') || interaction.user;
