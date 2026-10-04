@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #111827;
-            --navbar-bg: #1f293d;
+            --bg-main: #0b0f19;
+            --navbar-bg: #151d2a;
             --card-bg: #1a2332;
-            --input-bg: #16202e;
-            --border-color: #2b384e;
-            --text-gray: #94a3b8;
+            --input-bg: #111827;
+            --border-color: #232f42;
+            --text-gray: #8d9bb0;
             --active-blue: #3b82f6;
         }
 
@@ -39,6 +39,7 @@
             max-width: 520px;
         }
 
+        /* Top Header Navigation Bar */
         .top-navbar {
             display: flex;
             align-items: center;
@@ -49,7 +50,7 @@
             border: 1px solid var(--border-color);
             gap: 12px;
             margin-bottom: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .logo-box {
@@ -114,13 +115,14 @@
             cursor: pointer;
         }
 
+        /* Single Horizontal Scrollable Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .modes-scroll {
@@ -173,10 +175,108 @@
         }
 
         .nav-item.active {
-            background: #252f44;
+            background: #212d42;
             border-color: var(--active-blue);
             color: #ffffff;
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Server Info Banner Below Navigation */
+        .server-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .info-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--navbar-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .info-btn i {
+            color: #3b82f6;
+            font-size: 14px;
+        }
+
+        .server-box {
+            display: flex;
+            align-items: center;
+            background: var(--navbar-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 12px;
+            gap: 12px;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        /* Server Name Text Style (No Logo Box) */
+        .server-title-text {
+            font-size: 13px;
+            font-weight: 900;
+            color: #ef4444;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            font-family: 'Arial Black', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .ip-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .ip-label {
+            font-size: 10px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .ip-address {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ip-address i {
+            font-size: 10px;
+            color: var(--text-gray);
+        }
+
+        .discord-btn {
+            background: #5865F2;
+            color: #ffffff;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 16px;
+            transition: transform 0.2s, background-color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .discord-btn:hover {
+            background: #4752C4;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -184,6 +284,7 @@
 
     <div class="container">
 
+        <!-- Top Header Navigation Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -199,6 +300,7 @@
             </button>
         </div>
 
+        <!-- Single Horizontal Scrollable Categories Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
@@ -255,7 +357,41 @@
             </div>
         </div>
 
+        <!-- Server Info Banner -->
+        <div class="server-banner">
+            
+            <button class="info-btn">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>معلومة</span>
+            </button>
+
+            <div class="server-box">
+                <!-- Server Name Text Instead of Logo -->
+                <span class="server-title-text">PVP MIKEY</span>
+
+                <div class="ip-container">
+                    <span class="ip-label">عنوان IP للخادم</span>
+                    <span class="ip-address" onclick="copyIP()">
+                        MYPVP.Mikey
+                        <i class="fa-regular fa-copy"></i>
+                    </span>
+                </div>
+
+                <!-- Discord Link Button -->
+                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn" title="Join Discord">
+                    <i class="fa-brands fa-discord"></i>
+                </a>
+            </div>
+
+        </div>
+
     </div>
 
+    <script>
+        function copyIP() {
+            navigator.clipboard.writeText("MYPVP.Mikey");
+            alert("تم نسخ IP الخادم: MYPVP.Mikey");
+        }
+    </script>
 </body>
 </html>
