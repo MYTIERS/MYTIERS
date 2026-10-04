@@ -1,15 +1,18 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 require('dotenv').config();
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// حفظ بيانات المسجلين مع تفاصيل النقاط والرتب والأطوار
+// معرف قناة النتائج (ضع ID القناة الخاصة بك هنا)
+const RESULTS_CHANNEL_ID = '123456789012345678'; 
+
+// حفظ بيانات المسجلين (ملاحظة: ينصح باستخدام قاعدة بيانات لاحقاً)
 const registeredUsers = new Map();
 
 client.once('ready', async () => {
-    console.log(`تم تسجيل الدخول باسم ${client.user.tag}!`);
+    console.log(`✅ تم تسجيل الدخول باسم ${client.user.tag}!`);
 
     const commands = [
         new SlashCommandBuilder()
@@ -24,7 +27,7 @@ client.once('ready', async () => {
                     .setDescription('نسخة ماين كرافت (جافا، كراك، بيدروك)')
                     .setRequired(true)
                     .addChoices(
-                        { name: 'Java', value: 'JAVA' },
+                        { name: 'Java Premium', value: 'JAVA' },
                         { name: 'Cracked', value: 'CRACKED' },
                         { name: 'Bedrock', value: 'BEDROCK' }
                     ))
@@ -40,7 +43,7 @@ client.once('ready', async () => {
                     ))
             .addAttachmentOption(option =>
                 option.setName('skin_file')
-                    .setDescription('ملف صورة السكن (اختياري، مخصص لحسابات الكراك)')
+                    .setDescription('ملف صورة السكن (مطلوب للكراك والبيدروك)')
                     .setRequired(false)),
 
         new SlashCommandBuilder()
@@ -52,28 +55,31 @@ client.once('ready', async () => {
                     .setRequired(false)),
 
         new SlashCommandBuilder()
-            .setName('queuepanel')
-            .setDescription('إرسال لوحة الانتظار في هذه القناة'),
-
-        new SlashCommandBuilder()
             .setName('setrank')
-            .setDescription('تعيين تير لاعب في نمط لعب معين')
+            .setDescription('تعيين تير لاعب في نمط لعب معين (للمختبرين فقط)')
+            .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles) // صلاحيات المشرفين/التستر
             .addUserOption(option =>
                 option.setName('user')
                     .setDescription('اللاعب')
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('gamemode')
-                    .setDescription('نمط اللعب (Vanilla, UHC, Sword, etc.)')
-                    .setRequired(true))
+                    .setDescription('نمط اللعب')
+                    .setRequired(true)
+                    .addChoices(
+                        { name: 'Sword', value: 'Sword' },
+                        { name: 'Vanilla', value: 'Vanilla' },
+                        { name: 'Pot', value: 'Pot' },
+                        { name: 'UHC', value: 'UHC' },
+                        { name: 'NethOP', value: 'NethOP' },
+                        { name: 'SMP', value: 'SMP' },
+                        { name: 'Axe', value: 'Axe' },
+                        { name: 'Mace', value: 'Mace' }
+                    ))
             .addStringOption(option =>
                 option.setName('tier')
-                    .setDescription('التير (HT1, LT1, Unranked, etc.)')
+                    .setDescription('الرانك المستحق')
                     .setRequired(true)),
-
-        new SlashCommandBuilder()
-            .setName('syncroles')
-            .setDescription('مزامنة رتب ديسكورد للـ LT / HT لجميع المسجلين'),
 
         new SlashCommandBuilder()
             .setName('unregister')
@@ -106,7 +112,7 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'register') {
         if (registeredUsers.has(interaction.user.id)) {
             return await interaction.reply({
-                content: '❌ لقد قمت بالتسجيل مسبقاً بهذا الحساب! إذا أردت إعادة التسجيل، استخدم أمر `/unregister` أولاً.',
+                content: '❌ لقد قمت بالتسجيل مسبقاً! لاستبدال البيانات، استخدم أمر `/unregister` أولاً.',
                 ephemeral: true
             });
         }
@@ -116,7 +122,14 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin_file');
 
-        // إذا قام برفع ملف سكن يستميله، وإلا يأخذ السكن الافتراضي حسب اسم اللاعب
+        // التحقق من رفع السكن للكراك
+        if ((edition === 'CRACKED' || edition === 'BEDROCK') && !skinAttachment) {
+            return await interaction.reply({
+                content: '⚠️ يجب عليك رفع ملف السكن الخاص بك بصيغة (PNG) بما أن نسختك مكركة أو بيدروك!',
+                ephemeral: true
+            });
+        }
+
         let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
 
         registeredUsers.set(interaction.user.id, { 
@@ -125,7 +138,6 @@ client.on('interactionCreate', async interaction => {
             region, 
             skinUrl,
             points: 0,
-            rank: 'Rookie',
             tiers: {
                 'Vanilla': 'Unranked',
                 'UHC': 'Unranked',
@@ -140,84 +152,71 @@ client.on('interactionCreate', async interaction => {
         });
 
         const embed = new EmbedBuilder()
-            .setColor('#2b2d31')
-            .setTitle('💎 RubyTiers | نظام التسجيل')
-            .setDescription('**تم تسجيل وربط حسابك بنجاح!**')
+            .setColor('#00ff7f')
+            .setTitle('💎 RubyTiers - تم التسجيل بنجاح')
+            .setDescription('تم ربط حسابك بنجاح!')
             .setThumbnail(skinUrl)
             .addFields(
-                { name: '👤 الاسم', value: `\`${username}\``, inline: true },
-                { name: '🎮 النسخة', value: `\`${edition}\``, inline: true },
-                { name: '🌍 المنطقة', value: `\`${region}\``, inline: true }
+                { name: 'الاسم', value: `\`${username}\``, inline: false },
+                { name: 'النسخة', value: `\`${edition}\``, inline: false },
+                { name: 'المنطقة', value: `\`${region}\``, inline: false }
             )
-            .setFooter({ text: 'RubyTiers Competitive System' })
+            .setFooter({ text: 'RubyTiers Official Network' })
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
     } 
-    else if (commandName === 'profile') {
-        const targetUser = interaction.options.getUser('user') || interaction.user;
-        const userData = registeredUsers.get(targetUser.id);
 
-        if (!userData) {
-            return await interaction.reply({ 
-                content: `❌ المستخدم ${targetUser} غير مسجل في النظام بعد!`, 
-                ephemeral: true 
-            });
-        }
-
-        const tiersText = Object.entries(userData.tiers)
-            .map(([mode, tier]) => `• **${mode}:** \`${tier}\``)
-            .join('\n');
-
-        const embed = new EmbedBuilder()
-            .setColor('#2b2d31')
-            .setTitle(`⚔️ RubyTiers Profile - ${userData.username}`)
-            .setThumbnail(userData.skinUrl)
-            .addFields(
-                { name: '🌍 المنطقة', value: `\`${userData.region}\``, inline: true },
-                { name: '🏆 النقاط', value: `\`${userData.points} pts\``, inline: true },
-                { name: '⭐ اللقب', value: `\`${userData.rank}\``, inline: false },
-                { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersText, inline: false }
-            )
-            .setFooter({ text: 'RubyTiers Competitive System' })
-            .setTimestamp();
-
-        await interaction.reply({ embeds: [embed] });
-    }
-    else if (commandName === 'queuepanel') {
-        const embed = new EmbedBuilder()
-            .setColor('#2ecc71')
-            .setTitle('⚔️ RubyTiers | قائمة الانتظار (Queue)')
-            .setDescription('اضغط للانضمام إلى طابور المباريات التنافسية.');
-        await interaction.reply({ embeds: [embed] });
-    }
     else if (commandName === 'setrank') {
         const targetUser = interaction.options.getUser('user');
         const gamemode = interaction.options.getString('gamemode');
         const tier = interaction.options.getString('tier');
 
         const userData = registeredUsers.get(targetUser.id);
-        if (userData && userData.tiers[gamemode] !== undefined) {
-            userData.tiers[gamemode] = tier;
-            userData.points += 15;
+        
+        if (!userData) {
+            return await interaction.reply({ 
+                content: `❌ هذا اللاعب (${targetUser}) غير مسجل في النظام عبر أمر /register!`, 
+                ephemeral: true 
+            });
         }
 
-        await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
+        const previousRank = userData.tiers[gamemode] || 'Unranked';
+        userData.tiers[gamemode] = tier;
+
+        // إرسال الرد للتستر
+        await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} بنجاح!`, ephemeral: true });
+
+        // إرسال النتيجة تلقائياً لروم النتائج
+        const resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
+        if (resultsChannel) {
+            const resultEmbed = new EmbedBuilder()
+                .setColor('#2b2d31')
+                .setTitle(`${userData.username}'s Test Results 🏆`)
+                .setThumbnail(userData.skinUrl)
+                .addFields(
+                    { name: 'Tester:', value: `${interaction.user}`, inline: false },
+                    { name: 'Region:', value: `${userData.region}`, inline: false },
+                    { name: 'Username:', value: `${userData.username}`, inline: false },
+                    { name: 'Previous Rank:', value: `${previousRank}`, inline: false },
+                    { name: 'Rank Earned:', value: `**${tier} (${gamemode.toUpperCase()})**`, inline: false }
+                )
+                .setFooter({ text: 'RubyTiers Official Results' })
+                .setTimestamp();
+
+            await resultsChannel.send({ embeds: [resultEmbed] });
+        }
     }
-    else if (commandName === 'syncroles') {
-        await interaction.reply({ content: '🔄 جاري مزامنة رتب ديسكورد لجميع اللاعبين المسجلين...', ephemeral: true });
-    }
+
     else if (commandName === 'unregister') {
         const targetUser = interaction.options.getUser('user') || interaction.user;
 
         if (!registeredUsers.has(targetUser.id)) {
-            return await interaction.reply({ content: `❌ حساب الديسكورد ${targetUser} غير مسجل أصلاً في النظام!`, ephemeral: true });
+            return await interaction.reply({ content: `❌ هذا الحساب غير مسجل بالأساس!`, ephemeral: true });
         }
 
-        const userData = registeredUsers.get(targetUser.id);
         registeredUsers.delete(targetUser.id);
-
-        await interaction.reply({ content: `🗑 تم بنجاح حذف وإلغاء ربط حساب ماين كرافت (\`${userData.username}\`) المرتبط بحساب الديسكورد ${targetUser}. يمكنك الآن التسجيل من جديد!`, ephemeral: true });
+        await interaction.reply({ content: `🗑 تم إلغاء ربط الحساب بنجاح.`, ephemeral: true });
     }
 });
 
