@@ -3,480 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY TIERS - MCTiers Replica</title>
+    <title>MC TIERS - Minecraft PvP Tier List Leaderboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bgMain: '#0a0d14',
+                        cardBg: '#111622',
+                        cardHover: '#161d2d',
+                        borderColor: '#1a2332',
+                        goldAccent: '#f59e0b',
+                        htOrange: '#f97316',
+                        ltBlue: '#3b82f6',
+                        textGray: '#94a3b8',
+                        unrankedGray: '#475569'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --bg-main: #0a0d14;
-            --card-bg: #111622;
-            --border-color: #1a2332;
-            --gold: #f59e0b;
-            --ht-orange: #f97316;
-            --lt-blue: #3b82f6;
-            --text-gray: #94a3b8;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
         body {
-            background-color: var(--bg-main);
+            background-color: #0a0d14;
             color: #ffffff;
-            padding: 10px;
-            direction: ltr;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .container {
-            max-width: 480px;
-            margin: 0 auto;
+        /* Custom Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-
-        /* Top Header Navigation Bar */
-        .top-navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            gap: 8px;
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 900;
-            font-family: monospace;
-            letter-spacing: 0.5px;
-        }
-
-        .logo-my { color: var(--gold); }
-        .logo-tiers { color: var(--gold); }
-
-        .search-box {
-            position: relative;
-            flex-grow: 1;
-        }
-
-        .search-box input {
-            width: 100%;
-            background: #141b27;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 7px 10px 7px 30px;
-            color: #fff;
-            font-size: 12px;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-gray);
-            font-size: 11px;
-        }
-
-        .menu-btn {
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        /* Scrollable Navigation Ribbon */
-        .single-nav-wrapper {
-            overflow-x: auto;
-            white-space: nowrap;
-            margin-bottom: 10px;
-            padding-bottom: 4px;
+        .no-scrollbar {
+            -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
-        .single-nav-wrapper::-webkit-scrollbar { display: none; }
-
-        .nav-tabs {
-            display: inline-flex;
-            gap: 6px;
-            background: #121824;
-            padding: 4px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
+        /* Rank Banners Trapeze Clip Path */
+        .rank-banner-gold {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            clip-path: polygon(0 0, 100% 0, 82% 100%, 0% 100%);
+        }
+        .rank-banner-silver {
+            background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
+            clip-path: polygon(0 0, 100% 0, 82% 100%, 0% 100%);
+        }
+        .rank-banner-bronze {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            clip-path: polygon(0 0, 100% 0, 82% 100%, 0% 100%);
+        }
+        .rank-banner-default {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            clip-path: polygon(0 0, 100% 0, 82% 100%, 0% 100%);
         }
 
-        .nav-item {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 6px 14px;
-            border-radius: 6px;
-            color: var(--text-gray);
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .nav-item svg { width: 16px; height: 16px; fill: currentColor; }
-
-        .nav-item.active {
-            background: #1a2333;
-            color: #ffffff;
-            border-bottom: 2px solid var(--gold);
-        }
-
-        .nav-item.active svg { fill: var(--gold); }
-
-        /* Server Header Bar */
-        .server-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-bg);
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 12px;
-            font-size: 11px;
-        }
-
-        .info-btn {
-            background: #1c2636;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 5px;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .server-right {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .pvp-badge {
-            background: #e11d48;
-            color: #fff;
-            font-weight: bold;
-            padding: 1px 5px;
-            border-radius: 3px;
-            font-size: 9px;
-        }
-
-        .ip-text { color: var(--text-gray); font-size: 10px; }
-
-        /* Card Container */
-        .player-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
-        /* Top Header Row */
-        .card-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            height: 48px;
-            margin-bottom: 12px;
-        }
-
-        /* Yellow Rank Banner */
-        .rank-banner {
-            position: relative;
-            background: var(--gold);
-            height: 38px;
-            width: 140px;
-            clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
-            display: flex;
-            align-items: center;
-            padding-left: 12px;
-            border-radius: 4px 0 0 4px;
-        }
-
-        .rank-num {
-            font-size: 22px;
-            font-weight: 900;
-            font-style: italic;
-            color: #000;
-        }
-
-        /* Minecraft Head Avatar */
-        .player-head {
-            position: absolute;
-            left: 50px;
-            top: 4px;
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            z-index: 2;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        }
-
-        /* Player Details */
-        .player-info {
-            position: absolute;
-            left: 135px;
-            top: 2px;
-        }
-
-        .player-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            line-height: 1.2;
-        }
-
-        .player-rank-title {
-            font-size: 11px;
-            color: var(--text-gray);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-top: 2px;
-        }
-
-        .rank-icon { color: var(--gold); font-size: 10px; }
-
-        .status-badge {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: bold;
-        }
-
-        /* Tiers Section */
-        .tiers-header {
-            font-size: 11px;
-            color: var(--text-gray);
-            margin-bottom: 8px;
-        }
-
-        .tiers-row {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        /* Capsule Box */
+        /* Capsule Box Design */
         .tier-capsule {
             background: #141b27;
             border: 1px solid #1e2838;
-            border-radius: 14px 14px 8px 8px;
-            width: 38px;
-            height: 46px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            padding-bottom: 4px;
-            position: relative;
-            flex-shrink: 0;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .tier-capsule:hover {
+            transform: translateY(-2px);
+            border-color: #3b82f6;
         }
 
-        .tier-capsule .icon-area {
-            position: absolute;
-            top: 4px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Modal Overlay Transition */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
         }
-
-        .tier-capsule .icon-area svg { width: 14px; height: 14px; }
-
-        .tier-capsule .tier-type {
-            font-size: 9px;
-            font-weight: bold;
-            line-height: 1;
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
         }
-
-        .tier-capsule .tier-num {
-            font-size: 10px;
-            font-weight: bold;
-            line-height: 1.1;
-        }
-
-        .tier-capsule.ht .tier-type, .tier-capsule.ht .tier-num { color: var(--ht-orange); }
-        .tier-capsule.lt .tier-type, .tier-capsule.lt .tier-num { color: var(--lt-blue); }
     </style>
 </head>
-<body>
+<body class="min-h-screen pb-12">
 
-    <div class="container">
+    <div class="max-w-xl mx-auto px-4 pt-4">
 
-        <!-- Top Header Navigation Bar -->
-        <div class="top-navbar">
-            <div class="logo-text">
-                <span class="logo-my">MC</span><span class="logo-tiers">TIERS</span>
+        <!-- Top Header Navigation -->
+        <header class="flex items-center justify-between gap-3 mb-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-1 font-black tracking-wider text-xl font-mono select-none">
+                <span class="text-amber-500">MC</span>
+                <span class="text-white">TIERS</span>
             </div>
 
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search player...">
+            <!-- Search Box -->
+            <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-textGray text-xs"></i>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search player..." 
+                    class="w-full bg-[#141b27] border border-borderColor rounded-xl pl-8 pr-3 py-2 text-xs text-white placeholder-textGray focus:outline-none focus:border-amber-500 transition-colors"
+                    oninput="filterPlayers()"
+                >
             </div>
 
-            <button class="menu-btn"><i class="fa-solid fa-bars"></i></button>
-        </div>
+            <!-- Menu Button -->
+            <button onclick="toggleInfoModal()" class="p-2 text-textGray hover:text-white transition-colors" aria-label="Open Info">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+        </header>
 
-        <!-- Scrollable Gamemode Navigation Ribbon with Custom SVGs -->
-        <div class="single-nav-wrapper">
-            <div class="nav-tabs">
-                <div class="nav-item active">
-                    <i class="fa-solid fa-trophy"></i>
+        <!-- Scrollable Gamemodes Ribbon -->
+        <nav class="no-scrollbar overflow-x-auto mb-4 py-1">
+            <div class="inline-flex gap-2 bg-[#121824] p-1.5 rounded-2xl border border-borderColor min-w-full" id="gamemodeTabs">
+                
+                <!-- Tab: Overall -->
+                <button onclick="selectGamemode('overall')" class="tab-btn active flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all bg-[#1a2333] text-amber-500 border-b-2 border-amber-500">
+                    <i class="fa-solid fa-trophy text-sm"></i>
                     <span>Overall</span>
-                </div>
-                <div class="nav-item">
-                    <!-- Vanilla SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#b48ead" d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z"/></svg>
+                </button>
+
+                <!-- Tab: Vanilla -->
+                <button onclick="selectGamemode('vanilla')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#b48ead" d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z"/>
+                    </svg>
                     <span>Vanilla</span>
-                </div>
-                <div class="nav-item">
-                    <!-- Sword SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#60a5fa" d="M70 20 L80 30 L45 65 L35 65 L35 55 Z M30 70 L20 80 L15 75 L25 65 Z"/></svg>
+                </button>
+
+                <!-- Tab: Sword -->
+                <button onclick="selectGamemode('sword')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#60a5fa" d="M70 20 L80 30 L45 65 L35 65 L35 55 Z M30 70 L20 80 L15 75 L25 65 Z"/>
+                    </svg>
                     <span>Sword</span>
-                </div>
-                <div class="nav-item">
-                    <!-- UHC / Heart SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#ef4444" d="M50 80 C20 60 10 40 25 25 C35 15 45 20 50 30 C55 20 65 15 75 25 C90 40 80 60 50 80 Z"/></svg>
+                </button>
+
+                <!-- Tab: UHC -->
+                <button onclick="selectGamemode('uhc')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#ef4444" d="M50 80 C20 60 10 40 25 25 C35 15 45 20 50 30 C55 20 65 15 75 25 C90 40 80 60 50 80 Z"/>
+                    </svg>
                     <span>UHC</span>
-                </div>
-                <div class="nav-item">
-                    <!-- Mace SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#818cf8" d="M60 20 L80 40 L40 80 L20 60 Z"/></svg>
+                </button>
+
+                <!-- Tab: Mace -->
+                <button onclick="selectGamemode('mace')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#818cf8" d="M60 20 L80 40 L40 80 L20 60 Z"/>
+                    </svg>
                     <span>Mace</span>
-                </div>
-                <div class="nav-item">
-                    <!-- SpearMace SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#a78bfa" d="M70 10 L90 30 L30 90 L10 70 Z"/></svg>
+                </button>
+
+                <!-- Tab: SpearMace -->
+                <button onclick="selectGamemode('spearmace')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#a78bfa" d="M70 10 L90 30 L30 90 L10 70 Z"/>
+                    </svg>
                     <span>SpearMace</span>
-                </div>
-                <div class="nav-item">
-                    <!-- NethOP Helmet SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#a855f7" d="M20 40 C20 20 80 20 80 40 L80 70 C80 80 20 80 20 70 Z"/></svg>
+                </button>
+
+                <!-- Tab: NethOP -->
+                <button onclick="selectGamemode('nethop')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#a855f7" d="M20 40 C20 20 80 20 80 40 L80 70 C80 80 20 80 20 70 Z"/>
+                    </svg>
                     <span>NethOP</span>
-                </div>
-                <div class="nav-item">
-                    <!-- Axe SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#38bdf8" d="M60 20 L80 20 L70 50 L50 40 Z M30 80 L60 30 L50 20 L20 70 Z"/></svg>
+                </button>
+
+                <!-- Tab: Axe -->
+                <button onclick="selectGamemode('axe')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#38bdf8" d="M60 20 L80 20 L70 50 L50 40 Z M30 80 L60 30 L50 20 L20 70 Z"/>
+                    </svg>
                     <span>Axe</span>
-                </div>
-                <div class="nav-item">
-                    <!-- SMP Ender Pearl SVG -->
-                    <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#0d9488"/></svg>
+                </button>
+
+                <!-- Tab: SMP -->
+                <button onclick="selectGamemode('smp')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="35" fill="#0d9488"/>
+                    </svg>
                     <span>SMP</span>
-                </div>
-                <div class="nav-item">
-                    <!-- Pot Flask SVG -->
-                    <svg viewBox="0 0 100 100"><path fill="#ec4899" d="M40 20 L60 20 L60 35 L75 65 C80 75 70 85 50 85 C30 85 20 75 25 65 L40 35 Z"/></svg>
+                </button>
+
+                <!-- Tab: Pot -->
+                <button onclick="selectGamemode('pot')" class="tab-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl text-xs font-semibold gap-1 transition-all text-textGray hover:text-white hover:bg-[#182030]">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 100 100">
+                        <path fill="#ec4899" d="M40 20 L60 20 L60 35 L75 65 C80 75 70 85 50 85 C30 85 20 75 25 65 L40 35 Z"/>
+                    </svg>
                     <span>Pot</span>
-                </div>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Server Sub-Header Info Bar -->
+        <div class="flex items-center justify-between bg-cardBg border border-borderColor rounded-xl px-3 py-2.5 mb-5 shadow-sm">
+            <button onclick="toggleInfoModal()" class="bg-[#1c2636] border border-borderColor text-white text-[11px] font-medium px-2.5 py-1 rounded-lg flex items-center gap-1.5 hover:bg-[#253348] transition-colors">
+                <i class="fa-solid fa-circle-info text-amber-500"></i>
+                <span>Information</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+                <span class="bg-rose-600 text-white font-bold text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider">PVP CLUB</span>
+                <button onclick="copyIP()" class="text-textGray hover:text-white text-xs font-mono transition-colors flex items-center gap-1">
+                    <span>mcpvp.club</span>
+                    <i class="fa-regular fa-copy text-[10px]"></i>
+                </button>
+                <a href="https://discord.gg" target="_blank" rel="noreferrer" class="text-[#5865f2] hover:opacity-80 transition-opacity ml-1">
+                    <i class="fa-brands fa-discord text-base"></i>
+                </a>
             </div>
         </div>
 
-        <!-- Server Information Bar -->
-        <div class="server-bar">
-            <button class="info-btn"><i class="fa-solid fa-circle-info"></i> Information</button>
-            <div class="server-right">
-                <span class="pvp-badge">PVP CLUB</span>
-                <span class="ip-text">mcpvp.club</span>
-                <i class="fa-brands fa-discord" style="color:#5865f2;"></i>
-            </div>
-        </div>
-
-        <!-- Player Card 1 -->
-        <div class="player-card">
-            <div class="card-top">
-                <div class="rank-banner">
-                    <span class="rank-num">1.</span>
-                </div>
-                <!-- Player Head Avatar Only -->
-                <img src="https://mc-heads.net/avatar/Marlo/30" class="player-head" alt="Marlo">
-
-                <div class="player-info">
-                    <div class="player-name">Marlo</div>
-                    <div class="player-rank-title">
-                        <i class="fa-solid fa-gem rank-icon"></i>
-                        <span>Grand Combat Master (4)</span>
-                    </div>
-                </div>
-
-                <span class="status-badge">N/A</span>
-            </div>
-
-            <div class="tiers-header">Tiers</div>
-
-            <!-- Tiers Row with Matched SVGs -->
-            <div class="tiers-row">
-                <div class="tier-capsule ht">
-                    <div class="icon-area">
-                        <svg viewBox="0 0 100 100"><path fill="#60a5fa" d="M70 20 L80 30 L45 65 L35 65 L35 55 Z M30 70 L20 80 L15 75 L25 65 Z"/></svg>
-                    </div>
-                    <span class="tier-type">HT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule ht">
-                    <div class="icon-area"></div>
-                    <span class="tier-type">HT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule ht">
-                    <div class="icon-area">
-                        <svg viewBox="0 0 100 100"><path fill="#b48ead" d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z"/></svg>
-                    </div>
-                    <span class="tier-type">HT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule ht">
-                    <div class="icon-area">
-                        <svg viewBox="0 0 100 100"><path fill="#ec4899" d="M40 20 L60 20 L60 35 L75 65 C80 75 70 85 50 85 C30 85 20 75 25 65 L40 35 Z"/></svg>
-                    </div>
-                    <span class="tier-type">HT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule ht">
-                    <div class="icon-area"></div>
-                    <span class="tier-type">HT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule ht">
-                    <div class="icon-area"></div>
-                    <span class="tier-type">HT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule lt">
-                    <div class="icon-area">
-                        <svg viewBox="0 0 100 100"><path fill="#ef4444" d="M50 80 C20 60 10 40 25 25 C35 15 45 20 50 30 C55 20 65 15 75 25 C90 40 80 60 50 80 Z"/></svg>
-                    </div>
-                    <span class="tier-type">LT</span>
-                    <span class="tier-num">1</span>
-                </div>
-                <div class="tier-capsule lt">
-                    <div class="icon-area">
-                        <svg viewBox="0 0 100 100"><path fill="#38bdf8" d="M60 20 L80 20 L70 50 L50 40 Z M30 80 L60 30 L50 20 L20 70 Z"/></svg>
-                    </div>
-                    <span class="tier-type">LT</span>
-                    <span class="tier-num">1</span>
-                </div>
-            </div>
-        </div>
-
+        <!-- Player Leaderboard List Container -->
+        <main id="playerList" class="flex flex-col gap-3">
+            <!-- Player cards will be dynamically rendered via JS -->
+        </main>
     </div>
 
+    <!-- Information Modal Popup -->
+    <div id="infoModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-cardBg border border-borderColor rounded-2xl w-full max-w-sm p-5 relative shadow-2xl">
+            <button onclick="toggleInfoModal()" class="absolute right-4 top-4 text-textGray hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-trophy text-amber-500"></i>
+                MCTiers Ranking Info
+            </h3>
+            <p class="text-xs text-textGray leading-relaxed mb-4">
+                This tier list categorizes elite Minecraft PvP players into distinct tier ranks based on verified tournament performances and competitive matches.
+            </p>
+            <div class="space-y-2 text-xs text-slate-300">
+                <div class="flex items-center gap-2"><span class="font-bold text-amber-500">HT:</span> High Tier (Top competitive performance)</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-blue-400">LT:</span> Low Tier (Emerging competitive combatant)</div>
+            </div>
+            <button onclick="toggleInfoModal()" class="mt-5 w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 rounded-xl text-xs transition-colors">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-xs font-bold px-4 py-2 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300">
+        IP copied to clipboard!
+    </div>
+
+    <script>
+        // Game mode SVG Icon Dictionary
+        const gamemodeIcons = {
+            sword: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#60a5fa" d="M70 20 L80 30 L45 65 L35 65 L35 55 Z M30 70 L20 80 L15 75 L25 65 Z"/></svg>`,
+            vanilla: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#b48ead" d="M50 20 L80 35 L80 65 L50 80 L20 65 L20 35 Z"/></svg>`,
+            uhc: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#ef4444" d="M50 80 C20 60 10 40 25 25 C35 15 45 20 50 30 C55 20 65 15 75 25 C90 40 80 60 50 80 Z"/></svg>`,
+            mace: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#818cf8" d="M60 20 L80 40 L40 80 L20 60 Z"/></svg>`,
+            spearmace: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#a78bfa" d="M70 10 L90 30 L30 90 L10 70 Z"/></svg>`,
+            nethop: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#a855f7" d="M20 40 C20 20 80 20 80 40 L80 70 C80 80 20 80 20 70 Z"/></svg>`,
+            axe: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#38bdf8" d="M60 20 L80 20 L70 50 L50 40 Z M30 80 L60 30 L50 20 L20 70 Z"/></svg>`,
+            smp: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#0d9488"/></svg>`,
+            pot: `<svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 100 100"><path fill="#ec4899" d="M40 20 L60 20 L60 35 L75 65 C80 75 70 85 50 85 C30 85 20 75 25 65 L40 35 Z"/></svg>`
+        };
+
+        // Leaderboard Players Mock Data
+        const playersData = [
+            {
+                rank: 1,
+                name: "Marlo",
+                title: "Grand Combat Master (4)",
+                region: "غير متوفر",
+                regionColor: "bg-red-500/10 text-red-500 border-red-500/30",
+                skin: "Marlo",
+                tiers: [
+                    { mode: "sword", type: "HT", level: 1 },
+                    { mode: "vanilla", type: "HT", level: 1 },
+                    { mode: "smp", type: "HT", level: 1 },
+                    { mode: "pot", type: "HT", level: 1 },
+                    { mode: "nethop", type: "HT", level: 1 },
+                    { mode: "spearmace", type: "HT", level: 1 },
+                    { mode: "uhc", type: "LT", level: 1 },
+                    { mode: "axe", type: "LT", level: 1 }
+                ]
+            },
+            {
+                rank: 2,
+                name: "إيتزريلمي",
+                title: "(330 نقطة) سيد القتال",
+                region: "غير متوفر",
+                regionColor: "bg-red-500/10 text-red-500 border-red-500/30",
+                skin: "MHF_Steve",
+                tiers: [
+                    { mode: "axe", type: "HT", level: 3 },
+                    { mode: "mace", type: "HT", level: 1 },
+                    { mode: "sword", type: "HT", level: 1 },
+                    { mode: "vanilla", type: "HT", level: 1 },
+                    { mode: "smp", type: "HT", level: 1 },
+                    { mode: "axe", type: "LT", level: 2 },
+                    { mode: "mace", type: "LT", level: 2 },
+                    { mode: "uhc", type: "LT", level: 2 }
+                ]
+            },
+            {
+                rank: 3,
+                name: "مُبَرّد",
+                title: "(326 نقطة) سيد القتال",
+                region: "الاتحاد الأوروبي",
+                regionColor: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+                skin: "MHF_Alex",
+                tiers: [
+                    { mode: "pot", type: "LT", level: 1 },
+                    { mode: "smp", type: "LT", level: 3 },
+                    { mode: "sword", type: "HT", level: 1 },
+                    { mode: "vanilla", type: "HT", level: 1 },
+                    { mode: "sword", type: "LT", level: 1 },
+                    { mode: "axe", type: "LT", level: 1 },
+                    { mode: "mace", type: "LT", level: 1 },
+                    { mode: "nethop", type: "LT", level: 2 }
+                ]
+            },
+            {
+                rank: 4,
+                name: "iRuby_X",
+                title: "(60 نقطة) متخصص قتالي",
+                region: "الاتحاد الأوروبي",
+                regionColor: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+                skin: "Ruby",
+                tiers: [
+                    { mode: "sword", type: "HT", level: 1 },
+                    { mode: "vanilla", type: "Unranked", level: 0 },
+                    { mode: "uhc", type: "Unranked", level: 0 },
+                    { mode: "pot", type: "Unranked", level: 0 },
+                    { mode: "nethop", type: "Unranked", level: 0 },
+                    { mode: "smp", type: "Unranked", level: 0 },
+                    { mode: "spearmace", type: "Unranked", level: 0 },
+                    { mode: "mace", type: "Unranked", level: 0 }
+                ]
+            },
+            {
+                rank: 5,
+                name: "Mustfa_105",
+                title: "(42 نقطة) طالب عسكري قتالي",
+                region: "الاتحاد الأوروبي",
+                regionColor: "bg-emerald-500/10 text-emerald-500 border-emerald-500/30",
+                skin: "Mustafa",
+                tiers: [
+                    { mode: "vanilla", type: "LT", level: 3 },
+                    { mode: "smp", type: "LT", level: 3 },
+                    { mode: "mace", type: "LT", level: 2 },
+                    { mode: "axe", type: "HT", level: 3 }
+                ]
+            }
+        ];
+
+        let currentGamemode = 'overall';
+
+        // Get rank ribbon style class based on rank position
+        function getRankBannerStyle(rank) {
+            if (rank === 1) return 'rank-banner-gold';
+            if (rank === 2) return 'rank-banner-silver';
+            if (rank === 3) return 'rank-banner-bronze';
+            return 'rank-banner-default';
+        }
+
+        function renderCards(data) {
+            const container = document.getElementById('playerList');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-textGray text-xs">
+                        No players found matching your criteria.
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach(player => {
+                const bannerStyle = getRankBannerStyle(player.rank);
+                
+                // Construct Tier Capsules HTML
+                const tiersHTML = player.tiers.map(t => {
+                    const isUnranked = t.type === 'Unranked';
+                    const isHT = t.type === 'HT';
+                    const isLT = t.type === 'LT';
+
+                    let badgeColorClass = 'text-textGray';
+                    if (isHT) badgeColorClass = 'text-htOrange';
+                    if (isLT) badgeColorClass = 'text-ltBlue';
+                    if (isUnranked) badgeColorClass = 'text-unrankedGray';
+
+                    const modeIcon = gamemodeIcons[t.mode] || '';
+
+                    return `
+                        <div class="tier-capsule flex flex-col items-center justify-between w-10 h-12 rounded-xl py-1 px-0.5 flex-shrink-0 relative">
+                            <div class="h-4 flex items-center justify-center">
+                                ${modeIcon}
+                            </div>
+                            <div class="flex flex-col items-center leading-none">
+                                <span class="text-[9px] font-bold ${badgeColorClass}">
+                                    ${isUnranked ? 'غير' : t.type}
+                                </span>
+                                <span class="text-[10px] font-bold ${badgeColorClass}">
+                                    ${isUnranked ? 'مصنف' : t.level}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const cardHTML = `
+                    <div class="bg-cardBg hover:bg-cardHover border border-borderColor rounded-2xl p-3 relative transition-all duration-200">
+                        <!-- Top Header Row -->
+                        <div class="flex items-center justify-between relative h-12 mb-2">
+                            
+                            <!-- Trapeze Rank Banner -->
+                            <div class="${bannerStyle} h-9 w-36 flex items-center pl-3 rounded-l-md">
+                                <span class="text-lg font-black italic ${player.rank <= 3 ? 'text-black' : 'text-white'}">
+                                    ${player.rank}.
+                                </span>
+                            </div>
+
+                            <!-- Player Head Avatar -->
+                            <img 
+                                src="https://mc-heads.net/avatar/${player.skin}/32" 
+                                alt="${player.name}"
+                                class="absolute left-14 top-1 w-8 h-8 rounded border border-black/40 shadow-md object-cover"
+                                onerror="this.src='https://mc-heads.net/avatar/Steve/32'"
+                            />
+
+                            <!-- Player Info Details -->
+                            <div class="absolute left-24 top-0 flex flex-col justify-center h-full">
+                                <div class="text-sm font-bold text-white leading-tight flex items-center gap-1.5">
+                                    <span>${player.name}</span>
+                                </div>
+                                <div class="text-[10px] text-textGray flex items-center gap-1 mt-0.5">
+                                    <i class="fa-solid fa-gem text-amber-500 text-[9px]"></i>
+                                    <span>${player.title}</span>
+                                </div>
+                            </div>
+
+                            <!-- Status / Region Badge -->
+                            <span class="${player.regionColor} border px-2 py-0.5 rounded-lg text-[10px] font-bold tracking-tight">
+                                ${player.region}
+                            </span>
+                        </div>
+
+                        <!-- Tiers Section -->
+                        <div class="text-[10px] text-textGray mb-1.5 font-medium">المستويات</div>
+                        
+                        <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                            ${tiersHTML}
+                        </div>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
+
+        // Gamemode Selection Filter
+        function selectGamemode(modeKey) {
+            currentGamemode = modeKey;
+            
+            // Highlight Tab Buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-[#1a2333]', 'text-amber-500', 'border-b-2', 'border-amber-500');
+                btn.classList.add('text-textGray');
+            });
+
+            event.currentTarget.classList.remove('text-textGray');
+            event.currentTarget.classList.add('bg-[#1a2333]', 'text-amber-500', 'border-b-2', 'border-amber-500');
+
+            filterPlayers();
+        }
+
+        // Live Search and Gamemode Filtering
+        function filterPlayers() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            let filtered = playersData.filter(player => {
+                const matchesName = player.name.toLowerCase().includes(query) || player.title.toLowerCase().includes(query);
+                
+                if (currentGamemode === 'overall') {
+                    return matchesName;
+                } else {
+                    const hasGamemodeTier = player.tiers.some(t => t.mode === currentGamemode && t.type !== 'Unranked');
+                    return matchesName && hasGamemodeTier;
+                }
+            });
+
+            renderCards(filtered);
+        }
+
+        // Toggle Modal Functionality
+        function toggleInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Copy IP Notification Toast
+        function copyIP() {
+            const ip = "mcpvp.club";
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(ip);
+            } else {
+                const tempInput = document.createElement("input");
+                tempInput.value = ip;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+            }
+
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2000);
+        }
+
+        // Initialize App on DOM Load
+        window.onload = function() {
+            renderCards(playersData);
+        };
+    </script>
 </body>
 </html>
