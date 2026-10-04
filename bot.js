@@ -47,10 +47,10 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// دالة جلب رابط رأس اللاعب بدقة عالية من السكن أو عبر أداة mc-heads
+// دالة جلب رابط رأس اللاعب بدقة عالية عبر أداة mc-heads
 function getPlayerHeadUrl(skinUrl, username) {
     if (skinUrl && skinUrl.startsWith('http')) {
-        return skinUrl; // إذا رفع صورة سكن مخصصة
+        return skinUrl; 
     }
     return `https://mc-heads.net/avatar/${encodeURIComponent(username)}/128`;
 }
@@ -147,7 +147,7 @@ client.once('ready', async () => {
 
         new SlashCommandBuilder()
             .setName('setrank')
-            .setDescription('تعيين تصنيف الكت للاعب (للتسترات فقط)')
+            .setDescription('تعيين تصنيف الكت للالاعب (للتسترات فقط)')
             .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
             .addUserOption(opt => opt.setName('player').setDescription('اللاعب').setRequired(true))
             .addStringOption(opt => opt.setName('gamemode').setDescription('الكت / الطور').setRequired(true).addChoices(
@@ -452,7 +452,7 @@ client.on('interactionCreate', async interaction => {
                 .setThumbnail(headUrl)
                 .addFields(
                     { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: true },
-                    { name: 'عدد التصنيفات 🎖️', value: `\`{rankedCount} Tiers\``, inline: true },
+                    { name: 'عدد التصنيفات 🎖️', value: `\`${rankedCount} Tiers\``, inline: true },
                     { name: 'اللقب ⭐', value: `\`${userData.title}\``, inline: true },
                     { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersList, inline: false }
                 )
