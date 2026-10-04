@@ -5,7 +5,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
-// حفظ بيانات المسجلين
+// حفظ بيانات المسجلين مع تفاصيل النقاط والرتب والأطوار
 const registeredUsers = new Map();
 
 client.once('ready', async () => {
@@ -60,11 +60,11 @@ client.once('ready', async () => {
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('gamemode')
-                    .setDescription('نمط اللعب (Sword, Crystal, etc.)')
+                    .setDescription('نمط اللعب (Vanilla, UHC, Sword, etc.)')
                     .setRequired(true))
             .addStringOption(option =>
                 option.setName('tier')
-                    .setDescription('التير (HT1, LT1, etc.)')
+                    .setDescription('التير (HT1, LT1, Unranked, etc.)')
                     .setRequired(true)),
 
         new SlashCommandBuilder()
@@ -111,14 +111,32 @@ client.on('interactionCreate', async interaction => {
         const edition = interaction.options.getString('edition');
         const region = interaction.options.getString('region');
 
-        // السكن الافتراضي مبدئياً
         let skinUrl = `https://mc-heads.net/avatar/${username}/150`;
 
-        registeredUsers.set(interaction.user.id, { username, edition, region, skinUrl });
+        // تخزين البيانات مع القيم الافتراضية للنقاط والأطوار مطابقة للصورة
+        registeredUsers.set(interaction.user.id, { 
+            username, 
+            edition, 
+            region, 
+            skinUrl,
+            points: 0,
+            rank: 'Rookie',
+            tiers: {
+                'Vanilla': 'Unranked',
+                'UHC': 'Unranked',
+                'Pot': 'Unranked',
+                'NethOP': 'Unranked',
+                'SMP': 'Unranked',
+                'Sword': 'Unranked',
+                'Axe': 'Unranked',
+                'Mace': 'Unranked',
+                'SpearMace': 'Unranked'
+            }
+        });
 
         const embed = new EmbedBuilder()
-            .setColor('#e74c3c')
-            .setTitle('💎 MYTIERS | نظام التسجيل')
+            .setColor('#2b2d31')
+            .setTitle('💎 RubyTiers | نظام التسجيل')
             .setDescription(edition === 'CRACKED' 
                 ? '**تم تسجيل حسابك بنجاح!**\n\n📸 **بما أن حسابك (كراك)، يرجى إرسال صورة السكن (PNG) هنا في الشات الآن كرسالة عادية لتحديثه (أمامك 60 ثانية).**'
                 : '**تم ربط حسابك بنجاح!**')
@@ -128,12 +146,11 @@ client.on('interactionCreate', async interaction => {
                 { name: '🎮 النسخة', value: `\`${edition}\``, inline: true },
                 { name: '🌍 المنطقة', value: `\`${region}\``, inline: true }
             )
-            .setFooter({ text: 'MYTIERS Official Network' })
+            .setFooter({ text: 'RubyTiers Competitive System' })
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
 
-        // إذا كانت النسخة كراك، ننتظر أن يرسل اللاعب صورة السكن في الشات العادي
         if (edition === 'CRACKED') {
             const filter = m => m.author.id === interaction.user.id && m.attachments.size > 0;
             const collector = interaction.channel.createMessageCollector({ filter, time: 60000, max: 1 });
@@ -146,7 +163,6 @@ client.on('interactionCreate', async interaction => {
                         userData.skinUrl = attachment.url;
                         registeredUsers.set(interaction.user.id, userData);
 
-                        // حذف رسالة الصورة للحفاظ على نظافة الشات
                         try { await m.delete(); } catch (e) {}
 
                         await interaction.followUp({
@@ -171,18 +187,37 @@ client.on('interactionCreate', async interaction => {
         const targetUser = interaction.options.getUser('user') || interaction.user;
         const userData = registeredUsers.get(targetUser.id);
 
+        if (!userData) {
+            return await interaction.reply({ 
+                content: `❌ المستخدم ${targetUser} غير مسجل في النظام بعد!`, 
+                ephemeral: true 
+            });
+        }
+
+        // تنسيق قائمة الأطوار بنفس شكل الصورة المطلوبة
+        const tiersText = Object.entries(userData.tiers)
+            .map(([mode, tier]) => `• **${mode}:** \`${tier}\``)
+            .join('\n');
+
         const embed = new EmbedBuilder()
-            .setColor('#3498db')
-            .setTitle(`👤 ملف اللاعب: ${targetUser.username}`)
-            .setDescription(userData ? `**الاسم في اللعبة:** \`${userData.username}\`\n**النسخة:** \`${userData.edition}\`\n**المنطقة:** \`${userData.region}\`` : 'هذا المستخدم غير مسجل في النظام.')
-            .setThumbnail(userData ? userData.skinUrl : null)
+            .setColor('#2b2d31')
+            .setTitle(`⚔️ RubyTiers Profile - ${userData.username}`)
+            .setThumbnail(userData.skinUrl)
+            .addFields(
+                { name: '🌍 المنطقة', value: `\`${userData.region}\``, inline: true },
+                { name: '🏆 النقاط', value: `\`${userData.points} pts\``, inline: true },
+                { name: '⭐ اللقب', value: `\`${userData.rank}\``, inline: false },
+                { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersText, inline: false }
+            )
+            .setFooter({ text: 'RubyTiers Competitive System' })
             .setTimestamp();
+
         await interaction.reply({ embeds: [embed] });
     }
     else if (commandName === 'queuepanel') {
         const embed = new EmbedBuilder()
             .setColor('#2ecc71')
-            .setTitle('⚔️ MYTIERS | قائمة الانتظار (Queue)')
+            .setTitle('⚔️ RubyTiers | قائمة الانتظار (Queue)')
             .setDescription('اضغط للانضمام إلى طابور المباريات التنافسية.');
         await interaction.reply({ embeds: [embed] });
     }
@@ -190,6 +225,13 @@ client.on('interactionCreate', async interaction => {
         const targetUser = interaction.options.getUser('user');
         const gamemode = interaction.options.getString('gamemode');
         const tier = interaction.options.getString('tier');
+
+        const userData = registeredUsers.get(targetUser.id);
+        if (userData && userData.tiers[gamemode] !== undefined) {
+            userData.tiers[gamemode] = tier;
+            userData.points += 15; // زيادة نقاط تجريبية عند تعيين التير
+        }
+
         await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} في نمط **${gamemode}** بنجاح!`, ephemeral: true });
     }
     else if (commandName === 'syncroles') {
