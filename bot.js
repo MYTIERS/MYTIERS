@@ -10,6 +10,9 @@ const RESULTS_CHANNEL_ID = '1554252285842817174';
 
 const registeredUsers = new Map();
 
+// قائمة الأطوار المتاحة
+const GAMEMODES = ['Vanilla', 'UHC', 'Pot', 'NethOP', 'SMP', 'Sword', 'Axe', 'Mace', 'SpearMace'];
+
 client.once('ready', async () => {
     console.log(`✅ تم تسجيل الدخول باسم ${client.user.tag}!`);
 
@@ -58,22 +61,22 @@ client.once('ready', async () => {
                     .setDescription('نمط اللعب')
                     .setRequired(true)
                     .addChoices(
-                        { name: 'Sword 🗡️', value: 'SWORD' },
-                        { name: 'Vanilla 🔮', value: 'VANILLA' },
-                        { name: 'Pot 🧪', value: 'POT' },
+                        { name: 'Sword 🗡️', value: 'Sword' },
+                        { name: 'Vanilla 🔮', value: 'Vanilla' },
+                        { name: 'Pot 🧪', value: 'Pot' },
                         { name: 'UHC 💖', value: 'UHC' },
-                        { name: 'NethOP 🛡️', value: 'NETHOP' },
+                        { name: 'NethOP 🛡️', value: 'NethOP' },
                         { name: 'SMP 🟢', value: 'SMP' },
-                        { name: 'Axe 🪓', value: 'AXE' },
-                        { name: 'Mace 🔨', value: 'MACE' },
-                        { name: 'Spearmace 🔱', value: 'SPEARMACE' }
+                        { name: 'Axe 🪓', value: 'Axe' },
+                        { name: 'Mace 🔨', value: 'Mace' },
+                        { name: 'Spearmace 🔱', value: 'SpearMace' }
                     ))
             .addStringOption(option =>
                 option.setName('tier')
                     .setDescription('الرانك من الأقوى (HT1) إلى الأضعف (LT5)')
                     .setRequired(true)
                     .addChoices(
-                        { name: 'High Tier 1 (HT1) 🔥 [الأقوى]', value: 'HT1' },
+                        { name: 'High Tier 1 (HT1)', value: 'HT1' },
                         { name: 'Low Tier 1 (LT1)', value: 'LT1' },
                         { name: 'High Tier 2 (HT2)', value: 'HT2' },
                         { name: 'Low Tier 2 (LT2)', value: 'LT2' },
@@ -82,8 +85,16 @@ client.once('ready', async () => {
                         { name: 'High Tier 4 (HT4)', value: 'HT4' },
                         { name: 'Low Tier 4 (LT4)', value: 'LT4' },
                         { name: 'High Tier 5 (HT5)', value: 'HT5' },
-                        { name: 'Low Tier 5 (LT5) [الأضعف]', value: 'LT5' }
+                        { name: 'Low Tier 5 (LT5)', value: 'LT5' }
                     )),
+
+        new SlashCommandBuilder()
+            .setName('profile')
+            .setDescription('عرض ملف التير الخاص بك أو بياعب آخر')
+            .addUserOption(option =>
+                option.setName('user')
+                    .setDescription('اللاعب المراد عرض ملفه')
+                    .setRequired(false)),
 
         new SlashCommandBuilder()
             .setName('unregister')
@@ -102,7 +113,7 @@ client.once('ready', async () => {
             Routes.applicationCommands(client.user.id),
             { body: commands },
         );
-        console.log('تم تحديث الأوامر مع الخيارات الجديدة بنجاح!');
+        console.log('تم تحديث الأوامر بنجاح!');
     } catch (error) {
         console.error(error);
     }
@@ -133,15 +144,20 @@ client.on('interactionCreate', async interaction => {
             });
         }
 
-        // تحديد رابط السكن وإصلاح المشكلة
+        // جلب صورة راس أو سكن اللاعب
         let skinUrl = skinAttachment ? skinAttachment.url : `https://mc-heads.net/avatar/${username}/150`;
+
+        const initialTiers = {};
+        GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
 
         registeredUsers.set(interaction.user.id, { 
             username, 
             edition, 
             region, 
             skinUrl,
-            tiers: {}
+            points: 0,
+            title: 'Rookie',
+            tiers: initialTiers
         });
 
         const embed = new EmbedBuilder()
@@ -179,11 +195,11 @@ client.on('interactionCreate', async interaction => {
 
         await interaction.reply({ content: `✅ تم تعيين التير **${tier}** لللاعب ${targetUser} بنجاح!`, ephemeral: true });
 
-        // إرسال النتيجة تلقائياً لروم النتائج المخصص
+        // إرسال النتيجة بتنسيق مطابق للصورة تماماً
         const resultsChannel = interaction.guild.channels.cache.get(RESULTS_CHANNEL_ID);
         if (resultsChannel) {
             const resultEmbed = new EmbedBuilder()
-                .setColor('#2b2d31')
+                .setColor('#00ff44')
                 .setTitle(`${userData.username}'s Test Results 🏆`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
@@ -191,13 +207,46 @@ client.on('interactionCreate', async interaction => {
                     { name: 'Region:', value: `${userData.region}`, inline: false },
                     { name: 'Username:', value: `${userData.username}`, inline: false },
                     { name: 'Previous Rank:', value: `${previousRank}`, inline: false },
-                    { name: 'Rank Earned:', value: `**${tier} (${gamemode})**`, inline: false }
+                    { name: 'Rank Earned:', value: `**${tier} (${gamemode.toUpperCase()})**`, inline: false }
                 )
                 .setFooter({ text: 'RubyTiers Official Results' })
                 .setTimestamp();
 
             await resultsChannel.send({ embeds: [resultEmbed] });
         }
+    }
+
+    else if (commandName === 'profile') {
+        const targetUser = interaction.options.getUser('user') || interaction.user;
+        const userData = registeredUsers.get(targetUser.id);
+
+        if (!userData) {
+            return await interaction.reply({
+                content: `❌ هذا المستخدم (${targetUser}) غير مسجل في النظام!`,
+                ephemeral: true
+            });
+        }
+
+        // بناء قائمة الأطوار المنسقة مثل الصورة
+        let tiersList = '';
+        for (const [mode, rank] of Object.entries(userData.tiers)) {
+            tiersList += `• **${mode}:** \`${rank}\`\n`;
+        }
+
+        const profileEmbed = new EmbedBuilder()
+            .setColor('#2b2d31')
+            .setTitle(`⚔️ RubyTiers Profile - ${userData.username}`)
+            .setThumbnail(userData.skinUrl)
+            .addFields(
+                { name: 'المنطقة 🌍', value: `\`${userData.region}\``, inline: false },
+                { name: 'النقاط 🏆', value: `\`${userData.points} pts\``, inline: false },
+                { name: 'اللقب ⭐️', value: `\`${userData.title}\``, inline: false },
+                { name: '📊 تصنيفات الأطوار (Tiers)', value: tiersList, inline: false }
+            )
+            .setFooter({ text: 'RubyTiers Competitive System' })
+            .setTimestamp();
+
+        await interaction.reply({ embeds: [profileEmbed] });
     }
 
     else if (commandName === 'unregister') {
