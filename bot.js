@@ -40,8 +40,8 @@ client.once('ready', async () => {
                     ))
             .addAttachmentOption(option =>
                 option.setName('skin')
-                    .setDescription('ارفع ملف السكن png الخاص بك')
-                    .setRequired(false)),
+                    .setDescription('ارفع ملف السكن الخاص بك بصيغة PNG حصراً')
+                    .setRequired(true)), // إلزامي لضمان نجاح رفع السكن وعرضه
 
         new SlashCommandBuilder()
             .setName('profile')
@@ -116,11 +116,19 @@ client.on('interactionCreate', async interaction => {
         const region = interaction.options.getString('region');
         const skinAttachment = interaction.options.getAttachment('skin');
 
+        // التأكد من أن الملف مرفوع
+        if (!skinAttachment) {
+            return await interaction.reply({
+                content: '❌ يجب عليك رفع ملف السكن (PNG) لتتمكن من إتمام التسجيل!',
+                ephemeral: true
+            });
+        }
+
         // حفظ بيانات اللاعب مرتبطة بأيدي حساب الديسكورد
         registeredUsers.set(interaction.user.id, { username, edition, region });
 
-        // إذا لم يتم رفع ملف سكن، يتم جلب "رأس الشخصية" (Helm) أوتوماتيكياً
-        const skinAvatar = skinAttachment ? skinAttachment.url : `https://minotar.net/helm/${username}/150.png`;
+        // استخدام رابط السكن المرفوع مباشرة من ديسكورد كصورة مصغرة
+        const skinAvatar = skinAttachment.url;
 
         const embed = new EmbedBuilder()
             .setColor('#e74c3c')
@@ -175,7 +183,7 @@ client.on('interactionCreate', async interaction => {
         const userData = registeredUsers.get(targetUser.id);
         registeredUsers.delete(targetUser.id);
 
-        await interaction.reply({ content: `🗑️ تم بنجاح حذف وإلغاء ربط حساب ماين كرافت (\`${userData.username}\`) المرتبط بحساب الديسكورد ${targetUser}. يمكنك الآن التسجيل من جديد!`, ephemeral: true });
+        await interaction.reply({ content: `🗑️️ تم بنجاح حذف وإلغاء ربط حساب ماين كرافت (\`${userData.username}\`) المرتبط بحساب الديسكورد ${targetUser}. يمكنك الآن التسجيل من جديد!`, ephemeral: true });
     }
 });
 
