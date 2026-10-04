@@ -22,19 +22,18 @@ const client = new Client({
         GatewayIntentBits.Guilds, 
         GatewayIntentBits.GuildMessages, 
         GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildPresences, // ضروري لمعرفة حالة الأونلاين/الأوفلاين
-        GatewayIntentBits.GuildMembers   // ضروري لقراءة رتب الأعضاء
+        GatewayIntentBits.GuildPresences, 
+        GatewayIntentBits.GuildMembers 
     ]
 });
 
 // ======================== [ الإعدادات الرئيسية ] ========================
-const RESULTS_CHANNEL_ID = '1554252285842817174'; // ID روم النتائج 📋╎tier・results
+const RESULTS_CHANNEL_ID = '1554252285842817174'; // ID روم النتائج
 const TESTER_ROLE_ID = '1534195774160638131';     // ID رتبة MY | Tester
 const TICKETS_CATEGORY_ID = '';                   // ضع ID الكاتيجوري هنا (اختياري)
 const DB_FILE = './database.json';
 // ======================================================================
 
-// تحميل وتخزين بيانات التسجيل بملف JSON لعدم ضياعها
 let registeredUsers = {};
 if (fs.existsSync(DB_FILE)) {
     try {
@@ -48,22 +47,17 @@ function saveData() {
     fs.writeFileSync(DB_FILE, JSON.stringify(registeredUsers, null, 4));
 }
 
-// قائمة انتظار مؤقتة لكل كت
 const activeQueues = {
-    Sword: [],
-    Pot: [],
-    Vanilla: [],
-    UHC: [],
-    NethOP: [],
-    SMP: [],
-    Axe: [],
-    Mace: [],
-    SpearMace: []
+    Sword: [], Pot: [], Vanilla: [], UHC: [], NethOP: [], SMP: [], Axe: [], Mace: [], SpearMace: []
 };
 
 const GAMEMODES = ['Vanilla', 'UHC', 'Pot', 'NethOP', 'SMP', 'Sword', 'Axe', 'Mace', 'SpearMace'];
 
-// فحص وجود تستر بحالة أونلاين يحمل رتبة MY | Tester
+// دالة جلب صورة السكن المصغرة (رأس وكتفين)
+function getSkinUrl(username) {
+    return `https://mc-heads.net/bust/${encodeURIComponent(username)}/100`;
+}
+
 async function isTesterOnline(guild) {
     try {
         const members = await guild.members.fetch();
@@ -78,7 +72,6 @@ async function isTesterOnline(guild) {
     }
 }
 
-// بناء إمبد قائمة الانتظار بناءً على حالة التستر
 async function buildQueueEmbed(guild, gamemode) {
     const online = await isTesterOnline(guild);
     const queueList = activeQueues[gamemode] || [];
@@ -106,7 +99,7 @@ async function buildQueueEmbed(guild, gamemode) {
 
         const onlineEmbed = new EmbedBuilder()
             .setColor('#33ff33')
-            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️️`)
+            .setTitle(`قائمة الانتظار: ${gamemode} 🗡️`)
             .setDescription(`**🟢 أونلاين**\n\n${queueText}\n**المنتظرون:** ${queueList.length}/20`)
             .setFooter({ text: 'MYTIERS Queue' });
 
@@ -145,6 +138,10 @@ client.once('ready', async () => {
                 { name: 'Asia (AS)', value: 'AS' }
             ))
             .addAttachmentOption(opt => opt.setName('skin_file').setDescription('ملف السكن PNG (اختياري)').setRequired(false)),
+
+        new SlashCommandBuilder()
+            .setName('unregister')
+            .setDescription('حذف تسجيلك الحالي لإعادة التسجيل حساب جديد'),
 
         new SlashCommandBuilder()
             .setName('setrank')
@@ -189,7 +186,6 @@ client.once('ready', async () => {
 });
 
 client.on('interactionCreate', async interaction => {
-    // أمر إنشاء لوحة الأزرار والقوائم
     if (interaction.isChatInputCommand() && interaction.commandName === 'setup-queue') {
         const embed = new EmbedBuilder()
             .setColor('#2b2d31')
@@ -215,7 +211,6 @@ client.on('interactionCreate', async interaction => {
         return await interaction.reply({ content: '✅ تم إرسال لوحة قوائم الانتظار بنجاح!', ephemeral: true });
     }
 
-    // التفاعلات مع الأزرار
     if (interaction.isButton()) {
         const customId = interaction.customId;
 
@@ -258,9 +253,22 @@ client.on('interactionCreate', async interaction => {
             const queueData = await buildQueueEmbed(interaction.guild, mode);
             return await interaction.update(queueData);
         }
+
+        // زر قفل التذكرة
+        if (customId === 'close_ticket') {
+            await interaction.channel.permissionOverwrites.edit(interaction.guild.id, { SendMessages: false });
+            await interaction.reply({ content: '🔒 تم قفل التذكرة بنجاح.' });
+        }
+
+        // زر حذف التذكرة
+        if (customId === 'delete_ticket') {
+            await interaction.reply({ content: '🗑️ سيتم حذف التذكرة بعد 5 ثوانٍ...' });
+            setTimeout(() => {
+                interaction.channel.delete().catch(() => {});
+            }, 5000);
+        }
     }
 
-    // استقبال نموذج الآيبي وإنشاء روم التذكرة
     if (interaction.isModalSubmit()) {
         if (interaction.customId.startsWith('modal_ip_')) {
             const mode = interaction.customId.replace('modal_ip_', '');
@@ -289,7 +297,7 @@ client.on('interactionCreate', async interaction => {
 
             const ticketEmbed = new EmbedBuilder()
                 .setColor('#2b2d31')
-                .setTitle(`⚔️ تذكرة اختبار جديدة | MYTIERS`)
+                .setTitle(`⚔️ MYTIERS | تذكرة اختبار جديدة`)
                 .setThumbnail(userData.skinUrl)
                 .addFields(
                     { name: 'اللاعب:', value: `${interaction.user} (\`${userData.username}\`)`, inline: true },
@@ -300,9 +308,16 @@ client.on('interactionCreate', async interaction => {
                 .setFooter({ text: 'MYTIERS Ticket System' })
                 .setTimestamp();
 
+            // أزرار التحكم بالتذكرة (قفل وحذف)
+            const ticketButtons = new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setCustomId('close_ticket').setLabel('إغلاق التذكرة 🔒').setStyle(ButtonStyle.Secondary),
+                new ButtonBuilder().setCustomId('delete_ticket').setLabel('حذف التذكرة 🗑️').setStyle(ButtonStyle.Danger)
+            );
+
             await ticketChannel.send({ 
                 content: `👋 مرحباً ${interaction.user}! تم فتح التذكرة للاختبار. ينضم <@&${TESTER_ROLE_ID}> قريباً.`, 
-                embeds: [ticketEmbed] 
+                embeds: [ticketEmbed],
+                components: [ticketButtons]
             });
 
             return await interaction.reply({ 
@@ -312,14 +327,13 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    // تنفيذ الأوامر
     if (interaction.isChatInputCommand()) {
         const { commandName } = interaction;
 
         if (commandName === 'register') {
             const userId = interaction.user.id;
             if (registeredUsers[userId]) {
-                return await interaction.reply({ content: '❌ أنت مسجل بالفعل!', ephemeral: true });
+                return await interaction.reply({ content: '❌ أنت مسجل بالفعل! استخدم `/unregister` أولاً إذا أردت تغيير حسابك.', ephemeral: true });
             }
 
             const username = interaction.options.getString('username');
@@ -327,9 +341,7 @@ client.on('interactionCreate', async interaction => {
             const region = interaction.options.getString('region');
             const skinAttachment = interaction.options.getAttachment('skin_file');
 
-            let skinUrl = skinAttachment 
-                ? skinAttachment.url 
-                : `https://visage.surgeplay.com/face/160/${encodeURIComponent(username)}`;
+            let skinUrl = skinAttachment ? skinAttachment.url : getSkinUrl(username);
 
             const initialTiers = {};
             GAMEMODES.forEach(mode => initialTiers[mode] = 'Unranked');
@@ -351,6 +363,18 @@ client.on('interactionCreate', async interaction => {
 
             await interaction.reply({ embeds: [embed] });
         } 
+
+        else if (commandName === 'unregister') {
+            const userId = interaction.user.id;
+            if (!registeredUsers[userId]) {
+                return await interaction.reply({ content: '❌ أنت غير مسجل أصلاً لتقوم بإلغاء التسجيل!', ephemeral: true });
+            }
+
+            delete registeredUsers[userId];
+            saveData();
+
+            return await interaction.reply({ content: '✅ تم حذف تسجيلك بنجاح! يمكنك الآن استخدام `/register` والتسجيل باسم جديد.', ephemeral: true });
+        }
 
         else if (commandName === 'setrank') {
             const targetUser = interaction.options.getUser('player');
