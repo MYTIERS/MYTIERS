@@ -452,15 +452,15 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none; /* مخفي افتراضياً */
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 9999;
             padding: 16px;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(5px);
         }
 
         .modal-card {
@@ -473,7 +473,7 @@
             overflow-y: auto;
             direction: rtl;
             padding: 18px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
             color: #ffffff;
         }
 
@@ -494,7 +494,7 @@
             background: transparent;
             border: none;
             color: #64748b;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
         }
 
@@ -524,6 +524,7 @@
         .info-row .left-text {
             color: #94a3b8;
             font-size: 11px;
+            direction: ltr;
         }
 
         .info-row .right-text {
@@ -612,7 +613,7 @@
 
         <!-- Server Banner -->
         <div class="server-banner">
-            <button class="info-btn" onclick="openModal()">
+            <button class="info-btn" id="infoBtn">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
             </button>
@@ -640,34 +641,34 @@
     </div>
 
     <!-- Info Modal Popup -->
-    <div class="modal-overlay" id="infoModal" onclick="closeModalOnOutside(event)">
+    <div class="modal-overlay" id="infoModal">
         <div class="modal-card">
             <div class="modal-header">
                 <span class="modal-title">النقاط وألقاب الإنجازات</span>
-                <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+                <button class="close-btn" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="section-subtitle">حساب النقاط</div>
             <div class="info-list">
                 <div class="info-row">
                     <span class="right-text">45 نقطة</span>
-                    <span class="left-text">LT1 &nbsp;|&nbsp; 60 نقطة &nbsp;|&nbsp; HT1</span>
+                    <span class="left-text">HT1 | 60 نقطة | LT1</span>
                 </div>
                 <div class="info-row">
                     <span class="right-text">20 نقطة</span>
-                    <span class="left-text">LT2 &nbsp;|&nbsp; 30 نقطة &nbsp;|&nbsp; HT2</span>
+                    <span class="left-text">HT2 | 30 نقطة | LT2</span>
                 </div>
                 <div class="info-row">
                     <span class="right-text">6 نقاط</span>
-                    <span class="left-text">LT3 &nbsp;|&nbsp; 10 نقاط &nbsp;|&nbsp; HT3</span>
+                    <span class="left-text">HT3 | 10 نقاط | LT3</span>
                 </div>
                 <div class="info-row">
                     <span class="right-text">3 نقاط</span>
-                    <span class="left-text">LT4 &nbsp;|&nbsp; 4 نقاط &nbsp;|&nbsp; HT4</span>
+                    <span class="left-text">HT4 | 4 نقاط | LT4</span>
                 </div>
                 <div class="info-row">
                     <span class="right-text">نقطة واحدة</span>
-                    <span class="left-text">LT5 &nbsp;|&nbsp; نقطتان &nbsp;|&nbsp; HT5</span>
+                    <span class="left-text">HT5 | نقطتان | LT5</span>
                 </div>
             </div>
 
@@ -880,20 +881,20 @@
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
         }
 
-        /* Modal Functions */
-        function openModal() {
+        // ربط الأحداث برمجيًا لمنع مشاكل التبديل
+        document.getElementById('infoBtn').addEventListener('click', function() {
             document.getElementById('infoModal').style.display = 'flex';
-        }
+        });
 
-        function closeModal() {
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
             document.getElementById('infoModal').style.display = 'none';
-        }
+        });
 
-        function closeModalOnOutside(event) {
-            if (event.target.id === 'infoModal') {
-                closeModal();
+        document.getElementById('infoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
             }
-        }
+        });
 
         renderLeaderboard('overall');
     </script>
