@@ -19,6 +19,8 @@
             --silver: #a0acb2;
             --bronze: #cb6835;
             --pink-accent: #f43f5e;
+            --modal-bg: #121824;
+            --modal-card-bg: #192231;
         }
 
         * {
@@ -451,46 +453,46 @@
             font-size: 11px;
         }
 
-        /* ----- MODAL POPUP STYLES ----- */
+        /* ----- EXACT MATCH MODAL DESIGN (مطابق للصورة تماماً) ----- */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(6px);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 999;
+            z-index: 9999;
             padding: 16px;
         }
 
         .modal-overlay.active {
-            display: flex;
+            display: flex !important;
         }
 
         .modal-content {
-            background: #111827;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
+            background: var(--modal-bg);
+            border: 1px solid #1e293b;
+            border-radius: 24px;
             width: 100%;
-            max-width: 440px;
+            max-width: 460px;
             max-height: 85vh;
             overflow-y: auto;
-            padding: 20px;
+            padding: 24px 20px;
             direction: rtl;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
             position: relative;
         }
 
         .modal-content::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
 
         .modal-content::-webkit-scrollbar-thumb {
-            background: var(--border-color);
+            background: #2a374e;
             border-radius: 10px;
         }
 
@@ -498,22 +500,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
         }
 
         .modal-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 900;
             color: #ffffff;
+            letter-spacing: -0.2px;
         }
 
         .close-btn {
             background: transparent;
             border: none;
-            color: var(--text-gray);
-            font-size: 20px;
+            color: #64748b;
+            font-size: 18px;
             cursor: pointer;
             transition: color 0.2s;
         }
@@ -524,31 +525,27 @@
 
         .section-title {
             font-size: 15px;
-            font-weight: 800;
-            color: var(--pink-accent);
-            margin: 16px 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-weight: 900;
+            color: #e11d48;
+            margin: 20px 0 12px 0;
         }
 
         .points-table {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .points-row {
-            background: #182232;
-            border: 1px solid #233147;
-            border-radius: 10px;
-            padding: 10px 14px;
+            background: var(--modal-card-bg);
+            border-radius: 12px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             font-size: 13px;
             font-weight: 700;
-            color: #e2e8f0;
+            color: #94a3b8;
         }
 
         .points-col {
@@ -557,22 +554,21 @@
             gap: 8px;
         }
 
-        .badge-lt {
-            color: var(--text-gray);
-            font-weight: 600;
+        .points-col .highlight {
+            color: #ffffff;
+            font-weight: 800;
         }
 
         .titles-list {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .title-item {
-            background: #182232;
-            border: 1px solid #233147;
-            border-radius: 10px;
-            padding: 10px 14px;
+            background: var(--modal-card-bg);
+            border-radius: 12px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -581,16 +577,16 @@
         .title-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .title-icon {
-            width: 24px;
-            height: 24px;
-            object-fit: contain;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .title-icon img {
@@ -601,14 +597,14 @@
 
         .title-name {
             font-size: 14px;
-            font-weight: 800;
+            font-weight: 900;
             color: #ffffff;
         }
 
         .title-req {
             font-size: 12px;
-            font-weight: 600;
-            color: var(--text-gray);
+            font-weight: 700;
+            color: #64748b;
         }
     </style>
 </head>
@@ -707,7 +703,7 @@
 
     </div>
 
-    <!-- Info & Achievements Modal -->
+    <!-- Info & Achievements Modal (طابق الصورة بالظبط) -->
     <div class="modal-overlay" id="infoModal" onclick="closeInfoModalOnOverlay(event)">
         <div class="modal-content">
             <div class="modal-header">
@@ -719,24 +715,24 @@
             <div class="section-title">حساب النقاط</div>
             <div class="points-table">
                 <div class="points-row">
-                    <div class="points-col"><span>HT1</span> <span>60 نقطة</span></div>
-                    <div class="points-col badge-lt"><span>LT1</span> <span>45 نقطة</span></div>
+                    <div class="points-col"><span>LT1</span> | <span class="highlight">45 نقطة</span></div>
+                    <div class="points-col"><span>HT1</span> | <span class="highlight">60 نقطة</span></div>
                 </div>
                 <div class="points-row">
-                    <div class="points-col"><span>HT2</span> <span>30 نقطة</span></div>
-                    <div class="points-col badge-lt"><span>LT2</span> <span>20 نقطة</span></div>
+                    <div class="points-col"><span>LT2</span> | <span class="highlight">20 نقطة</span></div>
+                    <div class="points-col"><span>HT2</span> | <span class="highlight">30 نقطة</span></div>
                 </div>
                 <div class="points-row">
-                    <div class="points-col"><span>HT3</span> <span>10 نقاط</span></div>
-                    <div class="points-col badge-lt"><span>LT3</span> <span>6 نقاط</span></div>
+                    <div class="points-col"><span>LT3</span> | <span class="highlight">6 نقاط</span></div>
+                    <div class="points-col"><span>HT3</span> | <span class="highlight">10 نقاط</span></div>
                 </div>
                 <div class="points-row">
-                    <div class="points-col"><span>HT4</span> <span>4 نقاط</span></div>
-                    <div class="points-col badge-lt"><span>LT4</span> <span>3 نقاط</span></div>
+                    <div class="points-col"><span>LT4</span> | <span class="highlight">3 نقاط</span></div>
+                    <div class="points-col"><span>HT4</span> | <span class="highlight">4 نقاط</span></div>
                 </div>
                 <div class="points-row">
-                    <div class="points-col"><span>HT5</span> <span>نقطتان</span></div>
-                    <div class="points-col badge-lt"><span>LT5</span> <span>نقطة واحدة</span></div>
+                    <div class="points-col"><span>LT5</span> | <span class="highlight">نقطة واحدة</span></div>
+                    <div class="points-col"><span>HT5</span> | <span class="highlight">نقطتان</span></div>
                 </div>
             </div>
 
@@ -747,15 +743,15 @@
     </div>
 
     <script>
-        // مصفوفة ألقاب الإنجازات مع أيقوناتها وضبط مسارات الصور
+        // مصفوفة ألقاب الإنجازات باستخدام روابط صور الرتب الفعلية
         const titlesData = [
-            { name: "أستاذ فنون القتال", req: "أكثر من 400 نقطة", icon: "./ranks/master.png", fallbackIcon: "fa-solid fa-crown", color: "#f59e0b" },
-            { name: "سيد القتال", req: "أكثر من 250 نقطة", icon: "./ranks/grandmaster.png", fallbackIcon: "fa-solid fa-gem", color: "#eab308" },
-            { name: "بطل القتال", req: "أكثر من 100 نقطة", icon: "./ranks/champion.png", fallbackIcon: "fa-solid fa-shield-halved", color: "#ef4444" },
-            { name: "متخصص قتالي", req: "50+ نقطة", icon: "./ranks/specialist.png", fallbackIcon: "fa-solid fa-diamond", color: "#a855f7" },
-            { name: "طالب عسكري قتالي", req: "20+ نقطة", icon: "./ranks/cadet.png", fallbackIcon: "fa-solid fa-circle-dot", color: "#3b82f6" },
-            { name: "مبتدئ في القتال", req: "1+ نقاط", icon: "./ranks/rookie.png", fallbackIcon: "fa-regular fa-circle-dot", color: "#60a5fa" },
-            { name: "مبتدئ", req: "أقل من 10 نقاط", icon: "./ranks/beginner.png", fallbackIcon: "fa-regular fa-circle", color: "#9ca3af" }
+            { name: "أستاذ فنون القتال", req: "أكثر من 400 نقطة", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/combat_grandmaster.webp" },
+            { name: "سيد القتال", req: "أكثر من 250 نقطة", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/combat_master.webp" },
+            { name: "بطل القتال", req: "أكثر من 100 نقطة", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/combat_ace.svg" },
+            { name: "متخصص قتالي", req: "50+ نقطة", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/combat_specialist.svg" },
+            { name: "طالب عسكري قتالي", req: "20+ نقطة", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/combat_cadet.svg" },
+            { name: "مبتدئ في القتال", req: "1+ نقاط", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/combat_novice.svg" },
+            { name: "مبتدئ", req: "أقل من 10 نقاط", icon: "https://raw.githubusercontent.com/Fortnite-API/assets/main/rookie.svg" }
         ];
 
         const modeIcons = [
@@ -902,8 +898,7 @@
                 titleDiv.innerHTML = `
                     <div class="title-info">
                         <div class="title-icon">
-                            <img src="${item.icon}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
-                            <i class="${item.fallbackIcon}" style="color: ${item.color}; display:none;"></i>
+                            <img src="${item.icon}" alt="${item.name}">
                         </div>
                         <span class="title-name">${item.name}</span>
                     </div>
@@ -913,6 +908,7 @@
             });
         }
 
+        // إظهار وإخفاء النافذة
         function openInfoModal() {
             document.getElementById("infoModal").classList.add("active");
         }
@@ -947,9 +943,11 @@
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
         }
 
-        // Initialization
-        renderTitlesModal();
-        renderLeaderboard('overall');
+        // Initialization عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTitlesModal();
+            renderLeaderboard('overall');
+        });
     </script>
 </body>
 </html>
