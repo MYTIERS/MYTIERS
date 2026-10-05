@@ -294,17 +294,27 @@
             overflow: hidden;
         }
 
-        /* Header البنر المائل الجديد */
+        /* Top Header Row */
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* المستطيل المائل المصغر */
         .player-banner {
             position: relative;
-            width: 100%;
-            height: 75px;
-            border-radius: 10px;
+            width: 145px;
+            height: 52px;
+            border-radius: 8px 0 0 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+            padding: 0 8px 0 12px;
+            clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
+            flex-shrink: 0;
         }
 
         .player-banner.rank-1 { background-color: var(--gold); }
@@ -313,17 +323,26 @@
         .player-banner.rank-other { background-color: #232f42; }
 
         .rank-number {
-            font-size: 40px;
+            font-size: 26px;
             font-weight: 900;
             font-style: italic;
             color: #ffffff;
-            text-shadow: 3px 4px 0px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
         }
 
         .player-skin {
-            height: 120%;
+            height: 110%;
             object-fit: contain;
-            filter: drop-shadow(-4px 4px 5px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(-2px 2px 4px rgba(0, 0, 0, 0.4));
+        }
+
+        .player-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .levels-title {
@@ -334,7 +353,7 @@
             margin-top: 2px;
         }
 
-        /* المستويات كأيقونات دائرية بنفس تصميم الصور */
+        /* المستويات كأيقونات دائرية */
         .tiers-row {
             display: flex;
             gap: 8px;
@@ -558,6 +577,7 @@
 
                 const card = document.createElement("div");
                 card.className = "player-card";
+                card.setAttribute("data-name", player.name);
 
                 let levelsHTML = "";
                 player.levels.forEach(lvl => {
@@ -570,9 +590,12 @@
                 });
 
                 card.innerHTML = `
-                    <div class="player-banner ${rankClass}">
-                        <span class="rank-number">${rankNum}.</span>
-                        <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
+                    <div class="player-header">
+                        <div class="player-banner ${rankClass}">
+                            <span class="rank-number">${rankNum}.</span>
+                            <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
+                        </div>
+                        <span class="player-name">${player.name}</span>
                     </div>
 
                     <div class="levels-title">المستويات</div>
@@ -595,7 +618,7 @@
             const input = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.player-card');
             cards.forEach(card => {
-                const name = card.querySelector('.player-banner').getAttribute('data-name') || "";
+                const name = card.getAttribute('data-name') || "";
                 card.style.display = name.toLowerCase().includes(input) ? "flex" : "none";
             });
         }
