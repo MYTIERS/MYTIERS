@@ -724,6 +724,14 @@
     </div>
 
     <script>
+        const tierPointsMap = {
+            "HT1": 60, "LT1": 45,
+            "HT2": 30, "LT2": 20,
+            "HT3": 10, "LT3": 6,
+            "HT4": 4,  "LT4": 3,
+            "HT5": 2,  "LT5": 1
+        };
+
         const titlesData = [
             { name: "أستاذ فنون القتال", req: "أكثر من 400 نقطة", icon: "fa-solid fa-gem", color: "#f59e0b" },
             { name: "سيد القتال", req: "أكثر من 250 نقطة", icon: "fa-solid fa-crown", color: "#eab308" },
@@ -749,8 +757,6 @@
         const playersData = [
             {
                 name: "iRuby_X",
-                points: "60",
-                title: "متخصص قتالي",
                 region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/iRuby_X.png",
                 modes: {
@@ -767,8 +773,6 @@
             },
             {
                 name: "Mustfa_105",
-                points: "45",
-                title: "سيد القتال",
                 region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/M4ster.png",
                 modes: {
@@ -784,6 +788,27 @@
                 }
             }
         ];
+
+        function calculatePlayerPoints(player) {
+            let total = 0;
+            for (let mode in player.modes) {
+                const tier = player.modes[mode];
+                if (tierPointsMap[tier]) {
+                    total += tierPointsMap[tier];
+                }
+            }
+            return total;
+        }
+
+        function getPlayerTitle(points) {
+            if (points > 400) return "أستاذ فنون القتال";
+            if (points > 250) return "سيد القتال";
+            if (points > 100) return "بطل القتال";
+            if (points >= 50) return "متخصص قتالي";
+            if (points >= 20) return "طالب عسكري قتالي";
+            if (points >= 1) return "مبتدئ في القتال";
+            return "مبتدئ";
+        }
 
         function renderTitlesModal() {
             const container = document.getElementById("titlesContainer");
@@ -811,10 +836,25 @@
             if (!container) return;
             container.innerHTML = "";
 
-            let displayPlayers = [...playersData];
+            let displayPlayers = playersData.map(player => {
+                const calculatedPoints = calculatePlayerPoints(player);
+                return {
+                    ...player,
+                    points: calculatedPoints,
+                    title: getPlayerTitle(calculatedPoints)
+                };
+            });
 
             if (selectedMode === 'overall') {
-                displayPlayers.sort((a, b) => parseInt(b.points) - parseInt(a.points));
+                displayPlayers.sort((a, b) => b.points - a.points);
+            } else {
+                displayPlayers.sort((a, b) => {
+                    const tierA = a.modes[selectedMode] || "غير مصنف";
+                    const tierB = b.modes[selectedMode] || "غير مصنف";
+                    const pointsA = tierPointsMap[tierA] || 0;
+                    const pointsB = tierPointsMap[tierB] || 0;
+                    return pointsB - pointsA;
+                });
             }
 
             displayPlayers.forEach((player, index) => {
@@ -873,6 +913,12 @@
             });
         }
 
+        function selectMode(modeId, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if (element) element.classList.add('active');
+            renderLeaderboard(modeId);
+        }
+
         function filterPlayers() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.player-card');
@@ -887,7 +933,6 @@
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
         }
 
-        // Event Listeners (ربط الأحداث بالزر بشكل آمن وعازل للأخطاء)
         document.addEventListener("DOMContentLoaded", function() {
             renderTitlesModal();
             renderLeaderboard('overall');
