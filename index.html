@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="notranslate" translate="no">
+<html lang="ar" dir="rtl" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
@@ -453,7 +453,7 @@
             font-size: 11px;
         }
 
-        /* ----- MODAL FIXES AND DESIGN ----- */
+        /* ----- MODAL DESIGN ----- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -657,7 +657,7 @@
 
         <!-- Server Info Banner -->
         <div class="server-banner">
-            <button class="info-btn" id="infoBtn">
+            <button class="info-btn" id="infoBtn" onclick="openModal()">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
             </button>
@@ -689,7 +689,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">النقاط وألقاب الإنجازات</h3>
-                <button class="close-btn" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+                <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <!-- Points Section -->
@@ -808,6 +808,16 @@
             if (points >= 20) return "طالب عسكري قتالي";
             if (points >= 1) return "مبتدئ في القتال";
             return "مبتدئ";
+        }
+
+        function openModal() {
+            const modal = document.getElementById("infoModal");
+            if (modal) modal.classList.add("active");
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("infoModal");
+            if (modal) modal.classList.remove("active");
         }
 
         function renderTitlesModal() {
@@ -937,26 +947,11 @@
             renderTitlesModal();
             renderLeaderboard('overall');
 
-            const infoBtn = document.getElementById("infoBtn");
             const modal = document.getElementById("infoModal");
-            const closeBtn = document.getElementById("closeModalBtn");
-
-            if (infoBtn && modal) {
-                infoBtn.addEventListener("click", function() {
-                    modal.classList.add("active");
-                });
-            }
-
-            if (closeBtn && modal) {
-                closeBtn.addEventListener("click", function() {
-                    modal.classList.remove("active");
-                });
-            }
-
             if (modal) {
                 modal.addEventListener("click", function(e) {
                     if (e.target === modal) {
-                        modal.classList.remove("active");
+                        closeModal();
                     }
                 });
             }
