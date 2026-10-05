@@ -115,7 +115,7 @@
             cursor: pointer;
         }
 
-        /* Categories Navigation Bar */
+        /* Scrollable Navigation Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
@@ -273,7 +273,7 @@
             padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             position: relative;
         }
@@ -339,35 +339,35 @@
             border-radius: 8px;
         }
 
-        /* Levels Section Title Positioned Above/Left */
+        /* Levels Header Positioned to LEFT */
         .levels-header {
             display: flex;
-            justify-content: flex-end; /* لرفعه وإزاحته نحو اليسار والقمة */
-            margin-bottom: -4px;
-            margin-top: -2px;
+            justify-content: flex-start; /* محاذاة النص لليسار */
+            margin-top: 2px;
+            margin-bottom: 2px;
+            padding-left: 2px;
         }
 
         .levels-title {
             font-size: 13px;
             font-weight: 800;
-            color: #e2e8f0;
+            color: #ffffff;
         }
 
-        /* Tier Slots Row (Enlarged & Shifted to Left/Top) */
+        /* Tier Slots Row */
         .tiers-row {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding: 6px 2px;
-            justify-content: flex-start; /* ينزاح إلى اليسار بالتنسيق */
-            direction: ltr; /* الترتيب يبدأ يساراً */
+            padding: 4px 0px;
+            justify-content: flex-start;
+            direction: ltr;
         }
 
         .tiers-row::-webkit-scrollbar {
             display: none;
         }
 
-        /* Enlarged Circular/Pill Tier Badges */
         .tier-slot {
             display: flex;
             flex-direction: column;
@@ -375,22 +375,15 @@
             justify-content: center;
             background: #1e293b;
             border-radius: 22px;
-            padding: 8px 10px; /* تكبير الحجم */
-            min-width: 48px; /* زيادة العرض */
+            padding: 8px 10px;
+            min-width: 48px;
             gap: 4px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             flex-shrink: 0;
-            transition: transform 0.2s, border-color 0.2s;
         }
 
-        .tier-slot:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Enlarged Icons */
         .tier-slot img, .tier-slot i {
-            width: 22px; /* تكبير حجم الأيقونة */
+            width: 22px;
             height: 22px;
             font-size: 18px;
             object-fit: contain;
@@ -403,12 +396,12 @@
             text-align: center;
         }
 
-        /* Tier Colors (Match Image 2 Roles) */
-        .tier-ht1, .tier-lt1 { color: #f59e0b; } /* الأصفر */
-        .tier-ht2, .tier-lt2 { color: #f97316; } /* البرتقالي */
-        .tier-ht3, .tier-lt3 { color: #ef4444; } /* الأحمر */
-        .tier-ht4, .tier-lt4 { color: #a855f7; } /* البنفسجي */
-        .tier-ht5, .tier-lt5 { color: #3b82f6; } /* الأزرق */
+        /* Tier Colors */
+        .tier-ht1, .tier-lt1 { color: #f59e0b; }
+        .tier-ht2, .tier-lt2 { color: #f97316; }
+        .tier-ht3, .tier-lt3 { color: #ef4444; }
+        .tier-ht4, .tier-lt4 { color: #a855f7; }
+        .tier-ht5, .tier-lt5 { color: #3b82f6; }
 
     </style>
 </head>
@@ -416,7 +409,7 @@
 
     <div class="container">
 
-        <!-- Top Header Navigation Bar -->
+        <!-- Header Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -432,43 +425,48 @@
             </button>
         </div>
 
-        <!-- Scrollable Categories Bar (Includes Mace - ميس) -->
+        <!-- Categories Bar (Complete & Updated) -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
-                <div class="nav-item active" onclick="selectCategory(this, 'all')">
+                <div class="nav-item active">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
                     <span>إجمالي</span>
                 </div>
 
-                <div class="nav-item" onclick="selectCategory(this, 'mace')">
+                <div class="nav-item">
                     <img src="./mace.svg" alt="ميس" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
                     <span>ميس</span>
                 </div>
 
-                <div class="nav-item" onclick="selectCategory(this, 'sword')">
+                <div class="nav-item">
                     <img src="./sword.svg" alt="سيف" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
                     <span>سيف</span>
                 </div>
 
-                <div class="nav-item" onclick="selectCategory(this, 'netherite')">
+                <div class="nav-item">
                     <img src="./nethop.svg" alt="نيثوب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
                     <span>نيثوب</span>
                 </div>
 
-                <div class="nav-item" onclick="selectCategory(this, 'smp')">
+                <div class="nav-item">
                     <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
                     <span>SMP</span>
                 </div>
 
-                <div class="nav-item" onclick="selectCategory(this, 'pot')">
+                <div class="nav-item">
                     <img src="./pot.svg" alt="وعاء" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
                     <span>وعاء</span>
                 </div>
 
-                <div class="nav-item" onclick="selectCategory(this, 'vanilla')">
+                <div class="nav-item">
                     <img src="./vanilla.svg" alt="فانيليا" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
                     <span>فانيليا</span>
+                </div>
+
+                <div class="nav-item">
+                    <img src="./enderman.svg" alt="أندر" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1066/1066371.png'">
+                    <span>أندر</span>
                 </div>
 
             </div>
@@ -476,7 +474,6 @@
 
         <!-- Server Info Banner -->
         <div class="server-banner">
-            
             <button class="info-btn">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
@@ -493,38 +490,35 @@
                     </span>
                 </div>
 
-                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn" title="Join Discord">
+                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn">
                     <i class="fa-brands fa-discord"></i>
                 </a>
             </div>
-
         </div>
 
-        <!-- Leaderboard Player Cards Container -->
-        <div class="leaderboard-list" id="playerContainer">
-
-            <!-- Top Player 1 Card (Dynamic Demo) -->
+        <!-- Player Card -->
+        <div class="leaderboard-list">
             <div class="player-card">
                 <div class="player-header">
                     <div class="player-info-right">
-                        <div class="rank-box">.1</div>
+                        <div class="rank-box">1.</div>
                         <div class="avatar-box">
                             <img src="https://mc-heads.net/avatar/Marlo/48" alt="مارلو">
                         </div>
                         <div class="player-details">
                             <span class="player-name">مارلو</span>
-                            <span class="player-subtitle"> (4) سيد القتال الكبير 🌟</span>
+                            <span class="player-subtitle">(4) سيد القتال الكبير 🌟</span>
                         </div>
                     </div>
                     <span class="region-badge">غير متوفر</span>
                 </div>
 
-                <!-- Levels Title Positioned at Top/Right -->
+                <!-- Levels Title Shifted Left -->
                 <div class="levels-header">
                     <span class="levels-title">المستويات</span>
                 </div>
 
-                <!-- Circular Tier Badges Row (Large & Shifted Left) -->
+                <!-- Tier Badges (Replaced Heart with Enderman Icon) -->
                 <div class="tiers-row">
                     <div class="tier-slot">
                         <img src="./mace.svg" alt="mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
@@ -550,8 +544,9 @@
                         <img src="./nethop.svg" alt="nethop" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
                         <span class="tier-text tier-ht1">HT1</span>
                     </div>
+                    <!-- Replaced Heart with Enderman icon -->
                     <div class="tier-slot">
-                        <i class="fa-solid fa-heart tier-lt1"></i>
+                        <img src="./enderman.svg" alt="enderman" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1066/1066371.png'">
                         <span class="tier-text tier-lt1">LT1</span>
                     </div>
                     <div class="tier-slot">
@@ -560,7 +555,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>
@@ -569,17 +563,6 @@
         function copyIP() {
             navigator.clipboard.writeText("MYPVP.Mikey");
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
-        }
-
-        // Change Categories and Filter Top Player
-        function selectCategory(element, category) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-
-            // Example response when selecting "Mace" or other categories
-            if(category === 'mace') {
-                console.log("عرض أقوى لاعب في تصنيف الميس");
-            }
         }
     </script>
 </body>
