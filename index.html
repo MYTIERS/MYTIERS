@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="notranslate" translate="no">
+<html lang="ar" dir="rtl" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
@@ -30,7 +30,7 @@
             background-color: var(--bg-main);
             color: #ffffff;
             padding: 12px;
-            direction: ltr;
+            direction: rtl;
             display: flex;
             justify-content: center;
         }
@@ -61,17 +61,16 @@
             font-size: 20px;
             font-family: 'Arial Black', sans-serif;
             white-space: nowrap;
+            direction: ltr;
         }
 
         .logo-my {
-            color: #2563eb;
             background: linear-gradient(180deg, #60a5fa 0%, #1d4ed8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .logo-tiers {
-            color: #f59e0b;
             background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #b45309 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -88,7 +87,7 @@
             background: var(--input-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 8px 12px 8px 34px;
+            padding: 8px 34px 8px 12px;
             color: #fff;
             font-size: 13px;
             outline: none;
@@ -101,7 +100,7 @@
 
         .search-box i {
             position: absolute;
-            left: 12px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-gray);
@@ -131,6 +130,7 @@
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 4px;
+            direction: rtl;
         }
 
         .modes-scroll::-webkit-scrollbar {
@@ -147,8 +147,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 68px;
-            padding: 8px 10px;
+            min-width: 65px;
+            padding: 8px;
             background: var(--card-bg);
             border: 1px solid transparent;
             border-radius: 12px;
@@ -158,21 +158,20 @@
             transition: all 0.2s ease;
         }
 
-        .nav-item img {
+        .nav-item img, .nav-item i {
             width: 22px;
             height: 22px;
+            font-size: 18px;
             margin-bottom: 4px;
             object-fit: contain;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-item span {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .nav-item.active {
@@ -197,7 +196,7 @@
             gap: 6px;
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 14px;
+            padding: 8px 12px;
             border-radius: 12px;
             color: #ffffff;
             font-size: 13px;
@@ -226,10 +225,8 @@
             font-size: 13px;
             font-weight: 900;
             color: #ef4444;
-            letter-spacing: 0.5px;
             white-space: nowrap;
             font-family: 'Arial Black', sans-serif;
-            text-transform: uppercase;
         }
 
         .ip-container {
@@ -241,7 +238,6 @@
         .ip-label {
             font-size: 10px;
             color: var(--text-gray);
-            font-weight: 500;
         }
 
         .ip-address {
@@ -252,11 +248,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
-        }
-
-        .ip-address i {
-            font-size: 10px;
-            color: var(--text-gray);
+            direction: ltr;
         }
 
         .discord-btn {
@@ -270,7 +262,6 @@
             justify-content: center;
             text-decoration: none;
             font-size: 16px;
-            transition: transform 0.2s, background-color 0.2s;
             flex-shrink: 0;
         }
 
@@ -285,10 +276,10 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -298,29 +289,28 @@
             justify-content: space-between;
         }
 
-        .player-info-left {
+        .player-info-right {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .rank-badge {
-            background: #d97706;
-            color: #fff;
-            font-weight: 800;
-            font-size: 14px;
+        .rank-box {
+            background: #f59e0b;
+            color: #000;
+            font-weight: 900;
+            font-size: 20px;
             padding: 4px 10px;
-            border-radius: 8px 0 0 8px;
-            margin-right: -4px;
+            border-radius: 8px;
+            font-style: italic;
         }
 
         .avatar-box {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
             background: #232f42;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .avatar-box img {
@@ -336,40 +326,46 @@
 
         .player-name {
             font-weight: 800;
-            font-size: 15px;
+            font-size: 16px;
             color: #ffffff;
         }
 
         .player-subtitle {
             font-size: 11px;
             color: var(--text-gray);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .points-badge {
-            color: #93c5fd;
-            font-weight: 600;
         }
 
         .region-badge {
-            background: #065f46;
-            color: #34d399;
-            font-size: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            font-size: 11px;
             font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            padding: 4px 10px;
+            border-radius: 8px;
         }
 
-        /* Tier Items Horizontal Row */
+        /* Levels Header Positioned to Left */
+        .levels-header {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        .levels-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        /* Tier Slots Row */
         .tiers-row {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             overflow-x: auto;
-            padding-top: 4px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 4px 0px;
+            justify-content: flex-start;
+            direction: ltr;
         }
 
         .tiers-row::-webkit-scrollbar {
@@ -380,44 +376,38 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #111827;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 6px;
-            min-width: 42px;
+            justify-content: center;
+            background: #1e293b;
+            border-radius: 22px;
+            padding: 8px 10px;
+            min-width: 48px;
             gap: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            flex-shrink: 0;
         }
 
-        .tier-slot i {
-            font-size: 14px;
-            color: var(--text-gray);
+        .tier-slot img, .tier-slot i {
+            width: 22px;
+            height: 22px;
+            font-size: 18px;
+            object-fit: contain;
         }
 
-        .tier-slot.active-tier {
-            border-color: var(--gold);
+        .tier-slot .tier-text {
+            font-size: 11px;
+            font-weight: 900;
+            line-height: 1;
+            text-align: center;
         }
 
-        .tier-slot.active-tier i {
-            color: var(--gold);
-        }
-
-        .tier-label {
-            font-size: 9px;
-            color: var(--text-gray);
-            font-weight: 600;
-        }
-
-        .tier-label.gold-text {
-            color: var(--gold);
-            font-weight: 800;
-        }
+        .tier-ht1, .tier-lt1 { color: #f59e0b; }
     </style>
 </head>
 <body>
 
     <div class="container">
 
-        <!-- Header Bar -->
+        <!-- Top Header Navigation Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -425,7 +415,7 @@
 
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search player...">
+                <input type="text" placeholder="ابحث عن المشغل...">
             </div>
 
             <button class="menu-btn">
@@ -433,51 +423,60 @@
             </button>
         </div>
 
-        <!-- Scrollable Categories Bar -->
+        <!-- Scrollable Categories Bar (المعدل بالكامل) -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
                 <div class="nav-item active">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
-                    <span>Overall</span>
+                    <span>إجمالي</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./spearmace.svg" alt="LTMs">
-                    <span>LTMs</span>
+                    <img src="./mace.svg" alt="ميس" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
+                    <span>ميس</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./vanilla.svg" alt="Vanilla">
-                    <span>Vanilla</span>
+                    <img src="./spearmace.svg" alt="سبير ميس" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                    <span>سبير ميس</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./pot.svg" alt="Pot">
-                    <span>Pot</span>
+                    <img src="./axe.svg" alt="أكس" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
+                    <span>أكس</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./nethop.svg" alt="NethOP">
-                    <span>NethOP</span>
+                    <img src="./sword.svg" alt="سيف" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                    <span>سيف</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./smp.svg" alt="SMP">
+                    <img src="./nethop.svg" alt="نيثوب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
+                    <span>نيثوب</span>
+                </div>
+
+                <div class="nav-item">
+                    <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
                     <span>SMP</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./sword.svg" alt="Sword">
-                    <span>Sword</span>
+                    <img src="./pot.svg" alt="وعاء" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
+                    <span>وعاء</span>
+                </div>
+
+                <div class="nav-item">
+                    <img src="./vanilla.svg" alt="فانيليا" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
+                    <span>فانيليا</span>
                 </div>
 
             </div>
         </div>
 
-        <!-- Server Banner -->
+        <!-- Server Info Banner -->
         <div class="server-banner">
-            
             <button class="info-btn">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
@@ -494,73 +493,68 @@
                     </span>
                 </div>
 
-                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn" title="Join Discord">
+                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn">
                     <i class="fa-brands fa-discord"></i>
                 </a>
             </div>
-
         </div>
 
         <!-- Leaderboard Player Cards -->
         <div class="leaderboard-list">
-
-            <!-- Player 1 -->
             <div class="player-card">
                 <div class="player-header">
-                    <div class="player-info-left">
-                        <span class="rank-badge">1.</span>
+                    <div class="player-info-right">
+                        <div class="rank-box">1.</div>
                         <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/iRuby_X/42" alt="iRuby_X">
+                            <img src="https://mc-heads.net/avatar/Marlo/48" alt="مارلو">
                         </div>
                         <div class="player-details">
-                            <span class="player-name">iRuby_X</span>
-                            <span class="player-subtitle">
-                                <span class="points-badge">(60 نقطة)</span> متخصص قتالي
-                            </span>
+                            <span class="player-name">مارلو</span>
+                            <span class="player-subtitle">(4) سيد القتال الكبير 🌟</span>
                         </div>
                     </div>
-                    <span class="region-badge">EU</span>
+                    <span class="region-badge">غير متوفر</span>
+                </div>
+
+                <div class="levels-header">
+                    <span class="levels-title">المستويات</span>
                 </div>
 
                 <div class="tiers-row">
-                    <div class="tier-slot"><i class="fa-solid fa-gem"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-brands fa-discord"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-eye"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-sword"></i><span class="tier-label gold-text">HT1</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-shield-halved"></i><span class="tier-label">غير مصنف</span></div>
-                </div>
-            </div>
-
-            <!-- Player 2 -->
-            <div class="player-card">
-                <div class="player-header">
-                    <div class="player-info-left">
-                        <span class="rank-badge" style="background:#64748b;">2.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Mustfa_105/42" alt="Mustfa_105">
-                        </div>
-                        <div class="player-details">
-                            <span class="player-name">Mustfa_105</span>
-                            <span class="player-subtitle">
-                                <span class="points-badge">(42 نقطة)</span> طالب عسكري قتالي
-                            </span>
-                        </div>
+                    <div class="tier-slot">
+                        <img src="./mace.svg" alt="mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
-                    <span class="region-badge">EU</span>
-                </div>
-
-                <div class="tiers-row">
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-gem"></i><span class="tier-label gold-text">LT3</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-eye"></i><span class="tier-label gold-text">LT3</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-key"></i><span class="tier-label gold-text">LT2</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-hammer"></i><span class="tier-label gold-text">HT3</span></div>
+                    <div class="tier-slot">
+                        <img src="./sword.svg" alt="sword" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./axe.svg" alt="axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./vanilla.svg" alt="vanilla" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./uhc.svg" alt="uhc" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./nethop.svg" alt="nethop" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./enderman.svg" alt="enderman" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1066/1066371.png'">
+                        <span class="tier-text tier-lt1">LT1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./spearmace.svg" alt="spear" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                        <span class="tier-text tier-lt1">LT1</span>
+                    </div>
                 </div>
             </div>
-
         </div>
 
     </div>
