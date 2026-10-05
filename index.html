@@ -305,20 +305,20 @@
         .player-info-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         /* المستطيل المائل المصغر */
         .player-banner {
             position: relative;
-            width: 130px;
+            width: 120px;
             height: 48px;
             border-radius: 8px 0 0 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 8px 0 10px;
-            clip-path: polygon(0 0, 82% 0, 100% 100%, 0% 100%);
+            padding: 0 6px 0 10px;
+            clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
             flex-shrink: 0;
         }
 
@@ -348,26 +348,30 @@
             gap: 2px;
         }
 
-        .player-name-row {
+        .player-name {
+            font-size: 16px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+
+        .player-sub-info {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
         .points-badge {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-gray);
             direction: rtl;
         }
 
         .title-badge {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 800;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            color: #e2e8f0;
         }
 
         .region-tag {
@@ -543,15 +547,15 @@
 
     <script>
         const modeIcons = [
-            { id: "vanilla", iconType: "img", src: "./vanilla.svg", fallback: "https://cdn-icons-png.flaticon.com/512/188/188333.png" },
-            { id: "uhc", iconType: "i", class: "fa-solid fa-heart", color: "#ef4444" },
-            { id: "pot", iconType: "img", src: "./pot.svg", fallback: "https://cdn-icons-png.flaticon.com/512/868/868781.png" },
-            { id: "smp", iconType: "img", src: "./smp.svg", fallback: "https://cdn-icons-png.flaticon.com/512/1041/1041883.png" },
-            { id: "nethop", iconType: "img", src: "./nethop.svg", fallback: "https://cdn-icons-png.flaticon.com/512/3522/3522292.png" },
-            { id: "sword", iconType: "img", src: "./sword.svg", fallback: "https://cdn-icons-png.flaticon.com/512/929/929432.png" },
-            { id: "axe", iconType: "img", src: "./axe.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869108.png" },
             { id: "mace", iconType: "img", src: "./mace.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869112.png" },
-            { id: "spearmace", iconType: "img", src: "./spearmace.svg", fallback: "https://cdn-icons-png.flaticon.com/512/929/929432.png" }
+            { id: "axe", iconType: "img", src: "./axe.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869108.png" },
+            { id: "sword", iconType: "img", src: "./sword.svg", fallback: "https://cdn-icons-png.flaticon.com/512/929/929432.png" },
+            { id: "spearmace", iconType: "img", src: "./spearmace.svg", fallback: "https://cdn-icons-png.flaticon.com/512/929/929432.png" },
+            { id: "smp", iconType: "img", src: "./smp.svg", fallback: "https://cdn-icons-png.flaticon.com/512/1041/1041883.png" },
+            { id: "pot", iconType: "img", src: "./pot.svg", fallback: "https://cdn-icons-png.flaticon.com/512/868/868781.png" },
+            { id: "uhc", iconType: "i", class: "fa-solid fa-heart", color: "#ef4444" },
+            { id: "vanilla", iconType: "img", src: "./vanilla.svg", fallback: "https://cdn-icons-png.flaticon.com/512/188/188333.png" },
+            { id: "nethop", iconType: "img", src: "./nethop.svg", fallback: "https://cdn-icons-png.flaticon.com/512/3522/3522292.png" }
         ];
 
         const playersData = [
@@ -562,10 +566,10 @@
                 region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/iRuby_X.png",
                 modes: {
-                    vanilla: "غير مصنف",
+                    vanilla: "HT1",
                     uhc: "غير مصنف",
                     pot: "غير مصنف",
-                    smp: "غير مصنف",
+                    smp: "HT2",
                     nethop: "غير مصنف",
                     sword: "HT1",
                     axe: "غير مصنف",
@@ -593,11 +597,31 @@
             }
         ];
 
+        // دالة لمقارنة وقوة التصنيف (HT1 هو الأقوى)
+        function getTierValue(tierStr) {
+            if (!tierStr || tierStr === "غير مصنف") return 999;
+            const match = tierStr.match(/(\d+)/);
+            return match ? parseInt(match[1]) : 900;
+        }
+
         function renderLeaderboard(selectedMode = 'overall') {
             const container = document.getElementById("leaderboardList");
             container.innerHTML = "";
 
-            playersData.forEach((player, index) => {
+            let displayPlayers = [...playersData];
+
+            // إعادة الفرز حسب النمط المختار
+            if (selectedMode === 'overall') {
+                displayPlayers.sort((a, b) => parseInt(b.points) - parseInt(a.points));
+            } else {
+                displayPlayers.sort((a, b) => {
+                    const valA = getTierValue(a.modes[selectedMode]);
+                    const valB = getTierValue(b.modes[selectedMode]);
+                    return valA - valB;
+                });
+            }
+
+            displayPlayers.forEach((player, index) => {
                 const rankNum = index + 1;
                 let rankClass = "rank-other";
                 if (rankNum === 1) rankClass = "rank-1";
@@ -638,9 +662,10 @@
                                 <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
                             </div>
                             <div class="player-details">
-                                <div class="player-name-row">
-                                    <span class="points-badge">(${player.points} نقطة)</span>
+                                <span class="player-name">${player.name}</span>
+                                <div class="player-sub-info">
                                     <span class="title-badge">${player.title}</span>
+                                    <span class="points-badge">(${player.points} نقطة)</span>
                                 </div>
                             </div>
                         </div>
