@@ -65,12 +65,14 @@
         }
 
         .logo-my {
+            color: #2563eb;
             background: linear-gradient(180deg, #60a5fa 0%, #1d4ed8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .logo-tiers {
+            color: #f59e0b;
             background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #b45309 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -115,7 +117,7 @@
             cursor: pointer;
         }
 
-        /* Scrollable Navigation Categories Bar */
+        /* Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
@@ -130,7 +132,6 @@
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 4px;
-            direction: rtl;
         }
 
         .modes-scroll::-webkit-scrollbar {
@@ -147,8 +148,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 65px;
-            padding: 8px;
+            min-width: 68px;
+            padding: 8px 10px;
             background: var(--card-bg);
             border: 1px solid transparent;
             border-radius: 12px;
@@ -158,20 +159,21 @@
             transition: all 0.2s ease;
         }
 
-        .nav-item img, .nav-item i {
+        .nav-item img {
             width: 22px;
             height: 22px;
-            font-size: 18px;
             margin-bottom: 4px;
             object-fit: contain;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
         }
 
         .nav-item span {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .nav-item.active {
@@ -181,7 +183,7 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
         }
 
-        /* Server Banner */
+        /* Server Info Banner */
         .server-banner {
             display: flex;
             align-items: center;
@@ -196,7 +198,7 @@
             gap: 6px;
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 12px;
             color: #ffffff;
             font-size: 13px;
@@ -225,8 +227,10 @@
             font-size: 13px;
             font-weight: 900;
             color: #ef4444;
+            letter-spacing: 0.5px;
             white-space: nowrap;
             font-family: 'Arial Black', sans-serif;
+            text-transform: uppercase;
         }
 
         .ip-container {
@@ -238,6 +242,7 @@
         .ip-label {
             font-size: 10px;
             color: var(--text-gray);
+            font-weight: 500;
         }
 
         .ip-address {
@@ -251,6 +256,11 @@
             direction: ltr;
         }
 
+        .ip-address i {
+            font-size: 10px;
+            color: var(--text-gray);
+        }
+
         .discord-btn {
             background: #5865F2;
             color: #ffffff;
@@ -262,20 +272,26 @@
             justify-content: center;
             text-decoration: none;
             font-size: 16px;
+            transition: transform 0.2s, background-color 0.2s;
             flex-shrink: 0;
         }
 
-        /* Player Card Component */
+        /* Leaderboard Cards Section */
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .player-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 14px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
         }
 
         .player-header {
@@ -291,19 +307,23 @@
         }
 
         .rank-box {
+            position: relative;
             background: #f59e0b;
             color: #000;
             font-weight: 900;
-            font-size: 20px;
-            padding: 4px 10px;
-            border-radius: 8px;
+            font-size: 22px;
+            padding: 4px 12px;
+            border-radius: 8px 0 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-style: italic;
         }
 
         .avatar-box {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
             background: #232f42;
             overflow: hidden;
         }
@@ -328,6 +348,9 @@
         .player-subtitle {
             font-size: 11px;
             color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .region-badge {
@@ -339,29 +362,21 @@
             border-radius: 8px;
         }
 
-        /* Levels Header Positioned to LEFT */
-        .levels-header {
-            display: flex;
-            justify-content: flex-start; /* محاذاة النص لليسار */
-            margin-top: 2px;
-            margin-bottom: 2px;
-            padding-left: 2px;
-        }
-
+        /* Levels Title Section */
         .levels-title {
             font-size: 13px;
-            font-weight: 800;
+            font-weight: 700;
             color: #ffffff;
+            margin-top: 4px;
+            text-align: right;
         }
 
-        /* Tier Slots Row */
+        /* Circular Tier Badges Row */
         .tiers-row {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
-            padding: 4px 0px;
-            justify-content: flex-start;
-            direction: ltr;
+            padding-bottom: 4px;
         }
 
         .tiers-row::-webkit-scrollbar {
@@ -374,42 +389,36 @@
             align-items: center;
             justify-content: center;
             background: #1e293b;
-            border-radius: 22px;
-            padding: 8px 10px;
-            min-width: 48px;
-            gap: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 6px 8px;
+            min-width: 38px;
+            gap: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             flex-shrink: 0;
         }
 
         .tier-slot img, .tier-slot i {
-            width: 22px;
-            height: 22px;
-            font-size: 18px;
+            width: 16px;
+            height: 16px;
+            font-size: 13px;
             object-fit: contain;
+            color: #f87171;
         }
 
         .tier-slot .tier-text {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 900;
+            color: #f59e0b;
             line-height: 1;
-            text-align: center;
+            text-anchor: middle;
         }
-
-        /* Tier Colors */
-        .tier-ht1, .tier-lt1 { color: #f59e0b; }
-        .tier-ht2, .tier-lt2 { color: #f97316; }
-        .tier-ht3, .tier-lt3 { color: #ef4444; }
-        .tier-ht4, .tier-lt4 { color: #a855f7; }
-        .tier-ht5, .tier-lt5 { color: #3b82f6; }
-
     </style>
 </head>
 <body>
 
     <div class="container">
 
-        <!-- Header Bar -->
+        <!-- Header Navigation Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -425,7 +434,7 @@
             </button>
         </div>
 
-        <!-- Categories Bar (Complete & Updated) -->
+        <!-- Scrollable Categories Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
@@ -435,38 +444,28 @@
                 </div>
 
                 <div class="nav-item">
-                    <img src="./mace.svg" alt="ميس" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
-                    <span>ميس</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./sword.svg" alt="سيف" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                    <img src="./spearmace.svg" alt="سيف">
                     <span>سيف</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./nethop.svg" alt="نيثوب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
+                    <img src="./nethop.svg" alt="نيثوب">
                     <span>نيثوب</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
+                    <img src="./smp.svg" alt="SMP">
                     <span>SMP</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./pot.svg" alt="وعاء" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
+                    <img src="./pot.svg" alt="وعاء">
                     <span>وعاء</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./vanilla.svg" alt="فانيليا" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
+                    <img src="./vanilla.svg" alt="فانيليا">
                     <span>فانيليا</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./enderman.svg" alt="أندر" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1066/1066371.png'">
-                    <span>أندر</span>
                 </div>
 
             </div>
@@ -474,6 +473,7 @@
 
         <!-- Server Info Banner -->
         <div class="server-banner">
+            
             <button class="info-btn">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
@@ -490,71 +490,72 @@
                     </span>
                 </div>
 
-                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn">
+                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn" title="Join Discord">
                     <i class="fa-brands fa-discord"></i>
                 </a>
             </div>
+
         </div>
 
-        <!-- Player Card -->
+        <!-- Leaderboard Player Cards -->
         <div class="leaderboard-list">
+
+            <!-- Player 1 Card -->
             <div class="player-card">
                 <div class="player-header">
                     <div class="player-info-right">
                         <div class="rank-box">1.</div>
                         <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Marlo/48" alt="مارلو">
+                            <img src="https://mc-heads.net/avatar/Marlo/46" alt="مارلو">
                         </div>
                         <div class="player-details">
                             <span class="player-name">مارلو</span>
-                            <span class="player-subtitle">(4) سيد القتال الكبير 🌟</span>
+                            <span class="player-subtitle">
+                                4) سيد القتال الكبير 🌟
+                            </span>
                         </div>
                     </div>
                     <span class="region-badge">غير متوفر</span>
                 </div>
 
-                <!-- Levels Title Shifted Left -->
-                <div class="levels-header">
-                    <span class="levels-title">المستويات</span>
-                </div>
+                <div class="levels-title">المستويات</div>
 
-                <!-- Tier Badges (Replaced Heart with Enderman Icon) -->
                 <div class="tiers-row">
                     <div class="tier-slot">
-                        <img src="./mace.svg" alt="mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
-                        <span class="tier-text tier-ht1">HT1</span>
+                        <img src="./mace.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./sword.svg" alt="sword" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
-                        <span class="tier-text tier-ht1">HT1</span>
+                        <img src="./sword.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./axe.svg" alt="axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
-                        <span class="tier-text tier-ht1">HT1</span>
+                        <img src="./axe.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./vanilla.svg" alt="vanilla" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
-                        <span class="tier-text tier-ht1">HT1</span>
+                        <img src="./vanilla.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./uhc.svg" alt="uhc" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
-                        <span class="tier-text tier-ht1">HT1</span>
+                        <img src="./uhc.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./nethop.svg" alt="nethop" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
-                        <span class="tier-text tier-ht1">HT1</span>
-                    </div>
-                    <!-- Replaced Heart with Enderman icon -->
-                    <div class="tier-slot">
-                        <img src="./enderman.svg" alt="enderman" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1066/1066371.png'">
-                        <span class="tier-text tier-lt1">LT1</span>
+                        <img src="./nethop.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./spearmace.svg" alt="spear" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
-                        <span class="tier-text tier-lt1">LT1</span>
+                        <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
+                        <span class="tier-text">LT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./spearmace.svg" alt="icon">
+                        <span class="tier-text">LT 1</span>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>
