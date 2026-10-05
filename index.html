@@ -40,7 +40,7 @@
             max-width: 520px;
         }
 
-        /* Top Header Navigation Bar */
+        /* Header Navigation Bar */
         .top-navbar {
             display: flex;
             align-items: center;
@@ -116,7 +116,7 @@
             cursor: pointer;
         }
 
-        /* Categories Bar */
+        /* Scrollable Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
@@ -270,11 +270,10 @@
             justify-content: center;
             text-decoration: none;
             font-size: 16px;
-            transition: transform 0.2s, background-color 0.2s;
             flex-shrink: 0;
         }
 
-        /* Leaderboard Cards Section */
+        /* Leaderboard Player Cards */
         .leaderboard-list {
             display: flex;
             flex-direction: column;
@@ -310,8 +309,7 @@
             font-weight: 800;
             font-size: 14px;
             padding: 4px 10px;
-            border-radius: 8px 0 0 8px;
-            margin-right: -4px;
+            border-radius: 8px;
         }
 
         .avatar-box {
@@ -332,6 +330,8 @@
         .player-details {
             display: flex;
             flex-direction: column;
+            direction: rtl;
+            align-items: flex-start;
         }
 
         .player-name {
@@ -363,7 +363,7 @@
             border: 1px solid rgba(52, 211, 153, 0.2);
         }
 
-        /* Tier Items Horizontal Row */
+        /* Tier Slots Row */
         .tiers-row {
             display: flex;
             gap: 6px;
@@ -384,8 +384,9 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 6px;
-            min-width: 42px;
+            min-width: 50px;
             gap: 4px;
+            flex-shrink: 0;
         }
 
         .tier-slot i {
@@ -405,6 +406,7 @@
             font-size: 9px;
             color: var(--text-gray);
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .tier-label.gold-text {
@@ -425,7 +427,7 @@
 
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search player...">
+                <input type="text" id="searchInput" onkeyup="filterPlayers()" placeholder="Search player...">
             </div>
 
             <button class="menu-btn">
@@ -433,58 +435,58 @@
             </button>
         </div>
 
-        <!-- Scrollable Categories Bar (تمت إضافة الأقسام الثلاثة هنا) -->
+        <!-- Scrollable Categories Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
-                <div class="nav-item active">
+                <div class="nav-item active" onclick="selectMode('overall', this)">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
                     <span>Overall</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./mace.svg" alt="Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
-                    <span>Mace</span>
+                <div class="nav-item" onclick="selectMode('vanilla', this)">
+                    <img src="./vanilla.svg" alt="Vanilla" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
+                    <span>VANILLA</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./spearmace.svg" alt="Spear Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
-                    <span>Spear Mace</span>
+                <div class="nav-item" onclick="selectMode('uhc', this)">
+                    <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
+                    <span>UHC</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./axe.svg" alt="Axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
-                    <span>Axe</span>
+                <div class="nav-item" onclick="selectMode('pot', this)">
+                    <img src="./pot.svg" alt="Pot" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
+                    <span>POT</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./spearmace.svg" alt="LTMs">
-                    <span>LTMs</span>
+                <div class="nav-item" onclick="selectMode('nethop', this)">
+                    <img src="./nethop.svg" alt="NethOP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
+                    <span>NETHOP</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./vanilla.svg" alt="Vanilla">
-                    <span>Vanilla</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./pot.svg" alt="Pot">
-                    <span>Pot</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./nethop.svg" alt="NethOP">
-                    <span>NethOP</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./smp.svg" alt="SMP">
+                <div class="nav-item" onclick="selectMode('smp', this)">
+                    <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
                     <span>SMP</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./sword.svg" alt="Sword">
-                    <span>Sword</span>
+                <div class="nav-item" onclick="selectMode('sword', this)">
+                    <img src="./sword.svg" alt="Sword" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                    <span>SWORD</span>
+                </div>
+
+                <div class="nav-item" onclick="selectMode('axe', this)">
+                    <img src="./axe.svg" alt="Axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
+                    <span>AXE</span>
+                </div>
+
+                <div class="nav-item" onclick="selectMode('mace', this)">
+                    <img src="./mace.svg" alt="Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
+                    <span>MACE</span>
+                </div>
+
+                <div class="nav-item" onclick="selectMode('spearmace', this)">
+                    <img src="./spearmace.svg" alt="Spear Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                    <span>SPEAR MACE</span>
                 </div>
 
             </div>
@@ -492,7 +494,6 @@
 
         <!-- Server Banner -->
         <div class="server-banner">
-            
             <button class="info-btn">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
@@ -513,78 +514,168 @@
                     <i class="fa-brands fa-discord"></i>
                 </a>
             </div>
-
         </div>
 
-        <!-- Leaderboard Player Cards -->
-        <div class="leaderboard-list">
-
-            <!-- Player 1 -->
-            <div class="player-card">
-                <div class="player-header">
-                    <div class="player-info-left">
-                        <span class="rank-badge">1.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/iRuby_X/42" alt="iRuby_X">
-                        </div>
-                        <div class="player-details">
-                            <span class="player-name">iRuby_X</span>
-                            <span class="player-subtitle">
-                                <span class="points-badge">(60 نقطة)</span> متخصص قتالي
-                            </span>
-                        </div>
-                    </div>
-                    <span class="region-badge">EU</span>
-                </div>
-
-                <div class="tiers-row">
-                    <div class="tier-slot"><i class="fa-solid fa-gem"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-brands fa-discord"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-eye"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-sword"></i><span class="tier-label gold-text">HT1</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-shield-halved"></i><span class="tier-label">غير مصنف</span></div>
-                </div>
-            </div>
-
-            <!-- Player 2 -->
-            <div class="player-card">
-                <div class="player-header">
-                    <div class="player-info-left">
-                        <span class="rank-badge" style="background:#64748b;">2.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Mustfa_105/42" alt="Mustfa_105">
-                        </div>
-                        <div class="player-details">
-                            <span class="player-name">Mustfa_105</span>
-                            <span class="player-subtitle">
-                                <span class="points-badge">(42 نقطة)</span> طالب عسكري قتالي
-                            </span>
-                        </div>
-                    </div>
-                    <span class="region-badge">EU</span>
-                </div>
-
-                <div class="tiers-row">
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-gem"></i><span class="tier-label gold-text">LT3</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-eye"></i><span class="tier-label gold-text">LT3</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-key"></i><span class="tier-label gold-text">LT2</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-hammer"></i><span class="tier-label gold-text">HT3</span></div>
-                </div>
-            </div>
-
-        </div>
+        <!-- Leaderboard List -->
+        <div class="leaderboard-list" id="leaderboardList"></div>
 
     </div>
 
     <script>
+        const playersData = [
+            {
+                name: "iRuby_X",
+                points: 60,
+                subtitle: "متخصص قتالي",
+                region: "EU",
+                avatar: "https://mc-heads.net/avatar/iRuby_X/42",
+                ranks: {
+                    gem: "غير مصنف",
+                    heart: "غير مصنف",
+                    flask: "غير مصنف",
+                    discord: "غير مصنف",
+                    eye: "غير مصنف",
+                    sword: "HT1",
+                    shield: "غير مصنف"
+                },
+                modes: {
+                    vanilla: "HT1",
+                    uhc: "غير مصنف",
+                    pot: "غير مصنف",
+                    nethop: "HT1",
+                    smp: "غير مصنف",
+                    sword: "HT1",
+                    axe: "LT1",
+                    mace: "LT2",
+                    spearmace: "HT2"
+                }
+            },
+            {
+                name: "Mustfa_105",
+                points: 42,
+                subtitle: "طالب عسكري قتالي",
+                region: "EU",
+                avatar: "https://mc-heads.net/avatar/Mustfa_105/42",
+                ranks: {
+                    gem: "LT3",
+                    heart: "غير مصنف",
+                    flask: "غير مصنف",
+                    eye: "LT3",
+                    key: "LT2",
+                    hammer: "HT3"
+                },
+                modes: {
+                    vanilla: "LT3",
+                    uhc: "HT3",
+                    pot: "LT2",
+                    nethop: "LT3",
+                    smp: "HT3",
+                    sword: "غير مصنف",
+                    axe: "HT3",
+                    mace: "LT3",
+                    spearmace: "LT2"
+                }
+            }
+        ];
+
+        function renderLeaderboard(mode = 'overall') {
+            const container = document.getElementById("leaderboardList");
+            container.innerHTML = "";
+
+            let displayPlayers = [...playersData];
+
+            if (mode !== 'overall') {
+                displayPlayers.sort((a, b) => {
+                    const tierA = a.modes[mode] || "غير مصنف";
+                    const tierB = b.modes[mode] || "غير مصنف";
+                    if (tierA.includes("HT") && !tierB.includes("HT")) return -1;
+                    if (!tierA.includes("HT") && tierB.includes("HT")) return 1;
+                    return 0;
+                });
+            }
+
+            displayPlayers.forEach((player, index) => {
+                const card = document.createElement("div");
+                card.className = "player-card";
+
+                let tiersHTML = "";
+                if (mode === 'overall') {
+                    for (const [iconKey, tierVal] of Object.entries(player.ranks)) {
+                        const isGold = tierVal !== "غير مصنف";
+                        let iconClass = "fa-solid fa-gem";
+                        if (iconKey === "heart") iconClass = "fa-solid fa-heart";
+                        if (iconKey === "flask") iconClass = "fa-solid fa-flask";
+                        if (iconKey === "discord") iconClass = "fa-brands fa-discord";
+                        if (iconKey === "eye") iconClass = "fa-solid fa-eye";
+                        if (iconKey === "sword") iconClass = "fa-solid fa-sword";
+                        if (iconKey === "shield") iconClass = "fa-solid fa-shield-halved";
+                        if (iconKey === "key") iconClass = "fa-solid fa-key";
+                        if (iconKey === "hammer") iconClass = "fa-solid fa-hammer";
+
+                        tiersHTML += `
+                            <div class="tier-slot ${isGold ? 'active-tier' : ''}">
+                                <i class="${iconClass}"></i>
+                                <span class="tier-label ${isGold ? 'gold-text' : ''}">${tierVal}</span>
+                            </div>
+                        `;
+                    }
+                } else {
+                    const currentTier = player.modes[mode] || "غير مصنف";
+                    const isGold = currentTier !== "غير مصنف";
+                    tiersHTML = `
+                        <div class="tier-slot ${isGold ? 'active-tier' : ''}" style="min-width: 120px;">
+                            <span class="tier-label" style="font-size: 10px;">الرتبة في ${mode.toUpperCase()}</span>
+                            <span class="tier-label ${isGold ? 'gold-text' : ''}" style="font-size: 14px;">${currentTier}</span>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="player-header">
+                        <div class="player-info-left">
+                            <span class="rank-badge" style="${index === 1 ? 'background:#64748b;' : ''}">${index + 1}.</span>
+                            <div class="avatar-box">
+                                <img src="${player.avatar}" alt="${player.name}">
+                            </div>
+                            <div class="player-details">
+                                <span class="player-name">${player.name}</span>
+                                <span class="player-subtitle">
+                                    ${player.subtitle} <span class="points-badge">(${player.points} نقطة)</span>
+                                </span>
+                            </div>
+                        </div>
+                        <span class="region-badge">${player.region}</span>
+                    </div>
+
+                    <div class="tiers-row">
+                        ${tiersHTML}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectMode(mode, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            renderLeaderboard(mode);
+        }
+
+        function filterPlayers() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.player-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.player-name').innerText.toLowerCase();
+                card.style.display = name.includes(input) ? "flex" : "none";
+            });
+        }
+
         function copyIP() {
             navigator.clipboard.writeText("MYPVP.Mikey");
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
         }
+
+        renderLeaderboard('overall');
     </script>
 </body>
 </html>
