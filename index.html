@@ -15,7 +15,9 @@
             --border-color: #232f42;
             --text-gray: #8d9bb0;
             --active-blue: #3b82f6;
-            --gold: #f59e0b;
+            --gold: #f1b333;
+            --silver: #a0acb2;
+            --bronze: #cb6835;
         }
 
         * {
@@ -40,7 +42,7 @@
             max-width: 520px;
         }
 
-        /* Header Navigation Bar */
+        /* Top Header Navigation Bar */
         .top-navbar {
             display: flex;
             align-items: center;
@@ -116,7 +118,7 @@
             cursor: pointer;
         }
 
-        /* Scrollable Categories Bar */
+        /* Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
@@ -273,11 +275,11 @@
             flex-shrink: 0;
         }
 
-        /* Leaderboard Player Cards */
+        /* Leaderboard Player Cards Container */
         .leaderboard-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
 
         .player-card {
@@ -287,131 +289,104 @@
             padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
 
-        .player-header {
+        /* Header البنر المائل الجديد */
+        .player-banner {
+            position: relative;
+            width: 100%;
+            height: 75px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 20px;
+            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
         }
 
-        .player-info-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .player-banner.rank-1 { background-color: var(--gold); }
+        .player-banner.rank-2 { background-color: var(--silver); }
+        .player-banner.rank-3 { background-color: var(--bronze); }
+        .player-banner.rank-other { background-color: #232f42; }
 
-        .rank-badge {
-            background: #d97706;
-            color: #fff;
-            font-weight: 800;
-            font-size: 14px;
-            padding: 4px 10px;
-            border-radius: 8px;
-        }
-
-        .avatar-box {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            background: #232f42;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .avatar-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .player-details {
-            display: flex;
-            flex-direction: column;
-            direction: rtl;
-            align-items: flex-start;
-        }
-
-        .player-name {
-            font-weight: 800;
-            font-size: 15px;
+        .rank-number {
+            font-size: 40px;
+            font-weight: 900;
+            font-style: italic;
             color: #ffffff;
+            text-shadow: 3px 4px 0px rgba(0, 0, 0, 0.3);
         }
 
-        .player-subtitle {
-            font-size: 11px;
-            color: var(--text-gray);
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .player-skin {
+            height: 120%;
+            object-fit: contain;
+            filter: drop-shadow(-4px 4px 5px rgba(0, 0, 0, 0.4));
         }
 
-        .points-badge {
-            color: #93c5fd;
-            font-weight: 600;
-        }
-
-        .region-badge {
-            background: #065f46;
-            color: #34d399;
-            font-size: 10px;
+        .levels-title {
+            direction: rtl;
+            font-size: 13px;
             font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            color: var(--text-gray);
+            margin-top: 2px;
         }
 
-        /* Tier Slots Row */
+        /* المستويات كأيقونات دائرية بنفس تصميم الصور */
         .tiers-row {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             overflow-x: auto;
-            padding-top: 4px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            direction: rtl;
+            padding-bottom: 4px;
         }
 
         .tiers-row::-webkit-scrollbar {
             display: none;
         }
 
-        .tier-slot {
+        .level-pill {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             background: #111827;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 6px;
-            min-width: 50px;
-            gap: 4px;
+            border-radius: 12px;
+            padding: 6px 12px;
+            min-width: 48px;
+            height: 48px;
+            border: 1px solid transparent;
             flex-shrink: 0;
         }
 
-        .tier-slot i {
-            font-size: 14px;
-            color: var(--text-gray);
+        .level-pill.ht {
+            background: linear-gradient(180deg, #1f293d 0%, #111827 100%);
+            border: 1px solid #3b82f6;
         }
 
-        .tier-slot.active-tier {
-            border-color: var(--gold);
+        .level-pill.ht-gold {
+            background: linear-gradient(180deg, #3a2d13 0%, #111827 100%);
+            border: 1px solid var(--gold);
         }
 
-        .tier-slot.active-tier i {
-            color: var(--gold);
+        .level-pill.ht-bronze {
+            background: linear-gradient(180deg, #3d2218 0%, #111827 100%);
+            border: 1px solid var(--bronze);
         }
 
-        .tier-label {
-            font-size: 9px;
-            color: var(--text-gray);
-            font-weight: 600;
-            white-space: nowrap;
+        .level-label {
+            font-size: 11px;
+            font-weight: 900;
+            color: #f59e0b;
+            line-height: 1.1;
         }
 
-        .tier-label.gold-text {
-            color: var(--gold);
-            font-weight: 800;
+        .level-num {
+            font-size: 12px;
+            font-weight: 900;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -435,7 +410,7 @@
             </button>
         </div>
 
-        <!-- Scrollable Categories Bar -->
+        <!-- Categories Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
@@ -525,56 +500,36 @@
         const playersData = [
             {
                 name: "iRuby_X",
-                points: 60,
-                subtitle: "متخصص قتالي",
-                region: "EU",
-                avatar: "https://mc-heads.net/avatar/iRuby_X/42",
-                ranks: {
-                    gem: "غير مصنف",
-                    heart: "غير مصنف",
-                    flask: "غير مصنف",
-                    discord: "غير مصنف",
-                    eye: "غير مصنف",
-                    sword: "HT1",
-                    shield: "غير مصنف"
-                },
-                modes: {
-                    vanilla: "HT1",
-                    uhc: "غير مصنف",
-                    pot: "غير مصنف",
-                    nethop: "HT1",
-                    smp: "غير مصنف",
-                    sword: "HT1",
-                    axe: "LT1",
-                    mace: "LT2",
-                    spearmace: "HT2"
-                }
+                skinUrl: "https://visage.surgeplay.com/bust/512/iRuby_X.png",
+                levels: [
+                    { type: "HT", num: "1", style: "ht-gold" },
+                    { type: "HT", num: "1", style: "ht-gold" },
+                    { type: "HT", num: "1", style: "ht-gold" },
+                    { type: "HT", num: "1", style: "ht-gold" }
+                ],
+                modes: { vanilla: "HT1", uhc: "HT1", pot: "HT1", nethop: "HT1", smp: "HT1", sword: "HT1", axe: "HT1", mace: "HT1", spearmace: "HT1" }
             },
             {
                 name: "Mustfa_105",
-                points: 42,
-                subtitle: "طالب عسكري قتالي",
-                region: "EU",
-                avatar: "https://mc-heads.net/avatar/Mustfa_105/42",
-                ranks: {
-                    gem: "LT3",
-                    heart: "غير مصنف",
-                    flask: "غير مصنف",
-                    eye: "LT3",
-                    key: "LT2",
-                    hammer: "HT3"
-                },
-                modes: {
-                    vanilla: "LT3",
-                    uhc: "HT3",
-                    pot: "LT2",
-                    nethop: "LT3",
-                    smp: "HT3",
-                    sword: "غير مصنف",
-                    axe: "HT3",
-                    mace: "LT3",
-                    spearmace: "LT2"
-                }
+                skinUrl: "https://visage.surgeplay.com/bust/512/M4ster.png",
+                levels: [
+                    { type: "HT", num: "3", style: "ht-bronze" },
+                    { type: "HT", num: "1", style: "ht-gold" },
+                    { type: "HT", num: "1", style: "ht-gold" },
+                    { type: "HT", num: "1", style: "ht-gold" }
+                ],
+                modes: { vanilla: "HT3", uhc: "HT1", pot: "HT1", nethop: "HT1", smp: "HT3", sword: "HT2", axe: "HT3", mace: "HT3", spearmace: "HT2" }
+            },
+            {
+                name: "Player_3",
+                skinUrl: "https://visage.surgeplay.com/bust/512/Alex.png",
+                levels: [
+                    { type: "HT", num: "2", style: "ht" },
+                    { type: "HT", num: "2", style: "ht" },
+                    { type: "HT", num: "1", style: "ht-gold" },
+                    { type: "HT", num: "3", style: "ht-bronze" }
+                ],
+                modes: { vanilla: "HT2", uhc: "HT2", pot: "HT1", nethop: "HT3", smp: "HT2", sword: "HT2", axe: "HT2", mace: "HT2", spearmace: "HT2" }
             }
         ];
 
@@ -595,60 +550,35 @@
             }
 
             displayPlayers.forEach((player, index) => {
+                const rankNum = index + 1;
+                let rankClass = "rank-other";
+                if (rankNum === 1) rankClass = "rank-1";
+                if (rankNum === 2) rankClass = "rank-2";
+                if (rankNum === 3) rankClass = "rank-3";
+
                 const card = document.createElement("div");
                 card.className = "player-card";
 
-                let tiersHTML = "";
-                if (mode === 'overall') {
-                    for (const [iconKey, tierVal] of Object.entries(player.ranks)) {
-                        const isGold = tierVal !== "غير مصنف";
-                        let iconClass = "fa-solid fa-gem";
-                        if (iconKey === "heart") iconClass = "fa-solid fa-heart";
-                        if (iconKey === "flask") iconClass = "fa-solid fa-flask";
-                        if (iconKey === "discord") iconClass = "fa-brands fa-discord";
-                        if (iconKey === "eye") iconClass = "fa-solid fa-eye";
-                        if (iconKey === "sword") iconClass = "fa-solid fa-sword";
-                        if (iconKey === "shield") iconClass = "fa-solid fa-shield-halved";
-                        if (iconKey === "key") iconClass = "fa-solid fa-key";
-                        if (iconKey === "hammer") iconClass = "fa-solid fa-hammer";
-
-                        tiersHTML += `
-                            <div class="tier-slot ${isGold ? 'active-tier' : ''}">
-                                <i class="${iconClass}"></i>
-                                <span class="tier-label ${isGold ? 'gold-text' : ''}">${tierVal}</span>
-                            </div>
-                        `;
-                    }
-                } else {
-                    const currentTier = player.modes[mode] || "غير مصنف";
-                    const isGold = currentTier !== "غير مصنف";
-                    tiersHTML = `
-                        <div class="tier-slot ${isGold ? 'active-tier' : ''}" style="min-width: 120px;">
-                            <span class="tier-label" style="font-size: 10px;">الرتبة في ${mode.toUpperCase()}</span>
-                            <span class="tier-label ${isGold ? 'gold-text' : ''}" style="font-size: 14px;">${currentTier}</span>
+                let levelsHTML = "";
+                player.levels.forEach(lvl => {
+                    levelsHTML += `
+                        <div class="level-pill ${lvl.style}">
+                            <span class="level-label">${lvl.type}</span>
+                            <span class="level-num">${lvl.num}</span>
                         </div>
                     `;
-                }
+                });
 
                 card.innerHTML = `
-                    <div class="player-header">
-                        <div class="player-info-left">
-                            <span class="rank-badge" style="${index === 1 ? 'background:#64748b;' : ''}">${index + 1}.</span>
-                            <div class="avatar-box">
-                                <img src="${player.avatar}" alt="${player.name}">
-                            </div>
-                            <div class="player-details">
-                                <span class="player-name">${player.name}</span>
-                                <span class="player-subtitle">
-                                    ${player.subtitle} <span class="points-badge">(${player.points} نقطة)</span>
-                                </span>
-                            </div>
-                        </div>
-                        <span class="region-badge">${player.region}</span>
+                    <div class="player-banner ${rankClass}">
+                        <span class="rank-number">${rankNum}.</span>
+                        <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
                     </div>
 
+                    <div class="levels-title">المستويات</div>
+
                     <div class="tiers-row">
-                        ${tiersHTML}
+                        ${levelsHTML}
                     </div>
                 `;
                 container.appendChild(card);
@@ -665,8 +595,8 @@
             const input = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.player-card');
             cards.forEach(card => {
-                const name = card.querySelector('.player-name').innerText.toLowerCase();
-                card.style.display = name.includes(input) ? "flex" : "none";
+                const name = card.querySelector('.player-banner').getAttribute('data-name') || "";
+                card.style.display = name.toLowerCase().includes(input) ? "flex" : "none";
             });
         }
 
