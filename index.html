@@ -298,22 +298,27 @@
         .player-header {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
+            justify-content: space-between;
             width: 100%;
+        }
+
+        .player-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* المستطيل المائل المصغر */
         .player-banner {
             position: relative;
-            width: 145px;
-            height: 52px;
+            width: 130px;
+            height: 48px;
             border-radius: 8px 0 0 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 8px 0 12px;
-            clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
+            padding: 0 8px 0 10px;
+            clip-path: polygon(0 0, 82% 0, 100% 100%, 0% 100%);
             flex-shrink: 0;
         }
 
@@ -323,7 +328,7 @@
         .player-banner.rank-other { background-color: #232f42; }
 
         .rank-number {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 900;
             font-style: italic;
             color: #ffffff;
@@ -336,76 +341,108 @@
             filter: drop-shadow(-2px 2px 4px rgba(0, 0, 0, 0.4));
         }
 
-        .player-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .player-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
         }
 
-        .levels-title {
-            direction: rtl;
+        .player-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .points-badge {
             font-size: 13px;
             font-weight: 700;
             color: var(--text-gray);
-            margin-top: 2px;
+            direction: rtl;
         }
 
-        /* المستويات كأيقونات دائرية */
-        .tiers-row {
+        .title-badge {
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
             display: flex;
-            gap: 8px;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .region-tag {
+            background: #14532d;
+            color: #22c55e;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid #16a34a;
+        }
+
+        /* التصنيفات الـ 9 بالأيقونات الدائرية */
+        .modes-grid {
+            display: flex;
+            gap: 6px;
             overflow-x: auto;
             direction: rtl;
             padding-bottom: 4px;
         }
 
-        .tiers-row::-webkit-scrollbar {
+        .modes-grid::-webkit-scrollbar {
             display: none;
         }
 
-        .level-pill {
+        .mode-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #111827;
-            border-radius: 12px;
-            padding: 6px 12px;
             min-width: 48px;
-            height: 48px;
-            border: 1px solid transparent;
             flex-shrink: 0;
         }
 
-        .level-pill.ht {
-            background: linear-gradient(180deg, #1f293d 0%, #111827 100%);
-            border: 1px solid #3b82f6;
+        .icon-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #111827;
+            border: 1px solid #232f42;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+            transition: all 0.2s;
         }
 
-        .level-pill.ht-gold {
-            background: linear-gradient(180deg, #3a2d13 0%, #111827 100%);
-            border: 1px solid var(--gold);
+        .icon-circle img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
         }
 
-        .level-pill.ht-bronze {
-            background: linear-gradient(180deg, #3d2218 0%, #111827 100%);
-            border: 1px solid var(--bronze);
+        .icon-circle i {
+            font-size: 16px;
         }
 
-        .level-label {
-            font-size: 11px;
-            font-weight: 900;
+        .tier-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #6b7280;
+            white-space: nowrap;
+        }
+
+        /* تمييز التصنيف النشط برسمة دائرية صفراء أو ملونة */
+        .mode-item.ranked .icon-circle {
+            border: 2px solid #f59e0b;
+            background: #1f293d;
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .mode-item.ranked .tier-label {
             color: #f59e0b;
-            line-height: 1.1;
-        }
-
-        .level-num {
-            font-size: 12px;
             font-weight: 900;
-            color: #ffffff;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -432,57 +469,46 @@
         <!-- Categories Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
-                
                 <div class="nav-item active" onclick="selectMode('overall', this)">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
                     <span>Overall</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('vanilla', this)">
                     <img src="./vanilla.svg" alt="Vanilla" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
                     <span>VANILLA</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('uhc', this)">
                     <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
                     <span>UHC</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('pot', this)">
                     <img src="./pot.svg" alt="Pot" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
                     <span>POT</span>
                 </div>
-
-                <div class="nav-item" onclick="selectMode('nethop', this)">
-                    <img src="./nethop.svg" alt="NethOP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
-                    <span>NETHOP</span>
-                </div>
-
                 <div class="nav-item" onclick="selectMode('smp', this)">
                     <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
                     <span>SMP</span>
                 </div>
-
+                <div class="nav-item" onclick="selectMode('nethop', this)">
+                    <img src="./nethop.svg" alt="NethOP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
+                    <span>NETHOP</span>
+                </div>
                 <div class="nav-item" onclick="selectMode('sword', this)">
                     <img src="./sword.svg" alt="Sword" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
                     <span>SWORD</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('axe', this)">
                     <img src="./axe.svg" alt="Axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
                     <span>AXE</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('mace', this)">
                     <img src="./mace.svg" alt="Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
                     <span>MACE</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('spearmace', this)">
                     <img src="./spearmace.svg" alt="Spear Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
                     <span>SPEAR MACE</span>
                 </div>
-
             </div>
         </div>
 
@@ -516,59 +542,62 @@
     </div>
 
     <script>
+        const modeIcons = [
+            { id: "vanilla", iconType: "img", src: "./vanilla.svg", fallback: "https://cdn-icons-png.flaticon.com/512/188/188333.png" },
+            { id: "uhc", iconType: "i", class: "fa-solid fa-heart", color: "#ef4444" },
+            { id: "pot", iconType: "img", src: "./pot.svg", fallback: "https://cdn-icons-png.flaticon.com/512/868/868781.png" },
+            { id: "smp", iconType: "img", src: "./smp.svg", fallback: "https://cdn-icons-png.flaticon.com/512/1041/1041883.png" },
+            { id: "nethop", iconType: "img", src: "./nethop.svg", fallback: "https://cdn-icons-png.flaticon.com/512/3522/3522292.png" },
+            { id: "sword", iconType: "img", src: "./sword.svg", fallback: "https://cdn-icons-png.flaticon.com/512/929/929432.png" },
+            { id: "axe", iconType: "img", src: "./axe.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869108.png" },
+            { id: "mace", iconType: "img", src: "./mace.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869112.png" },
+            { id: "spearmace", iconType: "img", src: "./spearmace.svg", fallback: "https://cdn-icons-png.flaticon.com/512/929/929432.png" }
+        ];
+
         const playersData = [
             {
                 name: "iRuby_X",
+                points: "60",
+                title: "متخصص قتالي",
+                region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/iRuby_X.png",
-                levels: [
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" }
-                ],
-                modes: { vanilla: "HT1", uhc: "HT1", pot: "HT1", nethop: "HT1", smp: "HT1", sword: "HT1", axe: "HT1", mace: "HT1", spearmace: "HT1" }
+                modes: {
+                    vanilla: "غير مصنف",
+                    uhc: "غير مصنف",
+                    pot: "غير مصنف",
+                    smp: "غير مصنف",
+                    nethop: "غير مصنف",
+                    sword: "HT1",
+                    axe: "غير مصنف",
+                    mace: "غير مصنف",
+                    spearmace: "غير مصنف"
+                }
             },
             {
                 name: "Mustfa_105",
+                points: "45",
+                title: "سيد القتال",
+                region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/M4ster.png",
-                levels: [
-                    { type: "HT", num: "3", style: "ht-bronze" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" }
-                ],
-                modes: { vanilla: "HT3", uhc: "HT1", pot: "HT1", nethop: "HT1", smp: "HT3", sword: "HT2", axe: "HT3", mace: "HT3", spearmace: "HT2" }
-            },
-            {
-                name: "Player_3",
-                skinUrl: "https://visage.surgeplay.com/bust/512/Alex.png",
-                levels: [
-                    { type: "HT", num: "2", style: "ht" },
-                    { type: "HT", num: "2", style: "ht" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "3", style: "ht-bronze" }
-                ],
-                modes: { vanilla: "HT2", uhc: "HT2", pot: "HT1", nethop: "HT3", smp: "HT2", sword: "HT2", axe: "HT2", mace: "HT2", spearmace: "HT2" }
+                modes: {
+                    vanilla: "HT3",
+                    uhc: "HT1",
+                    pot: "غير مصنف",
+                    smp: "غير مصنف",
+                    nethop: "غير مصنف",
+                    sword: "HT2",
+                    axe: "HT3",
+                    mace: "غير مصنف",
+                    spearmace: "غير مصنف"
+                }
             }
         ];
 
-        function renderLeaderboard(mode = 'overall') {
+        function renderLeaderboard(selectedMode = 'overall') {
             const container = document.getElementById("leaderboardList");
             container.innerHTML = "";
 
-            let displayPlayers = [...playersData];
-
-            if (mode !== 'overall') {
-                displayPlayers.sort((a, b) => {
-                    const tierA = a.modes[mode] || "غير مصنف";
-                    const tierB = b.modes[mode] || "غير مصنف";
-                    if (tierA.includes("HT") && !tierB.includes("HT")) return -1;
-                    if (!tierA.includes("HT") && tierB.includes("HT")) return 1;
-                    return 0;
-                });
-            }
-
-            displayPlayers.forEach((player, index) => {
+            playersData.forEach((player, index) => {
                 const rankNum = index + 1;
                 let rankClass = "rank-other";
                 if (rankNum === 1) rankClass = "rank-1";
@@ -579,29 +608,48 @@
                 card.className = "player-card";
                 card.setAttribute("data-name", player.name);
 
-                let levelsHTML = "";
-                player.levels.forEach(lvl => {
-                    levelsHTML += `
-                        <div class="level-pill ${lvl.style}">
-                            <span class="level-label">${lvl.type}</span>
-                            <span class="level-num">${lvl.num}</span>
+                let modesHTML = "";
+                modeIcons.forEach(m => {
+                    const tier = player.modes[m.id] || "غير مصنف";
+                    const isRanked = tier !== "غير مصنف";
+                    let iconMarkup = "";
+
+                    if (m.iconType === "img") {
+                        iconMarkup = `<img src="${m.src}" alt="${m.id}" onerror="this.src='${m.fallback}'">`;
+                    } else {
+                        iconMarkup = `<i class="${m.class}" style="color: ${m.color}"></i>`;
+                    }
+
+                    modesHTML += `
+                        <div class="mode-item ${isRanked ? 'ranked' : ''}">
+                            <div class="icon-circle">
+                                ${iconMarkup}
+                            </div>
+                            <span class="tier-label">${tier}</span>
                         </div>
                     `;
                 });
 
                 card.innerHTML = `
                     <div class="player-header">
-                        <div class="player-banner ${rankClass}">
-                            <span class="rank-number">${rankNum}.</span>
-                            <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
+                        <div class="player-info-left">
+                            <div class="player-banner ${rankClass}">
+                                <span class="rank-number">${rankNum}.</span>
+                                <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
+                            </div>
+                            <div class="player-details">
+                                <div class="player-name-row">
+                                    <span class="points-badge">(${player.points} نقطة)</span>
+                                    <span class="title-badge">${player.title}</span>
+                                </div>
+                            </div>
                         </div>
-                        <span class="player-name">${player.name}</span>
+
+                        <div class="region-tag">${player.region}</div>
                     </div>
 
-                    <div class="levels-title">المستويات</div>
-
-                    <div class="tiers-row">
-                        ${levelsHTML}
+                    <div class="modes-grid">
+                        ${modesHTML}
                     </div>
                 `;
                 container.appendChild(card);
