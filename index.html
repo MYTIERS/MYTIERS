@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="notranslate" translate="no">
+<html lang="ar" dir="rtl" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
@@ -30,7 +30,7 @@
             background-color: var(--bg-main);
             color: #ffffff;
             padding: 12px;
-            direction: ltr;
+            direction: rtl;
             display: flex;
             justify-content: center;
         }
@@ -61,6 +61,7 @@
             font-size: 20px;
             font-family: 'Arial Black', sans-serif;
             white-space: nowrap;
+            direction: ltr;
         }
 
         .logo-my {
@@ -88,7 +89,7 @@
             background: var(--input-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 8px 12px 8px 34px;
+            padding: 8px 34px 8px 12px;
             color: #fff;
             font-size: 13px;
             outline: none;
@@ -101,7 +102,7 @@
 
         .search-box i {
             position: absolute;
-            left: 12px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-gray);
@@ -252,6 +253,7 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            direction: ltr;
         }
 
         .ip-address i {
@@ -288,7 +290,7 @@
             padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -298,29 +300,32 @@
             justify-content: space-between;
         }
 
-        .player-info-left {
+        .player-info-right {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .rank-badge {
-            background: #d97706;
-            color: #fff;
-            font-weight: 800;
-            font-size: 14px;
-            padding: 4px 10px;
+        .rank-box {
+            position: relative;
+            background: #f59e0b;
+            color: #000;
+            font-weight: 900;
+            font-size: 22px;
+            padding: 4px 12px;
             border-radius: 8px 0 0 8px;
-            margin-right: -4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
         }
 
         .avatar-box {
-            width: 42px;
-            height: 42px;
+            width: 46px;
+            height: 46px;
             border-radius: 8px;
             background: #232f42;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .avatar-box img {
@@ -336,7 +341,7 @@
 
         .player-name {
             font-weight: 800;
-            font-size: 15px;
+            font-size: 16px;
             color: #ffffff;
         }
 
@@ -348,28 +353,30 @@
             gap: 4px;
         }
 
-        .points-badge {
-            color: #93c5fd;
-            font-weight: 600;
-        }
-
         .region-badge {
-            background: #065f46;
-            color: #34d399;
-            font-size: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            font-size: 11px;
             font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            padding: 4px 10px;
+            border-radius: 8px;
         }
 
-        /* Tier Items Horizontal Row */
+        /* Levels Title Section */
+        .levels-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        /* Circular Tier Badges Row */
         .tiers-row {
             display: flex;
             gap: 6px;
             overflow-x: auto;
-            padding-top: 4px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 4px;
         }
 
         .tiers-row::-webkit-scrollbar {
@@ -380,36 +387,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #111827;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 6px;
-            min-width: 42px;
-            gap: 4px;
+            justify-content: center;
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 6px 8px;
+            min-width: 38px;
+            gap: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
         }
 
-        .tier-slot i {
-            font-size: 14px;
-            color: var(--text-gray);
+        .tier-slot img, .tier-slot i {
+            width: 16px;
+            height: 16px;
+            font-size: 13px;
+            object-fit: contain;
+            color: #f87171;
         }
 
-        .tier-slot.active-tier {
-            border-color: var(--gold);
-        }
-
-        .tier-slot.active-tier i {
-            color: var(--gold);
-        }
-
-        .tier-label {
-            font-size: 9px;
-            color: var(--text-gray);
-            font-weight: 600;
-        }
-
-        .tier-label.gold-text {
-            color: var(--gold);
-            font-weight: 800;
+        .tier-slot .tier-text {
+            font-size: 10px;
+            font-weight: 900;
+            color: #f59e0b;
+            line-height: 1;
+            text-anchor: middle;
         }
     </style>
 </head>
@@ -417,7 +418,7 @@
 
     <div class="container">
 
-        <!-- Header Bar -->
+        <!-- Header Navigation Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -425,7 +426,7 @@
 
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search player...">
+                <input type="text" placeholder="ابحث عن المشغل...">
             </div>
 
             <button class="menu-btn">
@@ -439,27 +440,17 @@
                 
                 <div class="nav-item active">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
-                    <span>Overall</span>
+                    <span>إجمالي</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./spearmace.svg" alt="LTMs">
-                    <span>LTMs</span>
+                    <img src="./spearmace.svg" alt="سيف">
+                    <span>سيف</span>
                 </div>
 
                 <div class="nav-item">
-                    <img src="./vanilla.svg" alt="Vanilla">
-                    <span>Vanilla</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./pot.svg" alt="Pot">
-                    <span>Pot</span>
-                </div>
-
-                <div class="nav-item">
-                    <img src="./nethop.svg" alt="NethOP">
-                    <span>NethOP</span>
+                    <img src="./nethop.svg" alt="نيثوب">
+                    <span>نيثوب</span>
                 </div>
 
                 <div class="nav-item">
@@ -468,14 +459,19 @@
                 </div>
 
                 <div class="nav-item">
-                    <img src="./sword.svg" alt="Sword">
-                    <span>Sword</span>
+                    <img src="./pot.svg" alt="وعاء">
+                    <span>وعاء</span>
+                </div>
+
+                <div class="nav-item">
+                    <img src="./vanilla.svg" alt="فانيليا">
+                    <span>فانيليا</span>
                 </div>
 
             </div>
         </div>
 
-        <!-- Server Banner -->
+        <!-- Server Info Banner -->
         <div class="server-banner">
             
             <button class="info-btn">
@@ -504,60 +500,59 @@
         <!-- Leaderboard Player Cards -->
         <div class="leaderboard-list">
 
-            <!-- Player 1 -->
+            <!-- Player 1 Card -->
             <div class="player-card">
                 <div class="player-header">
-                    <div class="player-info-left">
-                        <span class="rank-badge">1.</span>
+                    <div class="player-info-right">
+                        <div class="rank-box">1.</div>
                         <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/iRuby_X/42" alt="iRuby_X">
+                            <img src="https://mc-heads.net/avatar/Marlo/46" alt="مارلو">
                         </div>
                         <div class="player-details">
-                            <span class="player-name">iRuby_X</span>
+                            <span class="player-name">مارلو</span>
                             <span class="player-subtitle">
-                                <span class="points-badge">(60 نقطة)</span> متخصص قتالي
+                                4) سيد القتال الكبير 🌟
                             </span>
                         </div>
                     </div>
-                    <span class="region-badge">EU</span>
+                    <span class="region-badge">غير متوفر</span>
                 </div>
+
+                <div class="levels-title">المستويات</div>
 
                 <div class="tiers-row">
-                    <div class="tier-slot"><i class="fa-solid fa-gem"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-brands fa-discord"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-eye"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-sword"></i><span class="tier-label gold-text">HT1</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-shield-halved"></i><span class="tier-label">غير مصنف</span></div>
-                </div>
-            </div>
-
-            <!-- Player 2 -->
-            <div class="player-card">
-                <div class="player-header">
-                    <div class="player-info-left">
-                        <span class="rank-badge" style="background:#64748b;">2.</span>
-                        <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Mustfa_105/42" alt="Mustfa_105">
-                        </div>
-                        <div class="player-details">
-                            <span class="player-name">Mustfa_105</span>
-                            <span class="player-subtitle">
-                                <span class="points-badge">(42 نقطة)</span> طالب عسكري قتالي
-                            </span>
-                        </div>
+                    <div class="tier-slot">
+                        <img src="./mace.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
                     </div>
-                    <span class="region-badge">EU</span>
-                </div>
-
-                <div class="tiers-row">
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-gem"></i><span class="tier-label gold-text">LT3</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-heart"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot"><i class="fa-solid fa-flask"></i><span class="tier-label">غير مصنف</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-eye"></i><span class="tier-label gold-text">LT3</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-key"></i><span class="tier-label gold-text">LT2</span></div>
-                    <div class="tier-slot active-tier"><i class="fa-solid fa-hammer"></i><span class="tier-label gold-text">HT3</span></div>
+                    <div class="tier-slot">
+                        <img src="./sword.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./axe.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./vanilla.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./uhc.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./nethop.svg" alt="icon">
+                        <span class="tier-text">HT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
+                        <span class="tier-text">LT 1</span>
+                    </div>
+                    <div class="tier-slot">
+                        <img src="./spearmace.svg" alt="icon">
+                        <span class="tier-text">LT 1</span>
+                    </div>
                 </div>
             </div>
 
