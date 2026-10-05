@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --navbar-bg: #151d2a;
-            --card-bg: #141c2b;
-            --input-bg: #111827;
-            --border-color: #232f42;
+            --bg-main: #0a0d14;
+            --navbar-bg: #111723;
+            --card-bg: #111726;
+            --input-bg: #0d121c;
+            --border-color: #1e293b;
             --text-gray: #8d9bb0;
             --active-blue: #3b82f6;
-            --gold: #f1b333;
-            --silver: #a0acb2;
-            --bronze: #cb6835;
+            --gold: #f1a823;
+            --silver: #b2bdc4;
+            --bronze: #e06e38;
         }
 
         * {
@@ -31,7 +31,7 @@
         body {
             background-color: var(--bg-main);
             color: #ffffff;
-            padding: 12px;
+            padding: 10px;
             direction: ltr;
             display: flex;
             justify-content: center;
@@ -39,7 +39,7 @@
 
         .container {
             width: 100%;
-            max-width: 520px;
+            max-width: 480px;
         }
 
         /* Top Header Navigation Bar */
@@ -48,19 +48,18 @@
             align-items: center;
             justify-content: space-between;
             background: var(--navbar-bg);
-            padding: 10px 14px;
-            border-radius: 16px;
+            padding: 8px 12px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
-            gap: 12px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .logo-box {
             display: flex;
             align-items: center;
             font-weight: 900;
-            font-size: 20px;
+            font-size: 18px;
             font-family: 'Arial Black', sans-serif;
             white-space: nowrap;
         }
@@ -89,59 +88,39 @@
             width: 100%;
             background: var(--input-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 8px 12px 8px 34px;
+            border-radius: 18px;
+            padding: 6px 10px 6px 30px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--active-blue);
         }
 
         .search-box i {
             position: absolute;
-            left: 12px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-gray);
-            font-size: 12px;
-        }
-
-        .menu-btn {
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-size: 18px;
-            cursor: pointer;
+            font-size: 11px;
         }
 
         /* Categories Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 8px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 10px;
         }
 
         .modes-scroll {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
-            padding-bottom: 4px;
         }
 
         .modes-scroll::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .modes-scroll::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
+            display: none;
         }
 
         .nav-item {
@@ -149,39 +128,30 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 68px;
-            padding: 8px 10px;
+            min-width: 60px;
+            padding: 6px 8px;
             background: var(--card-bg);
             border: 1px solid transparent;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             color: var(--text-gray);
             flex-shrink: 0;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item img {
-            width: 22px;
-            height: 22px;
-            margin-bottom: 4px;
-            object-fit: contain;
         }
 
         .nav-item i {
-            font-size: 20px;
-            margin-bottom: 4px;
+            font-size: 18px;
+            margin-bottom: 2px;
         }
 
         .nav-item span {
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
         }
 
         .nav-item.active {
-            background: #212d42;
+            background: #1c2638;
             border-color: var(--active-blue);
             color: #ffffff;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
         }
 
         /* Server Info Banner */
@@ -190,26 +160,25 @@
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .info-btn {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 10px;
             color: #ffffff;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            cursor: pointer;
         }
 
         .info-btn i {
             color: #3b82f6;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .server-box {
@@ -217,37 +186,33 @@
             align-items: center;
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: 12px;
-            gap: 12px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            gap: 10px;
             flex-grow: 1;
             justify-content: space-between;
         }
 
         .server-title-text {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 900;
             color: #ef4444;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
             font-family: 'Arial Black', sans-serif;
-            text-transform: uppercase;
         }
 
         .ip-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: flex-end;
         }
 
         .ip-label {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-gray);
-            font-weight: 500;
         }
 
         .ip-address {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: #ffffff;
             cursor: pointer;
@@ -256,95 +221,84 @@
             gap: 4px;
         }
 
-        .ip-address i {
-            font-size: 10px;
-            color: var(--text-gray);
-        }
-
         .discord-btn {
             background: #5865F2;
             color: #ffffff;
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            font-size: 16px;
-            flex-shrink: 0;
+            font-size: 14px;
         }
 
-        /* Leaderboard Player Cards Container */
+        /* Leaderboard Cards */
         .leaderboard-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .player-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 12px;
+            border-radius: 14px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            gap: 10px;
         }
 
-        /* Header البنر المائل الجديد */
+        /* البنر العريض المائل بأسلوب الصورة تماماً */
         .player-banner {
             position: relative;
             width: 100%;
-            height: 75px;
-            border-radius: 10px;
+            height: 52px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
-            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+            padding: 0 16px;
+            clip-path: polygon(0 0, 84% 0, 98% 100%, 0% 100%);
         }
 
         .player-banner.rank-1 { background-color: var(--gold); }
         .player-banner.rank-2 { background-color: var(--silver); }
         .player-banner.rank-3 { background-color: var(--bronze); }
-        .player-banner.rank-other { background-color: #232f42; }
+        .player-banner.rank-other { background-color: #1e293b; }
 
         .rank-number {
-            font-size: 40px;
+            font-size: 34px;
             font-weight: 900;
             font-style: italic;
             color: #ffffff;
-            text-shadow: 3px 4px 0px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 3px 0px rgba(0, 0, 0, 0.25);
+            line-height: 1;
         }
 
         .player-skin {
-            height: 120%;
+            height: 110%;
             object-fit: contain;
-            filter: drop-shadow(-4px 4px 5px rgba(0, 0, 0, 0.4));
+            margin-right: 12px;
+            filter: drop-shadow(-3px 3px 4px rgba(0, 0, 0, 0.3));
         }
 
         .levels-title {
-            direction: rtl;
-            font-size: 13px;
+            text-align: right;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-gray);
-            margin-top: 2px;
+            padding-right: 4px;
         }
 
-        /* المستويات كأيقونات دائرية بنفس تصميم الصور */
+        /* المستويات الدائرية على اليمين */
         .tiers-row {
             display: flex;
             gap: 8px;
-            overflow-x: auto;
-            direction: rtl;
-            padding-bottom: 4px;
-        }
-
-        .tiers-row::-webkit-scrollbar {
-            display: none;
+            justify-content: flex-end;
+            padding-bottom: 2px;
         }
 
         .level-pill {
@@ -352,41 +306,29 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #111827;
-            border-radius: 12px;
-            padding: 6px 12px;
-            min-width: 48px;
-            height: 48px;
-            border: 1px solid transparent;
-            flex-shrink: 0;
+            background: var(--input-bg);
+            border-radius: 10px;
+            width: 44px;
+            height: 42px;
+            border: 1px solid var(--border-color);
         }
 
-        .level-pill.ht {
-            background: linear-gradient(180deg, #1f293d 0%, #111827 100%);
-            border: 1px solid #3b82f6;
-        }
-
-        .level-pill.ht-gold {
-            background: linear-gradient(180deg, #3a2d13 0%, #111827 100%);
-            border: 1px solid var(--gold);
-        }
-
-        .level-pill.ht-bronze {
-            background: linear-gradient(180deg, #3d2218 0%, #111827 100%);
-            border: 1px solid var(--bronze);
-        }
+        .level-pill.border-gold { border-color: var(--gold); }
+        .level-pill.border-bronze { border-color: var(--bronze); }
+        .level-pill.border-blue { border-color: var(--active-blue); }
 
         .level-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 900;
             color: #f59e0b;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .level-num {
             font-size: 12px;
             font-weight: 900;
             color: #ffffff;
+            margin-top: 2px;
         }
     </style>
 </head>
@@ -394,76 +336,36 @@
 
     <div class="container">
 
-        <!-- Header Bar -->
+        <!-- Top Navbar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
             </div>
-
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" onkeyup="filterPlayers()" placeholder="Search player...">
             </div>
-
-            <button class="menu-btn">
-                <i class="fa-solid fa-bars"></i>
-            </button>
         </div>
 
-        <!-- Categories Bar -->
+        <!-- Modes Bar -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
-                
                 <div class="nav-item active" onclick="selectMode('overall', this)">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
                     <span>Overall</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('vanilla', this)">
-                    <img src="./vanilla.svg" alt="Vanilla" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
+                    <i class="fa-solid fa-gem" style="color: #a855f7;"></i>
                     <span>VANILLA</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('uhc', this)">
                     <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
                     <span>UHC</span>
                 </div>
-
                 <div class="nav-item" onclick="selectMode('pot', this)">
-                    <img src="./pot.svg" alt="Pot" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
+                    <i class="fa-solid fa-flask" style="color: #ec4899;"></i>
                     <span>POT</span>
                 </div>
-
-                <div class="nav-item" onclick="selectMode('nethop', this)">
-                    <img src="./nethop.svg" alt="NethOP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
-                    <span>NETHOP</span>
-                </div>
-
-                <div class="nav-item" onclick="selectMode('smp', this)">
-                    <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
-                    <span>SMP</span>
-                </div>
-
-                <div class="nav-item" onclick="selectMode('sword', this)">
-                    <img src="./sword.svg" alt="Sword" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
-                    <span>SWORD</span>
-                </div>
-
-                <div class="nav-item" onclick="selectMode('axe', this)">
-                    <img src="./axe.svg" alt="Axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
-                    <span>AXE</span>
-                </div>
-
-                <div class="nav-item" onclick="selectMode('mace', this)">
-                    <img src="./mace.svg" alt="Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
-                    <span>MACE</span>
-                </div>
-
-                <div class="nav-item" onclick="selectMode('spearmace', this)">
-                    <img src="./spearmace.svg" alt="Spear Mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
-                    <span>SPEAR MACE</span>
-                </div>
-
             </div>
         </div>
 
@@ -476,18 +378,11 @@
 
             <div class="server-box">
                 <span class="server-title-text">PVP MIKEY</span>
-
                 <div class="ip-container">
                     <span class="ip-label">عنوان IP للخادم</span>
-                    <span class="ip-address" onclick="copyIP()">
-                        MYPVP.Mikey
-                        <i class="fa-regular fa-copy"></i>
-                    </span>
+                    <span class="ip-address" onclick="copyIP()">MYPVP.Mikey <i class="fa-regular fa-copy"></i></span>
                 </div>
-
-                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn" title="Join Discord">
-                    <i class="fa-brands fa-discord"></i>
-                </a>
+                <a href="https://discord.gg/3HtDCJV3x" target="_blank" class="discord-btn"><i class="fa-brands fa-discord"></i></a>
             </div>
         </div>
 
@@ -502,54 +397,39 @@
                 name: "iRuby_X",
                 skinUrl: "https://visage.surgeplay.com/bust/512/iRuby_X.png",
                 levels: [
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" }
-                ],
-                modes: { vanilla: "HT1", uhc: "HT1", pot: "HT1", nethop: "HT1", smp: "HT1", sword: "HT1", axe: "HT1", mace: "HT1", spearmace: "HT1" }
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "1", style: "border-gold" }
+                ]
             },
             {
-                name: "Mustfa_105",
+                name: "M4ster",
                 skinUrl: "https://visage.surgeplay.com/bust/512/M4ster.png",
                 levels: [
-                    { type: "HT", num: "3", style: "ht-bronze" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "1", style: "ht-gold" }
-                ],
-                modes: { vanilla: "HT3", uhc: "HT1", pot: "HT1", nethop: "HT1", smp: "HT3", sword: "HT2", axe: "HT3", mace: "HT3", spearmace: "HT2" }
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "3", style: "border-bronze" }
+                ]
             },
             {
-                name: "Player_3",
+                name: "Alex",
                 skinUrl: "https://visage.surgeplay.com/bust/512/Alex.png",
                 levels: [
-                    { type: "HT", num: "2", style: "ht" },
-                    { type: "HT", num: "2", style: "ht" },
-                    { type: "HT", num: "1", style: "ht-gold" },
-                    { type: "HT", num: "3", style: "ht-bronze" }
-                ],
-                modes: { vanilla: "HT2", uhc: "HT2", pot: "HT1", nethop: "HT3", smp: "HT2", sword: "HT2", axe: "HT2", mace: "HT2", spearmace: "HT2" }
+                    { type: "HT", num: "3", style: "border-bronze" },
+                    { type: "HT", num: "1", style: "border-gold" },
+                    { type: "HT", num: "2", style: "border-blue" },
+                    { type: "HT", num: "2", style: "border-blue" }
+                ]
             }
         ];
 
-        function renderLeaderboard(mode = 'overall') {
+        function renderLeaderboard() {
             const container = document.getElementById("leaderboardList");
             container.innerHTML = "";
 
-            let displayPlayers = [...playersData];
-
-            if (mode !== 'overall') {
-                displayPlayers.sort((a, b) => {
-                    const tierA = a.modes[mode] || "غير مصنف";
-                    const tierB = b.modes[mode] || "غير مصنف";
-                    if (tierA.includes("HT") && !tierB.includes("HT")) return -1;
-                    if (!tierA.includes("HT") && tierB.includes("HT")) return 1;
-                    return 0;
-                });
-            }
-
-            displayPlayers.forEach((player, index) => {
+            playersData.forEach((player, index) => {
                 const rankNum = index + 1;
                 let rankClass = "rank-other";
                 if (rankNum === 1) rankClass = "rank-1";
@@ -558,6 +438,7 @@
 
                 const card = document.createElement("div");
                 card.className = "player-card";
+                card.setAttribute("data-name", player.name);
 
                 let levelsHTML = "";
                 player.levels.forEach(lvl => {
@@ -574,9 +455,7 @@
                         <span class="rank-number">${rankNum}.</span>
                         <img class="player-skin" src="${player.skinUrl}" alt="${player.name}" onerror="this.src='https://visage.surgeplay.com/bust/512/Steve.png'">
                     </div>
-
                     <div class="levels-title">المستويات</div>
-
                     <div class="tiers-row">
                         ${levelsHTML}
                     </div>
@@ -588,14 +467,13 @@
         function selectMode(mode, element) {
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
-            renderLeaderboard(mode);
         }
 
         function filterPlayers() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.player-card');
             cards.forEach(card => {
-                const name = card.querySelector('.player-banner').getAttribute('data-name') || "";
+                const name = card.getAttribute('data-name') || "";
                 card.style.display = name.toLowerCase().includes(input) ? "flex" : "none";
             });
         }
@@ -605,7 +483,7 @@
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
         }
 
-        renderLeaderboard('overall');
+        renderLeaderboard();
     </script>
 </body>
 </html>
