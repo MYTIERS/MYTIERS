@@ -65,14 +65,12 @@
         }
 
         .logo-my {
-            color: #2563eb;
             background: linear-gradient(180deg, #60a5fa 0%, #1d4ed8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .logo-tiers {
-            color: #f59e0b;
             background: linear-gradient(180deg, #fef08a 0%, #f59e0b 50%, #b45309 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -117,7 +115,7 @@
             cursor: pointer;
         }
 
-        /* Categories Bar */
+        /* Categories Navigation Bar */
         .modes-nav-container {
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
@@ -132,6 +130,7 @@
             gap: 8px;
             overflow-x: auto;
             padding-bottom: 4px;
+            direction: rtl;
         }
 
         .modes-scroll::-webkit-scrollbar {
@@ -148,8 +147,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 68px;
-            padding: 8px 10px;
+            min-width: 65px;
+            padding: 8px;
             background: var(--card-bg);
             border: 1px solid transparent;
             border-radius: 12px;
@@ -159,21 +158,20 @@
             transition: all 0.2s ease;
         }
 
-        .nav-item img {
+        .nav-item img, .nav-item i {
             width: 22px;
             height: 22px;
+            font-size: 18px;
             margin-bottom: 4px;
             object-fit: contain;
-        }
-
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .nav-item span {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .nav-item.active {
@@ -183,7 +181,7 @@
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
         }
 
-        /* Server Info Banner */
+        /* Server Banner */
         .server-banner {
             display: flex;
             align-items: center;
@@ -198,7 +196,7 @@
             gap: 6px;
             background: var(--navbar-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 14px;
+            padding: 8px 12px;
             border-radius: 12px;
             color: #ffffff;
             font-size: 13px;
@@ -227,10 +225,8 @@
             font-size: 13px;
             font-weight: 900;
             color: #ef4444;
-            letter-spacing: 0.5px;
             white-space: nowrap;
             font-family: 'Arial Black', sans-serif;
-            text-transform: uppercase;
         }
 
         .ip-container {
@@ -242,7 +238,6 @@
         .ip-label {
             font-size: 10px;
             color: var(--text-gray);
-            font-weight: 500;
         }
 
         .ip-address {
@@ -256,11 +251,6 @@
             direction: ltr;
         }
 
-        .ip-address i {
-            font-size: 10px;
-            color: var(--text-gray);
-        }
-
         .discord-btn {
             background: #5865F2;
             color: #ffffff;
@@ -272,26 +262,20 @@
             justify-content: center;
             text-decoration: none;
             font-size: 16px;
-            transition: transform 0.2s, background-color 0.2s;
             flex-shrink: 0;
         }
 
-        /* Leaderboard Cards Section */
-        .leaderboard-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
+        /* Player Card Component */
         .player-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 12px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .player-header {
@@ -307,23 +291,19 @@
         }
 
         .rank-box {
-            position: relative;
             background: #f59e0b;
             color: #000;
             font-weight: 900;
-            font-size: 22px;
-            padding: 4px 12px;
-            border-radius: 8px 0 0 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 20px;
+            padding: 4px 10px;
+            border-radius: 8px;
             font-style: italic;
         }
 
         .avatar-box {
-            width: 46px;
-            height: 46px;
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
             background: #232f42;
             overflow: hidden;
         }
@@ -348,9 +328,6 @@
         .player-subtitle {
             font-size: 11px;
             color: var(--text-gray);
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .region-badge {
@@ -362,63 +339,84 @@
             border-radius: 8px;
         }
 
-        /* Levels Title Section */
-        .levels-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-top: 4px;
-            text-align: right;
+        /* Levels Section Title Positioned Above/Left */
+        .levels-header {
+            display: flex;
+            justify-content: flex-end; /* لرفعه وإزاحته نحو اليسار والقمة */
+            margin-bottom: -4px;
+            margin-top: -2px;
         }
 
-        /* Circular Tier Badges Row */
+        .levels-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #e2e8f0;
+        }
+
+        /* Tier Slots Row (Enlarged & Shifted to Left/Top) */
         .tiers-row {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            padding: 6px 2px;
+            justify-content: flex-start; /* ينزاح إلى اليسار بالتنسيق */
+            direction: ltr; /* الترتيب يبدأ يساراً */
         }
 
         .tiers-row::-webkit-scrollbar {
             display: none;
         }
 
+        /* Enlarged Circular/Pill Tier Badges */
         .tier-slot {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             background: #1e293b;
-            border-radius: 20px;
-            padding: 6px 8px;
-            min-width: 38px;
-            gap: 3px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 22px;
+            padding: 8px 10px; /* تكبير الحجم */
+            min-width: 48px; /* زيادة العرض */
+            gap: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             flex-shrink: 0;
+            transition: transform 0.2s, border-color 0.2s;
         }
 
+        .tier-slot:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Enlarged Icons */
         .tier-slot img, .tier-slot i {
-            width: 16px;
-            height: 16px;
-            font-size: 13px;
+            width: 22px; /* تكبير حجم الأيقونة */
+            height: 22px;
+            font-size: 18px;
             object-fit: contain;
-            color: #f87171;
         }
 
         .tier-slot .tier-text {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 900;
-            color: #f59e0b;
             line-height: 1;
-            text-anchor: middle;
+            text-align: center;
         }
+
+        /* Tier Colors (Match Image 2 Roles) */
+        .tier-ht1, .tier-lt1 { color: #f59e0b; } /* الأصفر */
+        .tier-ht2, .tier-lt2 { color: #f97316; } /* البرتقالي */
+        .tier-ht3, .tier-lt3 { color: #ef4444; } /* الأحمر */
+        .tier-ht4, .tier-lt4 { color: #a855f7; } /* البنفسجي */
+        .tier-ht5, .tier-lt5 { color: #3b82f6; } /* الأزرق */
+
     </style>
 </head>
 <body>
 
     <div class="container">
 
-        <!-- Header Navigation Bar -->
+        <!-- Top Header Navigation Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -434,37 +432,42 @@
             </button>
         </div>
 
-        <!-- Scrollable Categories Bar -->
+        <!-- Scrollable Categories Bar (Includes Mace - ميس) -->
         <div class="modes-nav-container">
             <div class="modes-scroll">
                 
-                <div class="nav-item active">
+                <div class="nav-item active" onclick="selectCategory(this, 'all')">
                     <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
                     <span>إجمالي</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./spearmace.svg" alt="سيف">
+                <div class="nav-item" onclick="selectCategory(this, 'mace')">
+                    <img src="./mace.svg" alt="ميس" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
+                    <span>ميس</span>
+                </div>
+
+                <div class="nav-item" onclick="selectCategory(this, 'sword')">
+                    <img src="./sword.svg" alt="سيف" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
                     <span>سيف</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./nethop.svg" alt="نيثوب">
+                <div class="nav-item" onclick="selectCategory(this, 'netherite')">
+                    <img src="./nethop.svg" alt="نيثوب" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
                     <span>نيثوب</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./smp.svg" alt="SMP">
+                <div class="nav-item" onclick="selectCategory(this, 'smp')">
+                    <img src="./smp.svg" alt="SMP" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1041/1041883.png'">
                     <span>SMP</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./pot.svg" alt="وعاء">
+                <div class="nav-item" onclick="selectCategory(this, 'pot')">
+                    <img src="./pot.svg" alt="وعاء" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
                     <span>وعاء</span>
                 </div>
 
-                <div class="nav-item">
-                    <img src="./vanilla.svg" alt="فانيليا">
+                <div class="nav-item" onclick="selectCategory(this, 'vanilla')">
+                    <img src="./vanilla.svg" alt="فانيليا" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
                     <span>فانيليا</span>
                 </div>
 
@@ -497,61 +500,63 @@
 
         </div>
 
-        <!-- Leaderboard Player Cards -->
-        <div class="leaderboard-list">
+        <!-- Leaderboard Player Cards Container -->
+        <div class="leaderboard-list" id="playerContainer">
 
-            <!-- Player 1 Card -->
+            <!-- Top Player 1 Card (Dynamic Demo) -->
             <div class="player-card">
                 <div class="player-header">
                     <div class="player-info-right">
-                        <div class="rank-box">1.</div>
+                        <div class="rank-box">.1</div>
                         <div class="avatar-box">
-                            <img src="https://mc-heads.net/avatar/Marlo/46" alt="مارلو">
+                            <img src="https://mc-heads.net/avatar/Marlo/48" alt="مارلو">
                         </div>
                         <div class="player-details">
                             <span class="player-name">مارلو</span>
-                            <span class="player-subtitle">
-                                4) سيد القتال الكبير 🌟
-                            </span>
+                            <span class="player-subtitle"> (4) سيد القتال الكبير 🌟</span>
                         </div>
                     </div>
                     <span class="region-badge">غير متوفر</span>
                 </div>
 
-                <div class="levels-title">المستويات</div>
+                <!-- Levels Title Positioned at Top/Right -->
+                <div class="levels-header">
+                    <span class="levels-title">المستويات</span>
+                </div>
 
+                <!-- Circular Tier Badges Row (Large & Shifted Left) -->
                 <div class="tiers-row">
                     <div class="tier-slot">
-                        <img src="./mace.svg" alt="icon">
-                        <span class="tier-text">HT 1</span>
+                        <img src="./mace.svg" alt="mace" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869112.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./sword.svg" alt="icon">
-                        <span class="tier-text">HT 1</span>
+                        <img src="./sword.svg" alt="sword" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./axe.svg" alt="icon">
-                        <span class="tier-text">HT 1</span>
+                        <img src="./axe.svg" alt="axe" onerror="this.src='https://cdn-icons-png.flaticon.com/512/869/869108.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./vanilla.svg" alt="icon">
-                        <span class="tier-text">HT 1</span>
+                        <img src="./vanilla.svg" alt="vanilla" onerror="this.src='https://cdn-icons-png.flaticon.com/512/188/188333.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./uhc.svg" alt="icon">
-                        <span class="tier-text">HT 1</span>
+                        <img src="./uhc.svg" alt="uhc" onerror="this.src='https://cdn-icons-png.flaticon.com/512/868/868781.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./nethop.svg" alt="icon">
-                        <span class="tier-text">HT 1</span>
+                        <img src="./nethop.svg" alt="nethop" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3522/3522292.png'">
+                        <span class="tier-text tier-ht1">HT1</span>
                     </div>
                     <div class="tier-slot">
-                        <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
-                        <span class="tier-text">LT 1</span>
+                        <i class="fa-solid fa-heart tier-lt1"></i>
+                        <span class="tier-text tier-lt1">LT1</span>
                     </div>
                     <div class="tier-slot">
-                        <img src="./spearmace.svg" alt="icon">
-                        <span class="tier-text">LT 1</span>
+                        <img src="./spearmace.svg" alt="spear" onerror="this.src='https://cdn-icons-png.flaticon.com/512/929/929432.png'">
+                        <span class="tier-text tier-lt1">LT1</span>
                     </div>
                 </div>
             </div>
@@ -564,6 +569,17 @@
         function copyIP() {
             navigator.clipboard.writeText("MYPVP.Mikey");
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
+        }
+
+        // Change Categories and Filter Top Player
+        function selectCategory(element, category) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Example response when selecting "Mace" or other categories
+            if(category === 'mace') {
+                console.log("عرض أقوى لاعب في تصنيف الميس");
+            }
         }
     </script>
 </body>
