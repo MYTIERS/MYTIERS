@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="notranslate" translate="no">
+<html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
@@ -18,9 +18,6 @@
             --gold: #f1b333;
             --silver: #a0acb2;
             --bronze: #cb6835;
-            --pink-accent: #f43f5e;
-            --modal-bg: #121824;
-            --modal-card-bg: #192231;
         }
 
         * {
@@ -208,11 +205,6 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .info-btn:hover {
-            background: #1e293b;
         }
 
         .info-btn i {
@@ -302,6 +294,7 @@
             overflow: hidden;
         }
 
+        /* Top Header Row */
         .player-header {
             display: flex;
             align-items: center;
@@ -390,6 +383,7 @@
             border: 1px solid #16a34a;
         }
 
+        /* التصنيفات الـ 9 بالأيقونات الدائرية */
         .modes-grid {
             display: flex;
             gap: 6px;
@@ -453,139 +447,100 @@
             font-size: 11px;
         }
 
-        /* ----- MODAL DESIGN ----- */
+        /* --- Modal Popup Styling --- */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.7);
             display: none;
-            align-items: center;
             justify-content: center;
-            z-index: 99999;
+            align-items: center;
+            z-index: 1000;
             padding: 16px;
+            backdrop-filter: blur(4px);
         }
 
-        .modal-overlay.active {
-            display: flex !important;
-        }
-
-        .modal-content {
-            background: var(--modal-bg);
+        .modal-card {
+            background: #0f1623;
             border: 1px solid #1e293b;
-            border-radius: 20px;
+            border-radius: 16px;
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             max-height: 85vh;
             overflow-y: auto;
-            padding: 20px;
             direction: rtl;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-            position: relative;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
         }
 
         .modal-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #1e293b;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
         .modal-title {
             font-size: 18px;
-            font-weight: 900;
+            font-weight: 800;
             color: #ffffff;
         }
 
         .close-btn {
             background: transparent;
             border: none;
-            color: var(--text-gray);
-            font-size: 20px;
+            color: #64748b;
+            font-size: 18px;
             cursor: pointer;
         }
 
-        .section-title {
-            font-size: 15px;
-            font-weight: 800;
+        .section-subtitle {
             color: #f43f5e;
-            margin: 16px 0 10px 0;
-        }
-
-        .points-table {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .points-row {
-            background: var(--modal-card-bg);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
-            color: #94a3b8;
+            margin: 14px 0 8px 0;
         }
 
-        .points-col {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .points-col .highlight {
-            color: #ffffff;
-            font-weight: 800;
-        }
-
-        .titles-list {
+        .info-list {
             display: flex;
             flex-direction: column;
+            gap: 6px;
+        }
+
+        .info-row {
+            background: #151d2a;
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .info-row .left-text {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .info-row .right-text {
+            color: #e2e8f0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
             gap: 8px;
         }
 
-        .title-item {
-            background: var(--modal-card-bg);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .title-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .title-icon {
-            width: 22px;
-            height: 22px;
-            display: flex;
+        .badge-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-        }
-
-        .title-name {
-            font-size: 14px;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .title-req {
             font-size: 12px;
-            font-weight: 600;
-            color: var(--text-gray);
         }
     </style>
 </head>
@@ -593,7 +548,7 @@
 
     <div class="container">
 
-        <!-- Top Header Navigation Bar -->
+        <!-- Header Bar -->
         <div class="top-navbar">
             <div class="logo-box">
                 <span class="logo-my">MY</span><span class="logo-tiers">TIERS</span>
@@ -655,9 +610,9 @@
             </div>
         </div>
 
-        <!-- Server Info Banner -->
+        <!-- Server Banner -->
         <div class="server-banner">
-            <button class="info-btn" id="infoBtn" onclick="openModal()">
+            <button class="info-btn" onclick="openModal()">
                 <i class="fa-solid fa-circle-info"></i>
                 <span>معلومة</span>
             </button>
@@ -684,64 +639,94 @@
 
     </div>
 
-    <!-- Info Modal -->
-    <div class="modal-overlay" id="infoModal">
-        <div class="modal-content">
+    <!-- Info Modal Popup -->
+    <div class="modal-overlay" id="infoModal" onclick="closeModalOnOutside(event)">
+        <div class="modal-card">
             <div class="modal-header">
-                <h3 class="modal-title">النقاط وألقاب الإنجازات</h3>
+                <span class="modal-title">النقاط وألقاب الإنجازات</span>
                 <button class="close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- Points Section -->
-            <div class="section-title">حساب النقاط</div>
-            <div class="points-table">
-                <div class="points-row">
-                    <div class="points-col"><span>LT1</span> | <span class="highlight">45 نقطة</span></div>
-                    <div class="points-col"><span>HT1</span> | <span class="highlight">60 نقطة</span></div>
+            <div class="section-subtitle">حساب النقاط</div>
+            <div class="info-list">
+                <div class="info-row">
+                    <span class="right-text">45 نقطة</span>
+                    <span class="left-text">LT1 &nbsp;|&nbsp; 60 نقطة &nbsp;|&nbsp; HT1</span>
                 </div>
-                <div class="points-row">
-                    <div class="points-col"><span>LT2</span> | <span class="highlight">20 نقطة</span></div>
-                    <div class="points-col"><span>HT2</span> | <span class="highlight">30 نقطة</span></div>
+                <div class="info-row">
+                    <span class="right-text">20 نقطة</span>
+                    <span class="left-text">LT2 &nbsp;|&nbsp; 30 نقطة &nbsp;|&nbsp; HT2</span>
                 </div>
-                <div class="points-row">
-                    <div class="points-col"><span>LT3</span> | <span class="highlight">6 نقاط</span></div>
-                    <div class="points-col"><span>HT3</span> | <span class="highlight">10 نقاط</span></div>
+                <div class="info-row">
+                    <span class="right-text">6 نقاط</span>
+                    <span class="left-text">LT3 &nbsp;|&nbsp; 10 نقاط &nbsp;|&nbsp; HT3</span>
                 </div>
-                <div class="points-row">
-                    <div class="points-col"><span>LT4</span> | <span class="highlight">3 نقاط</span></div>
-                    <div class="points-col"><span>HT4</span> | <span class="highlight">4 نقاط</span></div>
+                <div class="info-row">
+                    <span class="right-text">3 نقاط</span>
+                    <span class="left-text">LT4 &nbsp;|&nbsp; 4 نقاط &nbsp;|&nbsp; HT4</span>
                 </div>
-                <div class="points-row">
-                    <div class="points-col"><span>LT5</span> | <span class="highlight">نقطة واحدة</span></div>
-                    <div class="points-col"><span>HT5</span> | <span class="highlight">نقطتان</span></div>
+                <div class="info-row">
+                    <span class="right-text">نقطة واحدة</span>
+                    <span class="left-text">LT5 &nbsp;|&nbsp; نقطتان &nbsp;|&nbsp; HT5</span>
                 </div>
             </div>
 
-            <!-- Achievement Section -->
-            <div class="section-title">ألقاب الإنجازات</div>
-            <div class="titles-list" id="titlesContainer"></div>
+            <div class="section-subtitle">ألقاب الإنجازات</div>
+            <div class="info-list">
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #f59e0b;"><i class="fa-solid fa-crown"></i></span>
+                        أستاذ فنون القتال
+                    </span>
+                    <span class="left-text">أكثر من 400 نقطة</span>
+                </div>
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #eab308;"><i class="fa-solid fa-gem"></i></span>
+                        سيد القتال
+                    </span>
+                    <span class="left-text">أكثر من 250 نقطة</span>
+                </div>
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #f43f5e;"><i class="fa-solid fa-shield-halved"></i></span>
+                        بطل القتال
+                    </span>
+                    <span class="left-text">أكثر من 100 نقطة</span>
+                </div>
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #a855f7;"><i class="fa-solid fa-diamond"></i></span>
+                        متخصص قتالي
+                    </span>
+                    <span class="left-text">+50 نقطة</span>
+                </div>
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #3b82f6;"><i class="fa-solid fa-circle-dot"></i></span>
+                        طالب عسكري قتالي
+                    </span>
+                    <span class="left-text">+20 نقطة</span>
+                </div>
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #3b82f6;"><i class="fa-regular fa-circle-dot"></i></span>
+                        مبتدئ في القتال
+                    </span>
+                    <span class="left-text">+1 نقاط</span>
+                </div>
+                <div class="info-row">
+                    <span class="right-text">
+                        <span class="badge-icon" style="color: #64748b;"><i class="fa-regular fa-circle"></i></span>
+                        مبتدئ
+                    </span>
+                    <span class="left-text">أقل من 10 نقاط</span>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const tierPointsMap = {
-            "HT1": 60, "LT1": 45,
-            "HT2": 30, "LT2": 20,
-            "HT3": 10, "LT3": 6,
-            "HT4": 4,  "LT4": 3,
-            "HT5": 2,  "LT5": 1
-        };
-
-        const titlesData = [
-            { name: "أستاذ فنون القتال", req: "أكثر من 400 نقطة", icon: "fa-solid fa-gem", color: "#f59e0b" },
-            { name: "سيد القتال", req: "أكثر من 250 نقطة", icon: "fa-solid fa-crown", color: "#eab308" },
-            { name: "بطل القتال", req: "أكثر من 100 نقطة", icon: "fa-solid fa-shield-halved", color: "#ef4444" },
-            { name: "متخصص قتالي", req: "50+ نقطة", icon: "fa-solid fa-diamond", color: "#a855f7" },
-            { name: "طالب عسكري قتالي", req: "20+ نقطة", icon: "fa-solid fa-circle-dot", color: "#3b82f6" },
-            { name: "مبتدئ في القتال", req: "1+ نقاط", icon: "fa-regular fa-circle-dot", color: "#60a5fa" },
-            { name: "مبتدئ", req: "أقل من 10 نقاط", icon: "fa-regular fa-circle", color: "#9ca3af" }
-        ];
-
         const modeIcons = [
             { id: "mace", iconType: "img", src: "./mace.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869112.png" },
             { id: "axe", iconType: "img", src: "./axe.svg", fallback: "https://cdn-icons-png.flaticon.com/512/869/869108.png" },
@@ -757,6 +742,8 @@
         const playersData = [
             {
                 name: "iRuby_X",
+                points: "60",
+                title: "متخصص قتالي",
                 region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/iRuby_X.png",
                 modes: {
@@ -773,6 +760,8 @@
             },
             {
                 name: "Mustfa_105",
+                points: "45",
+                title: "سيد القتال",
                 region: "أوروبي",
                 skinUrl: "https://visage.surgeplay.com/bust/512/M4ster.png",
                 modes: {
@@ -789,81 +778,25 @@
             }
         ];
 
-        function calculatePlayerPoints(player) {
-            let total = 0;
-            for (let mode in player.modes) {
-                const tier = player.modes[mode];
-                if (tierPointsMap[tier]) {
-                    total += tierPointsMap[tier];
-                }
-            }
-            return total;
-        }
-
-        function getPlayerTitle(points) {
-            if (points > 400) return "أستاذ فنون القتال";
-            if (points > 250) return "سيد القتال";
-            if (points > 100) return "بطل القتال";
-            if (points >= 50) return "متخصص قتالي";
-            if (points >= 20) return "طالب عسكري قتالي";
-            if (points >= 1) return "مبتدئ في القتال";
-            return "مبتدئ";
-        }
-
-        function openModal() {
-            const modal = document.getElementById("infoModal");
-            if (modal) modal.classList.add("active");
-        }
-
-        function closeModal() {
-            const modal = document.getElementById("infoModal");
-            if (modal) modal.classList.remove("active");
-        }
-
-        function renderTitlesModal() {
-            const container = document.getElementById("titlesContainer");
-            if (!container) return;
-            container.innerHTML = "";
-
-            titlesData.forEach(item => {
-                const titleDiv = document.createElement("div");
-                titleDiv.className = "title-item";
-                titleDiv.innerHTML = `
-                    <div class="title-info">
-                        <div class="title-icon">
-                            <i class="${item.icon}" style="color: ${item.color}"></i>
-                        </div>
-                        <span class="title-name">${item.name}</span>
-                    </div>
-                    <span class="title-req">${item.req}</span>
-                `;
-                container.appendChild(titleDiv);
-            });
+        function getTierValue(tierStr) {
+            if (!tierStr || tierStr === "غير مصنف") return 999;
+            const match = tierStr.match(/(\d+)/);
+            return match ? parseInt(match[1]) : 900;
         }
 
         function renderLeaderboard(selectedMode = 'overall') {
             const container = document.getElementById("leaderboardList");
-            if (!container) return;
             container.innerHTML = "";
 
-            let displayPlayers = playersData.map(player => {
-                const calculatedPoints = calculatePlayerPoints(player);
-                return {
-                    ...player,
-                    points: calculatedPoints,
-                    title: getPlayerTitle(calculatedPoints)
-                };
-            });
+            let displayPlayers = [...playersData];
 
             if (selectedMode === 'overall') {
-                displayPlayers.sort((a, b) => b.points - a.points);
+                displayPlayers.sort((a, b) => parseInt(b.points) - parseInt(a.points));
             } else {
                 displayPlayers.sort((a, b) => {
-                    const tierA = a.modes[selectedMode] || "غير مصنف";
-                    const tierB = b.modes[selectedMode] || "غير مصنف";
-                    const pointsA = tierPointsMap[tierA] || 0;
-                    const pointsB = tierPointsMap[tierB] || 0;
-                    return pointsB - pointsA;
+                    const valA = getTierValue(a.modes[selectedMode]);
+                    const valB = getTierValue(b.modes[selectedMode]);
+                    return valA - valB;
                 });
             }
 
@@ -882,9 +815,13 @@
                 modeIcons.forEach(m => {
                     const tier = player.modes[m.id] || "غير مصنف";
                     const isRanked = tier !== "غير مصنف";
-                    let iconMarkup = m.iconType === "img" 
-                        ? `<img src="${m.src}" alt="${m.id}" onerror="this.src='${m.fallback}'">`
-                        : `<i class="${m.class}" style="color: ${m.color}"></i>`;
+                    let iconMarkup = "";
+
+                    if (m.iconType === "img") {
+                        iconMarkup = `<img src="${m.src}" alt="${m.id}" onerror="this.src='${m.fallback}'">`;
+                    } else {
+                        iconMarkup = `<i class="${m.class}" style="color: ${m.color}"></i>`;
+                    }
 
                     modesHTML += `
                         <div class="mode-item ${isRanked ? 'ranked' : ''}">
@@ -923,10 +860,10 @@
             });
         }
 
-        function selectMode(modeId, element) {
+        function selectMode(mode, element) {
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if (element) element.classList.add('active');
-            renderLeaderboard(modeId);
+            element.classList.add('active');
+            renderLeaderboard(mode);
         }
 
         function filterPlayers() {
@@ -943,19 +880,22 @@
             alert("تم نسخ IP الخادم: MYPVP.Mikey");
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            renderTitlesModal();
-            renderLeaderboard('overall');
+        /* Modal Functions */
+        function openModal() {
+            document.getElementById('infoModal').style.display = 'flex';
+        }
 
-            const modal = document.getElementById("infoModal");
-            if (modal) {
-                modal.addEventListener("click", function(e) {
-                    if (e.target === modal) {
-                        closeModal();
-                    }
-                });
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        function closeModalOnOutside(event) {
+            if (event.target.id === 'infoModal') {
+                closeModal();
             }
-        });
+        }
+
+        renderLeaderboard('overall');
     </script>
 </body>
 </html>
